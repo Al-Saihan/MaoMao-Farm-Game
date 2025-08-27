@@ -19,7 +19,7 @@ import math
 # TODO: Make Hens Class
 # TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower]
 # TODO: Make Player Class [A Cat Humanoid]
-# TODO: ADD_MORE
+# TODO: Design User Interface
 
 # ! --------------------------------------- Global Variables ---------------------------------------
 # ! --------------------------------------- Global Variables ---------------------------------------
