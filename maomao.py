@@ -131,10 +131,10 @@ MAOMAO = Player([0, 0, 0])
 def farmLand():
     glColor3f(0.0, 0.8, 0.0)  # Grass green color
     glBegin(GL_QUADS)
-    glVertex3f(-500, -500, 0)
-    glVertex3f(500, -500, 0)
-    glVertex3f(500, 500, 0)
-    glVertex3f(-500, 500, 0)
+    glVertex3f(-2000, -2000, 0)
+    glVertex3f(2000, -2000, 0)
+    glVertex3f(2000, 2000, 0)
+    glVertex3f(-2000, 2000, 0)
     glEnd()
 
 
@@ -194,15 +194,18 @@ def specialKeyListener(key, x, y):
 def mouseListener(button, state, x, y):
     global FOV, CAMERA_Z_REWORK
 
+    zoomUpStep = 6
+    zoomDownStep = 2
+
     # ? Scroll Up:
     if button == 3 and state == GLUT_DOWN:
-        FOV = max(FOV - 5, 90)
-        CAMERA_Z_REWORK = max(CAMERA_Z_REWORK - 5, -20)
+        FOV = max(FOV - zoomUpStep, 90)
+        CAMERA_Z_REWORK = max(CAMERA_Z_REWORK - zoomUpStep, -(4 * zoomUpStep))
 
     # ? Scroll Down:
     elif button == 4 and state == GLUT_DOWN:
-        FOV = min(FOV + 5, 110)
-        CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + 5, 10)
+        FOV = min(FOV + zoomDownStep, 110)
+        CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, (2 * zoomDownStep))
 
     glutPostRedisplay()
 
@@ -235,7 +238,7 @@ def showScreen():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     glViewport(0, 0, W, H)
-    glClearColor(0.2, 0.2, 0.2, 1)
+    glClearColor(0.53, 0.81, 0.92, 1)  # Sky blue color
     setupCamera()
 
     MAOMAO.draw()
