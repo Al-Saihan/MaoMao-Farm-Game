@@ -56,6 +56,7 @@ class Player:
         self.rotation %= 360
 
     def draw(self):
+        #! THIS IS TEMPORARY - WILL NEED TO BE REWORKED
         glPushMatrix()
         # Move to player position
         glTranslatef(self.position[0], self.position[1], self.position[2])
