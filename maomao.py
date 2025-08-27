@@ -4,6 +4,23 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import GLUT_BITMAP_HELVETICA_18
 import math
 
+# ! --------------------------------------- :TODO: ---------------------------------------
+# ! --------------------------------------- :TODO: ---------------------------------------
+# ! --------------------------------------- :TODO: ---------------------------------------
+# TODO: Make House Class
+# TODO: Make Fence Class
+# TODO: Make Road Class
+# TODO: Make Car Class
+# TODO: Make Pond Class
+# TODO: Make Farmable Plot Class [With Crop Specifier]
+# TODO: Make Cows Barn Class
+# TODO: Make Hens Barn Class
+# TODO: Make Cows Class
+# TODO: Make Hens Class
+# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower]
+# TODO: Make Player Class [A Cat Humanoid]
+# TODO: ADD_MORE
+
 # ! --------------------------------------- Global Variables ---------------------------------------
 # ! --------------------------------------- Global Variables ---------------------------------------
 # ! --------------------------------------- Global Variables ---------------------------------------
