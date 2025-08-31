@@ -3,22 +3,23 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import GLUT_BITMAP_HELVETICA_18
 import math
+import time
 
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
-# TODO: Make House Class
-# TODO: Make Fence Class
-# TODO: Make Road Class
-# TODO: Make Car Class
-# TODO: Make Pond Class
-# TODO: Make Farmable Plot Class [With Crop Specifier]
-# TODO: Make Cows Barn Class
-# TODO: Make Hens Barn Class
-# TODO: Make Cows Class
-# TODO: Make Hens Class
-# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower]
-# TODO: Make Player Class [A Cat Humanoid]
+# TODO: Make House Class --------------------------------------
+# TODO: Make Fence Class --------------------------------------
+# TODO: Make Road Class ---------------------------------------
+# TODO: Make Car Class ----------------------------------------
+# TODO: Make Pond Class ---------------------------------------
+# TODO: Make Farmable Plot Class [With Crop Specifier] --------
+# TODO: Make Cows Barn Class ----------------------------------
+# TODO: Make Hens Barn Class ----------------------------------
+# TODO: Make Cows Class ---------------------------------------
+# TODO: Make Hens Class ---------------------------------------
+# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] ---
+# TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan
 # TODO: Design User Interface
 
 # ! --------------------------------------- Global Variables ---------------------------------------
@@ -27,8 +28,9 @@ import math
 
 # ! Camera and Window Global Keys
 W, H = 1280, 720
-FOV = 100
+FOV = 30  # TODO:  DEFEAULT IS 100, PLEASE CHANGE IT BACK TO 100 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
 CAMERA_Z_REWORK = 0
+SELFIE = False
 
 # ! Player Movement
 BUTTONS = {"w": False, "s": False, "a": False, "d": False}
@@ -56,64 +58,136 @@ class Player:
         self.rotation %= 360
 
     def draw(self):
-        #! THIS IS TEMPORARY - WILL NEED TO BE REWORKED
+        # ! Please don't ask how I did this, my head hurts from all the trial & errors + calculations I had to do on paper [Saihan]
+
         glPushMatrix()
-        # Move to player position
         glTranslatef(self.position[0], self.position[1], self.position[2])
-        # Rotate player
-        glRotatef(self.rotation, 0, 0, 1)
+        glRotatef(self.rotation, 0, 0, 1)  # Rotate around Z-axis (facing X+ initially)
 
-        # Draw legs (2 cubes)
-        leg_width, leg_height, leg_depth = 2, 6, 2
-        body_width, body_height, body_depth = 6, 10, 4
+        # ! Variables
+        leg_width, leg_height, leg_depth = 1.8, 7, 1.8
+        body_width, body_height, body_depth = 5, 8, 3
         head_radius = 3
+        arm_width, arm_height, arm_depth = 1.5, 6, 1.5
+        tail_length, tail_width = 5, 0.5
+        leg_swing_angle = 0
+        arm_swing_angle = 0
+        rotateVar = math.sin(glutGet(GLUT_ELAPSED_TIME) / 200.0) * 15
+        if BUTTONS["w"] or BUTTONS["s"]:
+            # ? Animate walking
+            time = glutGet(GLUT_ELAPSED_TIME) / 50.0
+            leg_swing_angle = 35 * math.sin(time)
+            
+            # ! +Pi Reverse Arm Swing Compared with Leg
+            arm_swing_angle = 20 * math.sin(time + math.pi)
 
-        # Left leg
+        # ? Left leg
         glPushMatrix()
-        glTranslatef(0, -body_width / 4, leg_height / 2)
+        glTranslatef(0, -body_width / 3, leg_height / 2)
+        glRotatef(leg_swing_angle, 0, 1, 0)  # ! Left Leg Swing
         glScalef(leg_depth, leg_width, leg_height)
-        glColor3f(0.6, 0.4, 0.2)
+        glColor3f(0.3, 0.3, 0.3)  # ! Light dark gray
         glutSolidCube(1)
         glPopMatrix()
 
-        # Right leg
+        # ? Right leg
         glPushMatrix()
-        glTranslatef(0, body_width / 4, leg_height / 2)
+        glTranslatef(0, body_width / 3, leg_height / 2)
+        glRotatef(-leg_swing_angle, 0, 1, 0)  # ! Right Leg Swing
         glScalef(leg_depth, leg_width, leg_height)
-        glColor3f(0.6, 0.4, 0.2)
+        glColor3f(0.3, 0.3, 0.3)  # ! Light dark gray
         glutSolidCube(1)
         glPopMatrix()
 
-        # Body (cube)
+        # ? Body
         glPushMatrix()
         glTranslatef(0, 0, leg_height + body_height / 2)
         glScalef(body_depth, body_width, body_height)
-        glColor3f(1.0, 0.8, 0.6)
+        glColor3f(0.95, 0.6, 0.8)  # ! Pink
         glutSolidCube(1)
         glPopMatrix()
 
-        # Head (sphere)
+        # ! HEAD START
         glPushMatrix()
-        glTranslatef(0, 0, leg_height + body_height + head_radius)
-        glColor3f(1.0, 0.9, 0.7)
-        glutSolidSphere(head_radius, 20, 20)
+        glTranslatef(0, 0, leg_height + body_height + head_radius * 0.8)
+
+        # ? Head
+        glPushMatrix()
+        glScalef(1.0, 1.0, 1.1)
+        glColor3f(0.92, 0.82, 0.66)  # ! HUMAN SKIN COLOR, BEHOLD
+        glutSolidSphere(head_radius, 30, 30)
         glPopMatrix()
 
-        # Left hand (facing forward)
+        # ? Left ear
         glPushMatrix()
-        glTranslatef(0, -body_width / 2 - 1, leg_height + body_height * 0.8)
-        glRotatef(90, 1, 0, 0)  # Rotate to face forward
-        glScalef(2, 2, 6)
-        glColor3f(0.8, 0.6, 0.4)
+        glTranslatef(0, -head_radius * 0.5, head_radius * 0.8)
+        glRotatef(40, 1, 0, 0)
+        glColor3f(0.5, 0.5, 0.5)  # ! Lighter dark gray
+        glScalef(0.7, 1.0, 1.0)
+        glutSolidCone(1.4, 2.5, 10, 10)
+        glPopMatrix()
+
+        # ? Right ear
+        glPushMatrix()
+        glTranslatef(0, head_radius * 0.5, head_radius * 0.8)
+        glRotatef(-40, 1, 0, 0)
+        glColor3f(0.5, 0.5, 0.5)  # ! Lighter dark gray
+        glScalef(0.7, 1.0, 1.0)
+        glutSolidCone(1.4, 2.5, 10, 10)
+        glPopMatrix()
+
+        # ? Left eye
+        glPushMatrix()
+        glTranslatef(head_radius * 0.7, -head_radius * 0.4, head_radius * 0.6)
+        glRotatef(10, 0, 0, 1)
+        glScalef(0.8, 0.3, 0.4)
+        glColor3f(0.1, 0.1, 0.1)  # ! Black
+        glutSolidSphere(0.8, 10, 10)
+        glPopMatrix()
+
+        # ? Right eye
+        glPushMatrix()
+        glTranslatef(head_radius * 0.7, head_radius * 0.4, head_radius * 0.6)
+        glRotatef(-10, 0, 0, 1)
+        glScalef(0.8, 0.3, 0.4)
+        glColor3f(0.1, 0.1, 0.1)  # ! Black
+        glutSolidSphere(0.8, 10, 10)
+        glPopMatrix()
+
+        # ? Left Whisker
+        # TODO: MATHA BETHA KORE, I ADD LATER
+
+        # ? Right Whisker
+        # TODO: MATHA BETHA KORE, I ADD LATER
+
+        glPopMatrix()
+        # ! END HEAD
+
+        # ? Left arm
+        glPushMatrix()
+        glTranslatef(0, -body_width / 2 - arm_width / 2, leg_height + body_height * 0.7)
+        glRotatef(arm_swing_angle, 0, 1, 0)  # ! Left Swing Arm
+        glScalef(arm_depth, arm_width, arm_height)
+        glColor3f(0.3, 0.3, 0.3)  # ! Light dark gray
         glutSolidCube(1)
         glPopMatrix()
 
-        # Right hand (facing forward)
+        # ? Right arm
         glPushMatrix()
-        glTranslatef(0, body_width / 2 + 1, leg_height + body_height * 0.8)
-        glRotatef(90, 1, 0, 0)  # Rotate to face forward
-        glScalef(2, 2, 6)
-        glColor3f(0.8, 0.6, 0.4)
+        glTranslatef(0, body_width / 2 + arm_width / 2, leg_height + body_height * 0.7)
+        glRotatef(-arm_swing_angle, 0, 1, 0)  # ! Right Arm Swing
+        glScalef(arm_depth, arm_width, arm_height)
+        glColor3f(0.3, 0.3, 0.3)  # ! Light dark gray
+        glutSolidCube(1)
+        glPopMatrix()
+
+        # ? Tail
+        glPushMatrix()
+        glTranslatef(-body_depth / 2, 0, leg_height + 3)
+        glRotatef(-20, 0, 1, 0)
+        glRotatef(rotateVar, 1, 0, 0)  # ! Tail Move
+        glScalef(tail_width, tail_width, tail_length)
+        glColor3f(0.3, 0.3, 0.3)  # ! Light dark gray
         glutSolidCube(1)
         glPopMatrix()
 
@@ -131,10 +205,10 @@ MAOMAO = Player([0, 0, 0])
 def farmLand():
     glColor3f(0.0, 0.8, 0.0)  # Grass green color
     glBegin(GL_QUADS)
-    glVertex3f(-2000, -2000, 0)
-    glVertex3f(2000, -2000, 0)
-    glVertex3f(2000, 2000, 0)
-    glVertex3f(-2000, 2000, 0)
+    glVertex3f(-750, -600, 0)
+    glVertex3f(750, -600, 0)
+    glVertex3f(750, 750, 0)
+    glVertex3f(-750, 750, 0)
     glEnd()
 
 
@@ -168,7 +242,7 @@ def keyboardListener(key, x, y):
 
 
 def keyboardUpListener(key, x, y):
-    global BUTTONS
+    global BUTTONS, SELFIE
 
     # ! Move forward (W key)
     if key.lower() == b"w":
@@ -186,13 +260,17 @@ def keyboardUpListener(key, x, y):
     if key.lower() == b"d":
         BUTTONS["d"] = False
 
+    # ! Selfie Mode (V Key)
+    if key == b"v":
+        SELFIE = not SELFIE
+
 
 def specialKeyListener(key, x, y):
     pass
 
 
 def mouseListener(button, state, x, y):
-    global FOV, CAMERA_Z_REWORK
+    global FOV, CAMERA_Z_REWORK, SELFIE
 
     zoomUpStep = 6
     zoomDownStep = 2
@@ -203,7 +281,7 @@ def mouseListener(button, state, x, y):
         CAMERA_Z_REWORK = max(CAMERA_Z_REWORK - zoomUpStep, -(4 * zoomUpStep))
 
     # ? Scroll Down:
-    elif button == 4 and state == GLUT_DOWN:
+    if button == 4 and state == GLUT_DOWN:
         FOV = min(FOV + zoomDownStep, 110)
         CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, (2 * zoomDownStep))
 
@@ -227,9 +305,16 @@ def setupCamera():
     distance = 60
     height = 50
     angle_rad = math.radians(MAOMAO.rotation)
-    cam_x = px - distance * math.cos(angle_rad)
-    cam_y = py - distance * math.sin(angle_rad)
+
+    if SELFIE:
+        cam_x = px + distance * math.cos(angle_rad)
+        cam_y = py + distance * math.sin(angle_rad)
+    else:
+        cam_x = px - distance * math.cos(angle_rad)
+        cam_y = py - distance * math.sin(angle_rad)
+
     cam_z = pz + height + CAMERA_Z_REWORK
+
     gluLookAt(cam_x, cam_y, cam_z, px, py, pz, 0, 0, 1)
 
 
@@ -249,6 +334,19 @@ def showScreen():
     glutSwapBuffers()
 
 
+def devDebug():
+    if not hasattr(devDebug, "last_print_time"):
+        devDebug.last_print_time = time.time()
+
+    current_time = time.time()
+    if current_time - devDebug.last_print_time >= 1.0:
+        x, y, z = MAOMAO.position
+        print(
+            f"{glutGet(GLUT_ELAPSED_TIME)} : Player Currently At - X={x:.2f} Y={y:.2f} Z={z:.2f}"
+        )
+        devDebug.last_print_time = current_time
+
+
 def idle():
     if BUTTONS["a"]:
         MAOMAO.rotate(ROTATE_ANGLE)  # Rotate left
@@ -265,6 +363,7 @@ def idle():
         dy = -STEP * math.sin(angle_rad)
         MAOMAO.move(dx, dy)
 
+    devDebug()
     glutPostRedisplay()
 
 
