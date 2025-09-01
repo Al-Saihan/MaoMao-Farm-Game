@@ -28,7 +28,7 @@ import time
 
 # ! Camera and Window Global Keys
 W, H = 1280, 720
-FOV = 30  # TODO:  DEFEAULT IS 100, PLEASE CHANGE IT BACK TO 100 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
+FOV = 70  # TODO:  DEFEAULT IS 100, PLEASE CHANGE IT BACK TO 100 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
 CAMERA_Z_REWORK = 0
 CAMERA_EXTRA_TURN = 0
 SELFIE = False
@@ -70,7 +70,7 @@ class Player:
         body_width, body_height, body_depth = 5, 8, 3
         head_radius = 3
         arm_width, arm_height, arm_depth = 1.5, 6, 1.5
-        tail_length, tail_width = 1, 0.5
+        tail_length, tail_width = 1.25, 0.5
         leg_swing_angle = 0
         arm_swing_angle = 0
         rotateVar = math.sin(glutGet(GLUT_ELAPSED_TIME) / 200.0) * 15
@@ -194,14 +194,15 @@ class Player:
 
         # ? Tail v2
         glPushMatrix()
-        glTranslatef(-body_depth / 2 - 7, 0, leg_height + 6)
-        glScalef(tail_width, tail_width, tail_length)
-        glRotatef(270, 0, 1, 0)
+        glTranslatef(body_depth - 4.5, 0, leg_height + 2)
+        glScalef(tail_width, tail_width, tail_length * 0.8)
+        glRotatef(-90 - 30, 0, 1, 0)
+        # glRotatef(90, 1, 0, 0) # Along It's Own Axis - Rotates On Its Own - X
         glColor3f(0.3, 0.3, 0.3)  # ! Light dark gray
 
         x = 0.0
         while x <= 5.0:
-            glPointSize(5)
+            glPointSize(4 * (70 / FOV))  # ? This controls the thickness of the tail
             glBegin(GL_POINTS)
 
             speed = 0.005 * glutGet(GLUT_ELAPSED_TIME)
@@ -306,17 +307,17 @@ def specialKeyUpListener(key, x, y):
 def mouseListener(button, state, x, y):
     global FOV, CAMERA_Z_REWORK, SELFIE
 
-    zoomUpStep = 6
-    zoomDownStep = 2
+    zoomUpStep = 4
+    zoomDownStep = 6
 
     # ? Scroll Up:
     if button == 3 and state == GLUT_DOWN:
-        FOV = max(FOV - zoomUpStep, 90)
+        FOV = max(FOV - zoomUpStep, 60)
         CAMERA_Z_REWORK = max(CAMERA_Z_REWORK - zoomUpStep, -(4 * zoomUpStep))
 
     # ? Scroll Down:
     if button == 4 and state == GLUT_DOWN:
-        FOV = min(FOV + zoomDownStep, 110)
+        FOV = min(FOV + zoomDownStep, 80)
         CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, (2 * zoomDownStep))
 
     glutPostRedisplay()
@@ -402,10 +403,14 @@ def idle():
         dy = -STEP * math.sin(angle_rad)
         MAOMAO.move(dx, dy)
 
+    # if BUTTONS["la"]:
+    #     CAMERA_EXTRA_TURN = max(-26, CAMERA_EXTRA_TURN - 0.2)
+    # if BUTTONS["ra"]:
+    #     CAMERA_EXTRA_TURN = min(26, CAMERA_EXTRA_TURN + 0.2)
     if BUTTONS["la"]:
-        CAMERA_EXTRA_TURN = max(-26, CAMERA_EXTRA_TURN - 0.2)
+        CAMERA_EXTRA_TURN -= 0.2
     if BUTTONS["ra"]:
-        CAMERA_EXTRA_TURN = min(26, CAMERA_EXTRA_TURN + 0.2)
+        CAMERA_EXTRA_TURN += 0.2
 
     devDebug()
     glutPostRedisplay()
