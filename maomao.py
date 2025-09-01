@@ -1,7 +1,7 @@
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
-from OpenGL.GLUT import GLUT_BITMAP_HELVETICA_18
+from OpenGL.GLUT import GLUT_STROKE_ROMAN
 import math
 import time
 
@@ -28,7 +28,7 @@ import time
 
 # ! Camera and Window Global Keys
 W, H = 1280, 720
-FOV = 70  # TODO:  DEFEAULT IS 100, PLEASE CHANGE IT BACK TO 100 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
+FOV = 70  # TODO:  DEFEAULT IS 70, PLEASE CHANGE IT BACK TO 70 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
 CAMERA_Z_REWORK = 0
 CAMERA_EXTRA_TURN = 0
 SELFIE = False
@@ -63,7 +63,9 @@ class Player:
 
         glPushMatrix()
         glTranslatef(self.position[0], self.position[1], self.position[2])
-        glRotatef(self.rotation, 0, 0, 1)  # Rotate around Z-axis (facing X+ initially)
+        glRotatef(
+            self.rotation, 0, 0, 1
+        )  # ? Rotate around Z-axis (facing X+ initially)
 
         # ! Variables
         leg_width, leg_height, leg_depth = 1.8, 7, 1.8
@@ -73,14 +75,14 @@ class Player:
         tail_length, tail_width = 1.25, 0.5
         leg_swing_angle = 0
         arm_swing_angle = 0
-        rotateVar = math.sin(glutGet(GLUT_ELAPSED_TIME) / 200.0) * 15
+
         if BUTTONS["w"] or BUTTONS["s"]:
             # ? Animate walking
             time = glutGet(GLUT_ELAPSED_TIME) / 50.0
-            leg_swing_angle = 35 * math.sin(time)
-            
+            leg_swing_angle = 20 * math.sin(time)
+
             # ! +Pi Reverse Arm Swing Compared with Leg
-            arm_swing_angle = 20 * math.sin(time + math.pi)
+            arm_swing_angle = 15 * math.sin(time + math.pi)
 
         # ? Left leg
         glPushMatrix()
@@ -124,7 +126,7 @@ class Player:
         glTranslatef(0, -head_radius * 0.5, head_radius * 0.8)
         glRotatef(40, 1, 0, 0)
         glColor3f(0.5, 0.5, 0.5)  # ! Lighter dark gray
-        glScalef(0.7, 1.0, 1.0)
+        glScalef(0.3, 1.0, 1.0)
         glutSolidCone(1.4, 2.5, 10, 10)
         glPopMatrix()
 
@@ -133,7 +135,7 @@ class Player:
         glTranslatef(0, head_radius * 0.5, head_radius * 0.8)
         glRotatef(-40, 1, 0, 0)
         glColor3f(0.5, 0.5, 0.5)  # ! Lighter dark gray
-        glScalef(0.7, 1.0, 1.0)
+        glScalef(0.3, 1.0, 1.0)
         glutSolidCone(1.4, 2.5, 10, 10)
         glPopMatrix()
 
@@ -156,10 +158,42 @@ class Player:
         glPopMatrix()
 
         # ? Left Whisker
-        # TODO: MATHA BETHA KORE, I ADD LATER
+        glPushMatrix()
+        glRotatef(60, 1, 0, 0)
+        for i in range(3):
+            glPushMatrix()
+            glTranslatef(head_radius * 0.7, 0, head_radius * 0.3)
+            glRotatef(i * 30, 1, 0, 0)
+            glColor3f(0.2, 0.2, 0.2)  # ? Dark gray 
+            quad = gluNewQuadric()
+            gluCylinder(quad, 0.12, 0.12, 3, 10, 1)
+            gluDeleteQuadric(quad)
+            glPopMatrix()
+        glPopMatrix()
 
         # ? Right Whisker
-        # TODO: MATHA BETHA KORE, I ADD LATER
+        glPushMatrix()
+        glRotatef(-60, 1, 0, 0)
+        for i in range(3):
+            glPushMatrix()
+            glTranslatef(head_radius * 0.7, 0, head_radius * 0.3)
+            glRotatef(-i * 30, 1, 0, 0)
+            glColor3f(0.2, 0.2, 0.2)  # ? Dark gray 
+            quad = gluNewQuadric()
+            gluCylinder(quad, 0.12, 0.12, 3, 10, 1)
+            gluDeleteQuadric(quad)
+            glPopMatrix()
+        glPopMatrix()
+
+        # ? Mouth : W Text
+        glPushMatrix()
+        glTranslatef(head_radius, -0.7, head_radius - 4)
+        glRotatef(90, 0, 1, 0)
+        glRotatef(90, 0, 0, 1)
+        glColor3f(0.2, 0.2, 0.2)
+        glScalef(0.02, 0.02, 0.02)
+        glutStrokeCharacter(GLUT_STROKE_ROMAN, ord("w"))
+        glPopMatrix()
 
         glPopMatrix()
         # ! END HEAD
@@ -182,16 +216,6 @@ class Player:
         glutSolidCube(1)
         glPopMatrix()
 
-        # # ? Tail
-        # glPushMatrix()
-        # glTranslatef(-body_depth / 2, 0, leg_height + 3)
-        # glRotatef(-20, 0, 1, 0)
-        # glRotatef(rotateVar, 1, 0, 0)  # ! Tail Move
-        # glScalef(tail_width, tail_width, tail_length)
-        # glColor3f(0.3, 0.3, 0.3)  # ! Light dark gray
-        # glutSolidCube(1)
-        # glPopMatrix()
-
         # ? Tail v2
         glPushMatrix()
         glTranslatef(body_depth - 4.5, 0, leg_height + 2)
@@ -212,10 +236,10 @@ class Player:
             glVertex3f(x, y, z)
             glEnd()
 
-            x += 0.05 # ? This controls the smoothness of the tail / Step Size
+            x += 0.05  # ? This controls the smoothness of the tail / Step Size
 
         glPopMatrix()
-        
+
         glPopMatrix()
 
 
@@ -296,12 +320,12 @@ def specialKeyListener(key, x, y):
     elif key == GLUT_KEY_RIGHT:
         BUTTONS["ra"] = True
 
+
 def specialKeyUpListener(key, x, y):
     if key == GLUT_KEY_LEFT:
         BUTTONS["la"] = False
     elif key == GLUT_KEY_RIGHT:
         BUTTONS["ra"] = False
-
 
 
 def mouseListener(button, state, x, y):
@@ -339,7 +363,7 @@ def setupCamera():
 
     distance = 60
     height = 50
-    angle_rad = math.radians(MAOMAO.rotation + CAMERA_EXTRA_TURN) 
+    angle_rad = math.radians(MAOMAO.rotation + CAMERA_EXTRA_TURN)
 
     if SELFIE:
         cam_x = px + distance * math.cos(angle_rad)
@@ -382,8 +406,6 @@ def devDebug():
         print("Camera Extra Angle", CAMERA_EXTRA_TURN)
         devDebug.last_print_time = current_time
 
-    
-
 
 def idle():
     global CAMERA_EXTRA_TURN
@@ -403,10 +425,13 @@ def idle():
         dy = -STEP * math.sin(angle_rad)
         MAOMAO.move(dx, dy)
 
+    # # ! Camera Movement With Limit
     # if BUTTONS["la"]:
     #     CAMERA_EXTRA_TURN = max(-26, CAMERA_EXTRA_TURN - 0.2)
     # if BUTTONS["ra"]:
     #     CAMERA_EXTRA_TURN = min(26, CAMERA_EXTRA_TURN + 0.2)
+    
+    # ! Camera Movement WithOut Limit
     if BUTTONS["la"]:
         CAMERA_EXTRA_TURN -= 0.2
     if BUTTONS["ra"]:
