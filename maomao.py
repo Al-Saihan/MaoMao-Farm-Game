@@ -14,8 +14,8 @@ import time
 # TODO: Make Car Class ----------------------------------------
 # TODO: Make Pond Class ---------------------------------------
 # TODO: Make Farmable Plot Class [With Crop Specifier] --------
-# TODO: Make Cows Barn Class ----------------------------------
-# TODO: Make Hens Barn Class ----------------------------------
+# TODO: Make Cows Barn Class ---------------------------------- Nusayba
+# TODO: Make Hens Barn Class ---------------------------------- Nusayba
 # TODO: Make Cows Class ---------------------------------------
 # TODO: Make Hens Class ---------------------------------------
 # TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] ---
@@ -30,10 +30,11 @@ import time
 W, H = 1280, 720
 FOV = 30  # TODO:  DEFEAULT IS 100, PLEASE CHANGE IT BACK TO 100 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
 CAMERA_Z_REWORK = 0
+CAMERA_EXTRA_TURN = 0
 SELFIE = False
 
-# ! Player Movement
-BUTTONS = {"w": False, "s": False, "a": False, "d": False}
+# ! Buttons
+BUTTONS = {"w": False, "s": False, "a": False, "d": False, "la": False, "ra": False}
 
 STEP = 0.1
 ROTATE_ANGLE = 0.1
@@ -289,7 +290,17 @@ def keyboardUpListener(key, x, y):
 
 
 def specialKeyListener(key, x, y):
-    pass
+    if key == GLUT_KEY_LEFT:
+        BUTTONS["la"] = True
+    elif key == GLUT_KEY_RIGHT:
+        BUTTONS["ra"] = True
+
+def specialKeyUpListener(key, x, y):
+    if key == GLUT_KEY_LEFT:
+        BUTTONS["la"] = False
+    elif key == GLUT_KEY_RIGHT:
+        BUTTONS["ra"] = False
+
 
 
 def mouseListener(button, state, x, y):
@@ -327,7 +338,7 @@ def setupCamera():
 
     distance = 60
     height = 50
-    angle_rad = math.radians(MAOMAO.rotation)
+    angle_rad = math.radians(MAOMAO.rotation + CAMERA_EXTRA_TURN) 
 
     if SELFIE:
         cam_x = px + distance * math.cos(angle_rad)
@@ -367,10 +378,15 @@ def devDebug():
         print(
             f"{glutGet(GLUT_ELAPSED_TIME)} : Player Currently At - X={x:.2f} Y={y:.2f} Z={z:.2f}"
         )
+        print("Camera Extra Angle", CAMERA_EXTRA_TURN)
         devDebug.last_print_time = current_time
+
+    
 
 
 def idle():
+    global CAMERA_EXTRA_TURN
+
     if BUTTONS["a"]:
         MAOMAO.rotate(ROTATE_ANGLE)  # Rotate left
     if BUTTONS["d"]:
@@ -385,6 +401,11 @@ def idle():
         dx = -STEP * math.cos(angle_rad)
         dy = -STEP * math.sin(angle_rad)
         MAOMAO.move(dx, dy)
+
+    if BUTTONS["la"]:
+        CAMERA_EXTRA_TURN = max(-26, CAMERA_EXTRA_TURN - 0.2)
+    if BUTTONS["ra"]:
+        CAMERA_EXTRA_TURN = min(26, CAMERA_EXTRA_TURN + 0.2)
 
     devDebug()
     glutPostRedisplay()
@@ -407,6 +428,7 @@ def main():
     glutKeyboardFunc(keyboardListener)
     glutKeyboardUpFunc(keyboardUpListener)
     glutSpecialFunc(specialKeyListener)
+    glutSpecialUpFunc(specialKeyUpListener)
     glutMouseFunc(mouseListener)
     glutIdleFunc(idle)
 
