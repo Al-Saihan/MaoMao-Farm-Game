@@ -10,7 +10,7 @@ import time
 # ! --------------------------------------- :TODO: ---------------------------------------
 # TODO: Make House Class --------------------------------------
 # TODO: Make Fence Class --------------------------------------
-# TODO: Make Road Class ---------------------------------------
+# TODO: Make Road --------------------------------------------- Saihan [Finished]
 # TODO: Make Car Class ----------------------------------------
 # TODO: Make Pond Class ---------------------------------------
 # TODO: Make Farmable Plot Class [With Crop Specifier] --------
@@ -19,7 +19,7 @@ import time
 # TODO: Make Cows Class ---------------------------------------
 # TODO: Make Hens Class ---------------------------------------
 # TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] ---
-# TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan
+# TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
 # TODO: Design User Interface
 
 # ! --------------------------------------- Global Variables ---------------------------------------
@@ -28,7 +28,7 @@ import time
 
 # ! Camera and Window Global Keys
 W, H = 1280, 720
-FOV = 70  # TODO:  DEFEAULT IS 70, PLEASE CHANGE IT BACK TO 70 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
+FOV = 55  # TODO:  DEFEAULT IS 70, PLEASE CHANGE IT BACK TO 70 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
 CAMERA_Z_REWORK = 0
 CAMERA_EXTRA_TURN = 0
 SELFIE = False
@@ -164,7 +164,7 @@ class Player:
             glPushMatrix()
             glTranslatef(head_radius * 0.7, 0, head_radius * 0.3)
             glRotatef(i * 30, 1, 0, 0)
-            glColor3f(0.2, 0.2, 0.2)  # ? Dark gray 
+            glColor3f(0.2, 0.2, 0.2)  # ? Dark gray
             quad = gluNewQuadric()
             gluCylinder(quad, 0.12, 0.12, 3, 10, 1)
             gluDeleteQuadric(quad)
@@ -178,7 +178,7 @@ class Player:
             glPushMatrix()
             glTranslatef(head_radius * 0.7, 0, head_radius * 0.3)
             glRotatef(-i * 30, 1, 0, 0)
-            glColor3f(0.2, 0.2, 0.2)  # ? Dark gray 
+            glColor3f(0.2, 0.2, 0.2)  # ? Dark gray
             quad = gluNewQuadric()
             gluCylinder(quad, 0.12, 0.12, 3, 10, 1)
             gluDeleteQuadric(quad)
@@ -252,12 +252,66 @@ MAOMAO = Player([0, 0, 0])
 
 
 def farmLand():
-    glColor3f(0.0, 0.8, 0.0)  # Grass green color
+    # ! TEMP CORNER CHECKER
+    glBegin(GL_POINTS)
+    glColor3f(1.0, 0.0, 0.0)  # ? Bottom Left - Red
+    glVertex3f(-750, -600, 0)
+    glColor3f(0.0, 1.0, 0.0)  # ? Bottom Right - Green
+    glVertex3f(750, -600, 0)
+    glColor3f(0.0, 0.0, 1.0)  # ? Top Right - Blue
+    glVertex3f(750, 750, 0)
+    glColor3f(1.0, 1.0, 0.0)  # ? Top Left - Yellow
+    glVertex3f(-750, 750, 0)
+    glEnd()
+
     glBegin(GL_QUADS)
+    # ! Grass Land
+    glColor3f(0.0, 0.8, 0.0)  # Grass green color
     glVertex3f(-750, -600, 0)
     glVertex3f(750, -600, 0)
     glVertex3f(750, 750, 0)
     glVertex3f(-750, 750, 0)
+    glEnd()
+
+    # ! Road
+    glBegin(GL_QUADS)
+    glColor3f(0.95, 0.95, 0.5)  # Road brown color
+    # ! 1
+    glVertex3f(150, 250, 1)
+    glVertex3f(750, 250, 1)
+    glVertex3f(750, 150, 1)
+    glVertex3f(150, 150, 1)
+
+    # ! 2
+    glVertex3f(-50, 230, 1)
+    glVertex3f(150, 150, 1)
+    glVertex3f(150, 250, 1)
+    glVertex3f(-50, 330, 1)
+
+    # ! 3
+    glVertex3f(-750, 230, 1)
+    glVertex3f(-50, 230, 1)
+    glVertex3f(-50, 330, 1)
+    glVertex3f(-750, 330, 1)
+
+    # ! 4
+    glVertex3f(-100, 50, 1)
+    glVertex3f(0, 25, 1)
+    glVertex3f(160, 160, 1)  # Fix
+    glVertex3f(120, 250, 1)  # Fix
+
+    # ! 5
+    glVertex3f(-100, -600, 1)
+    glVertex3f(0, -600, 1)
+    glVertex3f(0, 50, 1)
+    glVertex3f(-100, 50, 1)
+
+    # ! 6
+    glVertex3f(330, -300, 1)
+    glVertex3f(400, -300, 1)
+    glVertex3f(400, 150, 1)
+    glVertex3f(330, 150, 1)
+
     glEnd()
 
 
@@ -336,11 +390,13 @@ def mouseListener(button, state, x, y):
 
     # ? Scroll Up:
     if button == 3 and state == GLUT_DOWN:
+        print("Scroll Up")
         FOV = max(FOV - zoomUpStep, 60)
         CAMERA_Z_REWORK = max(CAMERA_Z_REWORK - zoomUpStep, -(4 * zoomUpStep))
 
     # ? Scroll Down:
     if button == 4 and state == GLUT_DOWN:
+        print("Scroll Down")
         FOV = min(FOV + zoomDownStep, 80)
         CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, (2 * zoomDownStep))
 
@@ -375,6 +431,7 @@ def setupCamera():
     cam_z = pz + height + CAMERA_Z_REWORK
 
     gluLookAt(cam_x, cam_y, cam_z, px, py, pz, 0, 0, 1)
+    # gluLookAt(0, 0.1, 1500, px, py, pz, 0, 1, 0)
 
 
 def showScreen():
@@ -399,7 +456,7 @@ def devDebug():
 
     current_time = time.time()
     if current_time - devDebug.last_print_time >= 1.0:
-        x, y, z = MAOMAO.position
+        x, y, z = MAOMAO.position # ! THIS IS THE PLAYER CLASS - BRING POSITION HERE SOMEHOW
         print(
             f"{glutGet(GLUT_ELAPSED_TIME)} : Player Currently At - X={x:.2f} Y={y:.2f} Z={z:.2f}"
         )
@@ -430,7 +487,7 @@ def idle():
     #     CAMERA_EXTRA_TURN = max(-26, CAMERA_EXTRA_TURN - 0.2)
     # if BUTTONS["ra"]:
     #     CAMERA_EXTRA_TURN = min(26, CAMERA_EXTRA_TURN + 0.2)
-    
+
     # ! Camera Movement WithOut Limit
     if BUTTONS["la"]:
         CAMERA_EXTRA_TURN -= 0.2
