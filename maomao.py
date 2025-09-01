@@ -69,7 +69,7 @@ class Player:
         body_width, body_height, body_depth = 5, 8, 3
         head_radius = 3
         arm_width, arm_height, arm_depth = 1.5, 6, 1.5
-        tail_length, tail_width = 5, 0.5
+        tail_length, tail_width = 1, 0.5
         leg_swing_angle = 0
         arm_swing_angle = 0
         rotateVar = math.sin(glutGet(GLUT_ELAPSED_TIME) / 200.0) * 15
@@ -181,16 +181,39 @@ class Player:
         glutSolidCube(1)
         glPopMatrix()
 
-        # ? Tail
-        glPushMatrix()
-        glTranslatef(-body_depth / 2, 0, leg_height + 3)
-        glRotatef(-20, 0, 1, 0)
-        glRotatef(rotateVar, 1, 0, 0)  # ! Tail Move
-        glScalef(tail_width, tail_width, tail_length)
-        glColor3f(0.3, 0.3, 0.3)  # ! Light dark gray
-        glutSolidCube(1)
-        glPopMatrix()
+        # # ? Tail
+        # glPushMatrix()
+        # glTranslatef(-body_depth / 2, 0, leg_height + 3)
+        # glRotatef(-20, 0, 1, 0)
+        # glRotatef(rotateVar, 1, 0, 0)  # ! Tail Move
+        # glScalef(tail_width, tail_width, tail_length)
+        # glColor3f(0.3, 0.3, 0.3)  # ! Light dark gray
+        # glutSolidCube(1)
+        # glPopMatrix()
 
+        # ? Tail v2
+        glPushMatrix()
+        glTranslatef(-body_depth / 2 - 7, 0, leg_height + 6)
+        glScalef(tail_width, tail_width, tail_length)
+        glRotatef(270, 0, 1, 0)
+        glColor3f(0.3, 0.3, 0.3)  # ! Light dark gray
+
+        x = 0.0
+        while x <= 5.0:
+            glPointSize(5)
+            glBegin(GL_POINTS)
+
+            speed = 0.005 * glutGet(GLUT_ELAPSED_TIME)
+            y = 0.5 * (math.sin(x - speed) + math.sin(speed))
+            z = 0.0
+
+            glVertex3f(x, y, z)
+            glEnd()
+
+            x += 0.05 # ? This controls the smoothness of the tail / Step Size
+
+        glPopMatrix()
+        
         glPopMatrix()
 
 
