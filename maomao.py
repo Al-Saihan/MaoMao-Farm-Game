@@ -29,8 +29,8 @@ import time
 
 # ! Camera and Window Global Keys
 W, H = 1280, 720
-FOV = 70  # TODO:  DEFEAULT IS 70, PLEASE CHANGE IT BACK TO 70 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
-CAMERA_Z_REWORK = 0
+FOV = 60  # TODO:  DEFEAULT IS 60, PLEASE CHANGE IT BACK TO 60 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
+CAMERA_Z_REWORK = -24
 CAMERA_EXTRA_TURN = 0
 SELFIE = False
 
@@ -262,14 +262,14 @@ class Fence:
 
     def draw(self):
         glColor3f(0.9, 0.9, 0.9)  # Wood color
-        
-        for i in range(self.units):
+
+        for i in range(0, self.units, 30):
             # Calculate position for each fence unit
             stepSize = 10
             unit_pos = [
                 self.position[0] + i * stepSize * self.direction[0],
                 self.position[1] + i * stepSize * self.direction[1],
-                self.position[2] + 10
+                self.position[2] + 10,
             ]
 
             # ? Plank
@@ -280,20 +280,25 @@ class Fence:
             glutSolidCube(1)
             glPopMatrix()
 
-            # ? Connector
-            glPushMatrix()
-            glTranslatef(unit_pos[0], unit_pos[1], 7)
-            glRotatef(90, 0, 0, 1)
-            glScalef(10, 1, 1)
-            glutSolidCube(1)
-            glTranslatef(0, 0, 8)
-            glutSolidCube(1)
-            glPopMatrix()
+        midLoc = [
+            (self.position[0] + unit_pos[0]) / 2,
+            (self.position[1] + unit_pos[1]) / 2,
+        ]
+        # ? Connector
+        glPushMatrix()
+        glTranslatef(midLoc[0], midLoc[1], 7)
+        glRotatef(90, 0, 0, 1)
+        glScalef(10 * self.units, 1, 1)
+        glutSolidCube(1)
+        glTranslatef(0, 0, 8)
+        glutSolidCube(1)
+        glPopMatrix()
 
 
-MAOMAO = Player([0, -650, 0])
-x = Fence([5, 5, 0], direction="-y", units=62)
-FENCES = [x]
+MAOMAO = Player([330, -400, 0])
+x1 = Fence([370, -450, 0], direction="y", units=30)
+x2 = Fence([735, 750, 0], direction="-y", units=150)
+FENCES = []
 
 # ! --------------------------------------- Draw Functions ---------------------------------------
 # ! --------------------------------------- Draw Functions ---------------------------------------
@@ -326,46 +331,79 @@ def farmLand():
     glBegin(GL_QUADS)
     glColor3f(0.95, 0.95, 0.5)  # Road brown color
     # ! 1
-    glVertex3f(150, 250, 1)
-    glVertex3f(750, 250, 1)
-    glVertex3f(750, 150, 1)
-    glVertex3f(150, 150, 1)
+    glVertex3f(150, 250, 0.1)
+    glVertex3f(750, 250, 0.1)
+    glVertex3f(750, 150, 0.1)
+    glVertex3f(150, 150, 0.1)
 
     # ! 2
-    glVertex3f(-50, 230, 1)
-    glVertex3f(150, 150, 1)
-    glVertex3f(150, 250, 1)
-    glVertex3f(-50, 330, 1)
+    glVertex3f(-50, 230, 0.1)
+    glVertex3f(150, 150, 0.1)
+    glVertex3f(150, 250, 0.1)
+    glVertex3f(-50, 330, 0.1)
 
     # ! 3
-    glVertex3f(-750, 230, 1)
-    glVertex3f(-50, 230, 1)
-    glVertex3f(-50, 330, 1)
-    glVertex3f(-750, 330, 1)
+    glVertex3f(-750, 230, 0.1)
+    glVertex3f(-50, 230, 0.1)
+    glVertex3f(-50, 330, 0.1)
+    glVertex3f(-750, 330, 0.1)
 
     # ! 4
-    glVertex3f(-100, 50, 1)
-    glVertex3f(0, 25, 1)
-    glVertex3f(160, 160, 1)  # Fix
-    glVertex3f(120, 250, 1)  # Fix
+    glVertex3f(-100, 50, 0.1)
+    glVertex3f(0, 25, 0.1)
+    glVertex3f(160, 160, 0.1)  # Fix
+    glVertex3f(120, 250, 0.1)  # Fix
 
     # ! 5
-    glVertex3f(-100, -600, 1)
-    glVertex3f(0, -600, 1)
-    glVertex3f(0, 50, 1)
-    glVertex3f(-100, 50, 1)
+    glVertex3f(-100, -600, 0.1)
+    glVertex3f(0, -600, 0.1)
+    glVertex3f(0, 50, 0.1)
+    glVertex3f(-100, 50, 0.1)
 
     # ! 6
-    glVertex3f(330, -300, 1)
-    glVertex3f(400, -300, 1)
-    glVertex3f(400, 150, 1)
-    glVertex3f(330, 150, 1)
+    glVertex3f(330, -300, 0.1)
+    glVertex3f(400, -300, 0.1)
+    glVertex3f(400, 150, 0.1)
+    glVertex3f(330, 150, 0.1)
 
     glEnd()
+
+    # Draw world border using cubes
+    glColor3f(0.6, 0.3, 0.1)  # Brown border color
+
+    # Bottom border
+    glPushMatrix()
+    glTranslatef(0, -600, 10)
+    glScalef(1500, 2.5, 50)
+    glutSolidCube(1)
+    glPopMatrix()
+
+    # Top border
+    glPushMatrix()
+    glTranslatef(0, 750, 10)
+    glScalef(1500, 2.5, 50)
+    glutSolidCube(1)
+    glPopMatrix()
+
+    # Left border
+    glPushMatrix()
+    glTranslatef(-750, 75, 10)
+    glScalef(2.5, 1400, 50)
+    glutSolidCube(1)
+    glPopMatrix()
+
+    # Right border
+    glPushMatrix()
+    glTranslatef(750, 75, 10)
+    glScalef(2.5, 1350, 50)
+    glutSolidCube(1)
+    glPopMatrix()
+
 
 def drawFences():
     for lathi in FENCES:
         lathi.draw()
+
 
 # ! --------------------------------------- Input Functions ---------------------------------------
 # ! --------------------------------------- Input Functions ---------------------------------------
@@ -437,20 +475,24 @@ def specialKeyUpListener(key, x, y):
 def mouseListener(button, state, x, y):
     global FOV, CAMERA_Z_REWORK, SELFIE
 
-    zoomUpStep = 4
+    zoomUpStep = 6
     zoomDownStep = 6
 
     # ? Scroll Up:
     if button == 3 and state == GLUT_DOWN:
         print("Scroll Up")
         FOV = max(FOV - zoomUpStep, 60)
-        CAMERA_Z_REWORK = max(CAMERA_Z_REWORK - zoomUpStep, -(4 * zoomUpStep))
+        print('FOV: ', FOV)
+        CAMERA_Z_REWORK = max(CAMERA_Z_REWORK - zoomUpStep, -24)
+        print('CAMERA_Z_REWORK: ', CAMERA_Z_REWORK)
 
     # ? Scroll Down:
     if button == 4 and state == GLUT_DOWN:
         print("Scroll Down")
         FOV = min(FOV + zoomDownStep, 80)
-        CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, (2 * zoomDownStep))
+        print('FOV: ', FOV)
+        CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, 0)
+        print('CAMERA_Z_REWORK: ', CAMERA_Z_REWORK)
 
     glutPostRedisplay()
 
@@ -503,39 +545,37 @@ def showScreen():
     glutSwapBuffers()
 
 
-
 def devDebug():
     # Initialize timing variables on first call
     if not hasattr(devDebug, "last_print_time"):
         devDebug.last_print_time = time.time()
         devDebug.frame_count = 0
         devDebug.fps = 0
-    
+
     current_time = time.time()
     devDebug.frame_count += 1
     elapsed_time = current_time - devDebug.last_print_time
-    
+
     # Only print if at least 1 second has passed
     if elapsed_time < 1.0:
         return
-    
+
     # Get player position
     x, y, z = MAOMAO.position
-    
+
     # Calculate FPS based on actual elapsed time and frame count
     devDebug.fps = devDebug.frame_count / elapsed_time
-    
+
     # Format and print debug information
-    print(f"{glutGet(GLUT_ELAPSED_TIME)} : Player Position - X={x:.2f} Y={y:.2f} Z={z:.2f}")
+    print(
+        f"{glutGet(GLUT_ELAPSED_TIME)} : Player Position - X={x:.2f} Y={y:.2f} Z={z:.2f}"
+    )
     print(f"FPS: {devDebug.fps:.2f}")
     print(f"Camera Extra Angle: {CAMERA_EXTRA_TURN}")
-    
+
     # Reset counters for next interval
     devDebug.last_print_time = current_time
     devDebug.frame_count = 0
-
-
-    
 
 
 def idle():
