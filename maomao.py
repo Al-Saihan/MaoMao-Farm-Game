@@ -9,7 +9,7 @@ import time
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
 # TODO: Make House Class --------------------------------------
-# TODO: Make Fence Class -------------------------------------- Saihan [WIP]
+# TODO: Make Fence Class -------------------------------------- Saihan [Finished]
 # TODO: Make Collision Class ---------------------------------- Saihan [WIP]
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
 # TODO: Make Car Class ----------------------------------------
@@ -253,7 +253,7 @@ class Fence:
         x1, y1, z1 = self.start
         x2, y2, z2 = self.end
 
-        # ! Horizontal Connector
+        # ! Horizontal Connector - Variables
         mid_x = (x1 + x2) / 2
         mid_y = (y1 + y2) / 2
         mid_z = (z1 + z2) / 2
@@ -266,17 +266,20 @@ class Fence:
         connectorWidth = 2
         connectorHeight = 2.5
 
-        glColor3f(0.9, 0.9, 0.9)
+        # ! Connector - Draw
         glPushMatrix()
         glTranslatef(mid_x, mid_y, mid_z)
+
         if dx > dy:
             glScalef(connectorLength, connectorWidth, connectorHeight)
         else:
             glScalef(connectorWidth, connectorLength, connectorHeight)
 
+        glColor3f(0.9, 0.9, 0.9)  # ? Off-White Color
         glutSolidCube(1)
         glPopMatrix()
 
+        # ! Vertical Connector Nodes (4 Nodes, Equally Spaced)
         connection_nodes = [
             [x1, y1, z1],
             [x1 + dx * 0.33, y1 + dy * 0.33, z1 + dz * 0.33],
@@ -284,24 +287,27 @@ class Fence:
             [x2, y2, z2],
         ]
 
+        # ! Node Draw
         for nodes in connection_nodes:
             glPushMatrix()
             glTranslatef(nodes[0], nodes[1], nodes[2] / 2)
+
             if dx > dy:
                 glScalef(5, connectorWidth * 1.1, 20)
             else:
                 glScalef(connectorWidth * 1.1, 5, 20)
-            glColor3f(0.7, 0.5, 0.3)  # Brownish color for posts
+                
+            glColor3f(0.7, 0.5, 0.3)  # ? Brownish color for posts
             glutSolidCube(1)
             glPopMatrix()
 
 
 MAOMAO = Player([0, 0, 0])
 
-b1 = Fence([-750, -600, 10], [750, -600, 10])
-b2 = Fence([-750, 750, 10], [750, 750, 10])
-b3 = Fence([-750, -600, 10], [-750, 750, 10])
-b4 = Fence([750, -600, 10], [750, 750, 10])
+b1 = Fence([-740, -590, 10], [740, -590, 10])
+b2 = Fence([-740, 740, 10], [740, 740, 10])
+b3 = Fence([-740, -590, 10], [-740, 740, 10])
+b4 = Fence([740, -590, 10], [740, 740, 10])
 FENCES = [b1, b2, b3, b4]
 
 
@@ -311,21 +317,9 @@ FENCES = [b1, b2, b3, b4]
 
 
 def farmLand():
-    # ! TEMP CORNER CHECKER
-    glBegin(GL_POINTS)
-    glColor3f(1.0, 0.0, 0.0)  # ? Bottom Left - Red
-    glVertex3f(-750, -600, 0)
-    glColor3f(0.0, 1.0, 0.0)  # ? Bottom Right - Green
-    glVertex3f(750, -600, 0)
-    glColor3f(0.0, 0.0, 1.0)  # ? Top Right - Blue
-    glVertex3f(750, 750, 0)
-    glColor3f(1.0, 1.0, 0.0)  # ? Top Left - Yellow
-    glVertex3f(-750, 750, 0)
-    glEnd()
-
     glBegin(GL_QUADS)
     # ! Grass Land
-    glColor3f(0.0, 0.8, 0.0)  # Grass green color
+    glColor3f(0.0, 0.8, 0.0)  # ? Grass green color
     glVertex3f(-750, -600, 0)
     glVertex3f(750, -600, 0)
     glVertex3f(750, 750, 0)
@@ -334,7 +328,7 @@ def farmLand():
 
     # ! Road
     glBegin(GL_QUADS)
-    glColor3f(0.95, 0.95, 0.5)  # Road brown color
+    glColor3f(0.95, 0.95, 0.5)  # ? Road brown color
     # ! 1
     glVertex3f(150, 250, 1)
     glVertex3f(750, 250, 1)
@@ -356,8 +350,8 @@ def farmLand():
     # ! 4
     glVertex3f(-100, 50, 1)
     glVertex3f(0, 25, 1)
-    glVertex3f(160, 160, 1)  # Fix
-    glVertex3f(120, 250, 1)  # Fix
+    glVertex3f(160, 160, 1)
+    glVertex3f(120, 250, 1)
 
     # ! 5
     glVertex3f(-100, -600, 1)
