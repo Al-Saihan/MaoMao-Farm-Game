@@ -9,14 +9,15 @@ import time
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
 # TODO: Make House Class --------------------------------------
-# TODO: Make Fence Class --------------------------------------
+# TODO: Make Fence Class -------------------------------------- Saihan [WIP]
+# TODO: Make Collision Class ---------------------------------- Saihan [WIP]
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
 # TODO: Make Car Class ----------------------------------------
 # TODO: Make Pond Class ---------------------------------------
 # TODO: Make Farmable Plot Class [With Crop Specifier] --------
 # TODO: Make Cows Barn Class ---------------------------------- Nusayba
-# TODO: Make Hens Barn Class ---------------------------------- Nusayba
-# TODO: Make Cows Class ---------------------------------------
+# TODO: Make Cows Class --------------------------------------- Nusayba
+# TODO: Make Hens Barn Class ----------------------------------
 # TODO: Make Hens Class ---------------------------------------
 # TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] ---
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
@@ -28,7 +29,7 @@ import time
 
 # ! Camera and Window Global Keys
 W, H = 1280, 720
-FOV = 55  # TODO:  DEFEAULT IS 70, PLEASE CHANGE IT BACK TO 70 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
+FOV = 70  # TODO:  DEFEAULT IS 70, PLEASE CHANGE IT BACK TO 70 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
 CAMERA_Z_REWORK = 0
 CAMERA_EXTRA_TURN = 0
 SELFIE = False
@@ -243,8 +244,56 @@ class Player:
         glPopMatrix()
 
 
-MAOMAO = Player([0, 0, 0])
+# ! Fence
+class Fence:
+    def __init__(self, position, direction="x", units=1):
+        self.position = position
 
+        if direction == "x":
+            self.direction = [1, 0, 0]
+        elif direction == "y":
+            self.direction = [0, 1, 0]
+        elif direction == "-x":
+            self.direction = [-1, 0, 0]
+        elif direction == "-y":
+            self.direction = [0, -1, 0]
+
+        self.units = units
+
+    def draw(self):
+        glColor3f(0.9, 0.9, 0.9)  # Wood color
+        
+        for i in range(self.units):
+            # Calculate position for each fence unit
+            stepSize = 10
+            unit_pos = [
+                self.position[0] + i * stepSize * self.direction[0],
+                self.position[1] + i * stepSize * self.direction[1],
+                self.position[2] + 10
+            ]
+
+            # ? Plank
+            glPushMatrix()
+            glTranslatef(*unit_pos)
+            glRotatef(90, 0, 1, 0)
+            glScalef(20, 3, 1)
+            glutSolidCube(1)
+            glPopMatrix()
+
+            # ? Connector
+            glPushMatrix()
+            glTranslatef(unit_pos[0], unit_pos[1], 7)
+            glRotatef(90, 0, 0, 1)
+            glScalef(10, 1, 1)
+            glutSolidCube(1)
+            glTranslatef(0, 0, 8)
+            glutSolidCube(1)
+            glPopMatrix()
+
+
+MAOMAO = Player([0, -650, 0])
+x = Fence([5, 5, 0], direction="-y", units=62)
+FENCES = [x]
 
 # ! --------------------------------------- Draw Functions ---------------------------------------
 # ! --------------------------------------- Draw Functions ---------------------------------------
@@ -314,6 +363,9 @@ def farmLand():
 
     glEnd()
 
+def drawFences():
+    for lathi in FENCES:
+        lathi.draw()
 
 # ! --------------------------------------- Input Functions ---------------------------------------
 # ! --------------------------------------- Input Functions ---------------------------------------
@@ -445,23 +497,45 @@ def showScreen():
     MAOMAO.draw()
 
     farmLand()
+    drawFences()
 
     # ? Double Buffering - Smoothness
     glutSwapBuffers()
 
 
+
 def devDebug():
+    # Initialize timing variables on first call
     if not hasattr(devDebug, "last_print_time"):
         devDebug.last_print_time = time.time()
-
+        devDebug.frame_count = 0
+        devDebug.fps = 0
+    
     current_time = time.time()
-    if current_time - devDebug.last_print_time >= 1.0:
-        x, y, z = MAOMAO.position # ! THIS IS THE PLAYER CLASS - BRING POSITION HERE SOMEHOW
-        print(
-            f"{glutGet(GLUT_ELAPSED_TIME)} : Player Currently At - X={x:.2f} Y={y:.2f} Z={z:.2f}"
-        )
-        print("Camera Extra Angle", CAMERA_EXTRA_TURN)
-        devDebug.last_print_time = current_time
+    devDebug.frame_count += 1
+    elapsed_time = current_time - devDebug.last_print_time
+    
+    # Only print if at least 1 second has passed
+    if elapsed_time < 1.0:
+        return
+    
+    # Get player position
+    x, y, z = MAOMAO.position
+    
+    # Calculate FPS based on actual elapsed time and frame count
+    devDebug.fps = devDebug.frame_count / elapsed_time
+    
+    # Format and print debug information
+    print(f"{glutGet(GLUT_ELAPSED_TIME)} : Player Position - X={x:.2f} Y={y:.2f} Z={z:.2f}")
+    print(f"FPS: {devDebug.fps:.2f}")
+    print(f"Camera Extra Angle: {CAMERA_EXTRA_TURN}")
+    
+    # Reset counters for next interval
+    devDebug.last_print_time = current_time
+    devDebug.frame_count = 0
+
+
+    
 
 
 def idle():
