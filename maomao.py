@@ -338,8 +338,8 @@ class Plot:
         self.position = position
 
     def draw(self):
-        scaleX = 300
-        scaleY = 300
+        scaleX = 250
+        scaleY = 250
         glColor3f(244/255, 223/255, 144/255)  # ? Lighter brown color for soil
         glPushMatrix()
         glTranslatef(*self.position)
@@ -576,7 +576,7 @@ def setupCamera():
     cam_z = pz + height + CAMERA_Z_REWORK
 
     gluLookAt(cam_x, cam_y, cam_z, px, py, pz, 0, 0, 1)
-    # gluLookAt(0, 0.1, 1500, px, py, pz, 0, 1, 0)
+    # gluLookAt(px + 1, py - 1, 300, px, py, pz, 0, 1, 0)
 
 
 def showScreen():
