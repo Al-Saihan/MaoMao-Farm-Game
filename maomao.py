@@ -14,7 +14,7 @@ import time
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
 # TODO: Make Car Class ---------------------------------------- Mao
 # TODO: Make Pond Class --------------------------------------- Mao
-# TODO: Make Farmable Plot Class [With Crop Specifier] -------- 
+# TODO: Make Farmable Plot Class [With Crop Specifier] --------
 # TODO: Make Cows Barn Class ---------------------------------- Nusayba
 # TODO: Make Cows Class --------------------------------------- Nusayba
 # TODO: Make Hens Barn Class ---------------------------------- Mao
@@ -37,7 +37,7 @@ SELFIE = False
 # ! Buttons
 BUTTONS = {"w": False, "s": False, "a": False, "d": False, "la": False, "ra": False}
 
-P_SPEED = 0.1
+P_SPEED = 0.5
 P_ROTATE_ANGLE = 0.1
 
 # ! --------------------------------------- CLasses ---------------------------------------
@@ -47,7 +47,7 @@ P_ROTATE_ANGLE = 0.1
 
 # ! Player
 class Player:
-    def __init__(self, position, rotation = 0):
+    def __init__(self, position, rotation=0):
         self.position = position
         self.rotation = rotation
 
@@ -302,13 +302,52 @@ class Fence:
             glPopMatrix()
 
 
+class BorderLine:
+    def __init__(self, A, B, strength = 15):
+        self.A = A
+        self.B = B
+        self.strength = strength
+
+    def __call__(self, C=[0, 0, 0]):
+        # ! PEAK CROSS PRODUCT SHENANIGANS
+
+        # ? Distance of the Point C, on the line AB
+        AB = [self.B[i] - self.A[i] for i in range(3)]
+        AC = [C[i] - self.A[i] for i in range(3)]
+
+        cross = [
+            AB[1] * AC[2] - AB[2] * AC[1],
+            AB[2] * AC[0] - AB[0] * AC[2],
+            AB[0] * AC[1] - AB[1] * AC[0],
+        ]
+
+        # ? Magnetudes
+        cross_mag = math.sqrt(sum([x**2 for x in cross]))
+        AB_mag = math.sqrt(sum([x**2 for x in AB]))
+
+        distance = cross_mag / AB_mag if AB_mag != 0 else 0
+
+        if abs(distance) < self.strength:
+            return True
+        return False
+
+
+print(BorderLine([0, 0, 0], [1, 0, 0]))
+
 MAOMAO = Player([0, 0, 0])
 
-b1 = Fence([-740, -590, 10], [740, -590, 10])
-b2 = Fence([-740, 740, 10], [740, 740, 10])
-b3 = Fence([-740, -590, 10], [-740, 740, 10])
-b4 = Fence([740, -590, 10], [740, 740, 10])
-FENCES = [b1, b2, b3, b4]
+a1 = Fence([-740, -590, 10], [740, -590, 10])
+a2 = Fence([-740, 740, 10], [740, 740, 10])
+a3 = Fence([-740, -590, 10], [-740, 740, 10])
+a4 = Fence([740, -590, 10], [740, 740, 10])
+FENCES = [a1, a2, a3, a4]
+
+b1 = BorderLine([-740, -590, 10], [740, -590, 10])
+b2 = BorderLine([-740, 740, 10], [740, 740, 10])
+b3 = BorderLine([-740, -590, 10], [-740, 740, 10])
+b4 = BorderLine([740, -590, 10], [740, 740, 10])
+
+BOUND_BOXES = [b1, b2, b3, b4]
 
 
 # ! --------------------------------------- Draw Functions ---------------------------------------
@@ -366,6 +405,7 @@ def farmLand():
     glVertex3f(330, 150, 1)
 
     glEnd()
+
 
 def drawFences():
     for lathi in FENCES:
@@ -508,7 +548,7 @@ def showScreen():
     glutSwapBuffers()
 
 
-def devDebug(): # ! Clearly AI Written, Remove After Finishing. Thank You.
+def devDebug():  # ! Clearly AI Written, Remove After Finishing. Thank You.
     # Initialize timing variables on first call
     if not hasattr(devDebug, "last_print_time"):
         devDebug.last_print_time = time.time()
@@ -540,6 +580,8 @@ def devDebug(): # ! Clearly AI Written, Remove After Finishing. Thank You.
     devDebug.last_print_time = current_time
     devDebug.frame_count = 0
 
+    # print(b1(MAOMAO.position))
+
 
 def idle():
     global CAMERA_ROTATE
@@ -553,11 +595,36 @@ def idle():
     if BUTTONS["w"]:
         dx = P_SPEED * math.cos(angle_rad)
         dy = P_SPEED * math.sin(angle_rad)
-        MAOMAO.move(dx, dy)
+        move = True
+
+        moveX = MAOMAO.position[0] + dx
+        moveY = MAOMAO.position[1] + dy
+        moveZ = MAOMAO.position[2]
+
+        for collisions in BOUND_BOXES:
+            if collisions([moveX, moveY, moveZ]):
+                move = False
+                break
+
+        if move:
+            MAOMAO.move(dx, dy)
+
     if BUTTONS["s"]:
         dx = -P_SPEED * math.cos(angle_rad)
         dy = -P_SPEED * math.sin(angle_rad)
-        MAOMAO.move(dx, dy)
+        move = True
+
+        moveX = MAOMAO.position[0] + dx
+        moveY = MAOMAO.position[1] + dy
+        moveZ = MAOMAO.position[2]
+
+        for collisions in BOUND_BOXES:
+            if collisions([moveX, moveY, moveZ]):
+                move = False
+                break
+
+        if move:
+            MAOMAO.move(dx, dy)
 
     # # ! Camera Movement With Limit
     # if BUTTONS["la"]:
