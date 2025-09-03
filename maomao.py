@@ -8,18 +8,18 @@ import time
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
-# TODO: Make House Class --------------------------------------
+# TODO: Make House Class -------------------------------------- Nadia
 # TODO: Make Fence Class -------------------------------------- Saihan [Finished]
 # TODO: Make Collision Class ---------------------------------- Saihan [WIP]
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
-# TODO: Make Car Class ----------------------------------------
-# TODO: Make Pond Class ---------------------------------------
+# TODO: Make Car Class ---------------------------------------- Nadia
+# TODO: Make Pond Class --------------------------------------- Nadia
 # TODO: Make Farmable Plot Class [With Crop Specifier] --------
 # TODO: Make Cows Barn Class ---------------------------------- Nusayba
 # TODO: Make Cows Class --------------------------------------- Nusayba
-# TODO: Make Hens Barn Class ----------------------------------
-# TODO: Make Hens Class ---------------------------------------
-# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] ---
+# TODO: Make Hens Barn Class ---------------------------------- Nadia
+# TODO: Make Hens Class --------------------------------------- Nadia
+# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] --- 
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
 # TODO: Design User Interface
 
@@ -31,13 +31,13 @@ import time
 W, H = 1280, 720
 FOV = 70  # TODO:  DEFEAULT IS 70, PLEASE CHANGE IT BACK TO 70 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
 CAMERA_Z_REWORK = 0
-CAMERA_EXTRA_TURN = 0
+CAMERA_ROTATE = 0
 SELFIE = False
 
 # ! Buttons
 BUTTONS = {"w": False, "s": False, "a": False, "d": False, "la": False, "ra": False}
 
-P_SPEED = 0.5
+P_SPEED = 0.1
 P_ROTATE_ANGLE = 0.1
 
 # ! --------------------------------------- CLasses ---------------------------------------
@@ -47,9 +47,9 @@ P_ROTATE_ANGLE = 0.1
 
 # ! Player
 class Player:
-    def __init__(self, position):
+    def __init__(self, position, rotation = 0):
         self.position = position
-        self.rotation = 0
+        self.rotation = rotation
 
     def move(self, dx, dy):
         self.position[0] += dx
@@ -296,7 +296,7 @@ class Fence:
                 glScalef(5, connectorWidth * 1.1, 20)
             else:
                 glScalef(connectorWidth * 1.1, 5, 20)
-                
+
             glColor3f(0.7, 0.5, 0.3)  # ? Brownish color for posts
             glutSolidCube(1)
             glPopMatrix()
@@ -366,7 +366,6 @@ def farmLand():
     glVertex3f(330, 150, 1)
 
     glEnd()
-
 
 def drawFences():
     for lathi in FENCES:
@@ -477,7 +476,7 @@ def setupCamera():
 
     distance = 60
     height = 50
-    angle_rad = math.radians(MAOMAO.rotation + CAMERA_EXTRA_TURN)
+    angle_rad = math.radians(MAOMAO.rotation + CAMERA_ROTATE)
 
     if SELFIE:
         cam_x = px + distance * math.cos(angle_rad)
@@ -509,7 +508,7 @@ def showScreen():
     glutSwapBuffers()
 
 
-def devDebug():
+def devDebug(): # ! Clearly AI Written, Remove After Finishing. Thank You.
     # Initialize timing variables on first call
     if not hasattr(devDebug, "last_print_time"):
         devDebug.last_print_time = time.time()
@@ -535,7 +534,7 @@ def devDebug():
         f"{glutGet(GLUT_ELAPSED_TIME)} : Player Position - X={x:.2f} Y={y:.2f} Z={z:.2f}"
     )
     print(f"FPS: {devDebug.fps:.2f}")
-    print(f"Camera Extra Angle: {CAMERA_EXTRA_TURN}")
+    print(f"Camera Extra Angle: {CAMERA_ROTATE}")
 
     # Reset counters for next interval
     devDebug.last_print_time = current_time
@@ -543,7 +542,7 @@ def devDebug():
 
 
 def idle():
-    global CAMERA_EXTRA_TURN
+    global CAMERA_ROTATE
 
     if BUTTONS["a"]:
         MAOMAO.rotate(P_ROTATE_ANGLE)  # Rotate left
@@ -568,9 +567,9 @@ def idle():
 
     # ! Camera Movement WithOut Limit
     if BUTTONS["la"]:
-        CAMERA_EXTRA_TURN -= 0.2
+        CAMERA_ROTATE -= 0.2
     if BUTTONS["ra"]:
-        CAMERA_EXTRA_TURN += 0.2
+        CAMERA_ROTATE += 0.2
 
     devDebug()
     glutPostRedisplay()
