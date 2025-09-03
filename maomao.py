@@ -8,8 +8,8 @@ import time
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
-# TODO: Make House Class -------------------------------------- Mao
-# TODO: Make Fence Class -------------------------------------- Saihan [WIP]
+# TODO: Make House Class --------------------------------------
+# TODO: Make Fence Class -------------------------------------- Saihan [Finished]
 # TODO: Make Collision Class ---------------------------------- Saihan [WIP]
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
 # TODO: Make Car Class ---------------------------------------- Mao
@@ -37,8 +37,8 @@ SELFIE = False
 # ! Buttons
 BUTTONS = {"w": False, "s": False, "a": False, "d": False, "la": False, "ra": False}
 
-STEP = 0.1
-ROTATE_ANGLE = 0.1
+P_SPEED = 0.5
+P_ROTATE_ANGLE = 0.1
 
 # ! --------------------------------------- CLasses ---------------------------------------
 # ! --------------------------------------- CLasses ---------------------------------------
@@ -244,56 +244,72 @@ class Player:
         glPopMatrix()
 
 
-# ! Fence
 class Fence:
-    def __init__(self, position, direction="x", units=1):
-        self.position = position
-
-        if direction == "x":
-            self.direction = [1, 0, 0]
-        elif direction == "y":
-            self.direction = [0, 1, 0]
-        elif direction == "-x":
-            self.direction = [-1, 0, 0]
-        elif direction == "-y":
-            self.direction = [0, -1, 0]
-
-        self.units = units
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
 
     def draw(self):
-        glColor3f(0.9, 0.9, 0.9)  # Wood color
-        
-        for i in range(self.units):
-            # Calculate position for each fence unit
-            stepSize = 10
-            unit_pos = [
-                self.position[0] + i * stepSize * self.direction[0],
-                self.position[1] + i * stepSize * self.direction[1],
-                self.position[2] + 10
-            ]
+        x1, y1, z1 = self.start
+        x2, y2, z2 = self.end
 
-            # ? Plank
+        # ! Horizontal Connector - Variables
+        mid_x = (x1 + x2) / 2
+        mid_y = (y1 + y2) / 2
+        mid_z = (z1 + z2) / 2
+
+        dx = x2 - x1
+        dy = y2 - y1
+        dz = z2 - z1
+
+        connectorLength = math.sqrt(dx**2 + dy**2 + dz**2)
+        connectorWidth = 2
+        connectorHeight = 2.5
+
+        # ! Connector - Draw
+        glPushMatrix()
+        glTranslatef(mid_x, mid_y, mid_z)
+
+        if dx > dy:
+            glScalef(connectorLength, connectorWidth, connectorHeight)
+        else:
+            glScalef(connectorWidth, connectorLength, connectorHeight)
+
+        glColor3f(0.9, 0.9, 0.9)  # ? Off-White Color
+        glutSolidCube(1)
+        glPopMatrix()
+
+        # ! Vertical Connector Nodes (4 Nodes, Equally Spaced)
+        connection_nodes = [
+            [x1, y1, z1],
+            [x1 + dx * 0.33, y1 + dy * 0.33, z1 + dz * 0.33],
+            [x1 + dx * 0.66, y1 + dy * 0.66, z1 + dz * 0.66],
+            [x2, y2, z2],
+        ]
+
+        # ! Node Draw
+        for nodes in connection_nodes:
             glPushMatrix()
-            glTranslatef(*unit_pos)
-            glRotatef(90, 0, 1, 0)
-            glScalef(20, 3, 1)
+            glTranslatef(nodes[0], nodes[1], nodes[2] / 2)
+
+            if dx > dy:
+                glScalef(5, connectorWidth * 1.1, 20)
+            else:
+                glScalef(connectorWidth * 1.1, 5, 20)
+                
+            glColor3f(0.7, 0.5, 0.3)  # ? Brownish color for posts
             glutSolidCube(1)
             glPopMatrix()
 
-            # ? Connector
-            glPushMatrix()
-            glTranslatef(unit_pos[0], unit_pos[1], 7)
-            glRotatef(90, 0, 0, 1)
-            glScalef(10, 1, 1)
-            glutSolidCube(1)
-            glTranslatef(0, 0, 8)
-            glutSolidCube(1)
-            glPopMatrix()
 
+MAOMAO = Player([0, 0, 0])
 
-MAOMAO = Player([0, -650, 0])
-x = Fence([5, 5, 0], direction="-y", units=62)
-FENCES = [x]
+b1 = Fence([-740, -590, 10], [740, -590, 10])
+b2 = Fence([-740, 740, 10], [740, 740, 10])
+b3 = Fence([-740, -590, 10], [-740, 740, 10])
+b4 = Fence([740, -590, 10], [740, 740, 10])
+FENCES = [b1, b2, b3, b4]
+
 
 # ! --------------------------------------- Draw Functions ---------------------------------------
 # ! --------------------------------------- Draw Functions ---------------------------------------
@@ -301,21 +317,9 @@ FENCES = [x]
 
 
 def farmLand():
-    # ! TEMP CORNER CHECKER
-    glBegin(GL_POINTS)
-    glColor3f(1.0, 0.0, 0.0)  # ? Bottom Left - Red
-    glVertex3f(-750, -600, 0)
-    glColor3f(0.0, 1.0, 0.0)  # ? Bottom Right - Green
-    glVertex3f(750, -600, 0)
-    glColor3f(0.0, 0.0, 1.0)  # ? Top Right - Blue
-    glVertex3f(750, 750, 0)
-    glColor3f(1.0, 1.0, 0.0)  # ? Top Left - Yellow
-    glVertex3f(-750, 750, 0)
-    glEnd()
-
     glBegin(GL_QUADS)
     # ! Grass Land
-    glColor3f(0.0, 0.8, 0.0)  # Grass green color
+    glColor3f(0.0, 0.8, 0.0)  # ? Grass green color
     glVertex3f(-750, -600, 0)
     glVertex3f(750, -600, 0)
     glVertex3f(750, 750, 0)
@@ -324,7 +328,7 @@ def farmLand():
 
     # ! Road
     glBegin(GL_QUADS)
-    glColor3f(0.95, 0.95, 0.5)  # Road brown color
+    glColor3f(0.95, 0.95, 0.5)  # ? Road brown color
     # ! 1
     glVertex3f(150, 250, 1)
     glVertex3f(750, 250, 1)
@@ -346,8 +350,8 @@ def farmLand():
     # ! 4
     glVertex3f(-100, 50, 1)
     glVertex3f(0, 25, 1)
-    glVertex3f(160, 160, 1)  # Fix
-    glVertex3f(120, 250, 1)  # Fix
+    glVertex3f(160, 160, 1)
+    glVertex3f(120, 250, 1)
 
     # ! 5
     glVertex3f(-100, -600, 1)
@@ -363,9 +367,11 @@ def farmLand():
 
     glEnd()
 
+
 def drawFences():
     for lathi in FENCES:
         lathi.draw()
+
 
 # ! --------------------------------------- Input Functions ---------------------------------------
 # ! --------------------------------------- Input Functions ---------------------------------------
@@ -503,57 +509,55 @@ def showScreen():
     glutSwapBuffers()
 
 
-
 def devDebug():
     # Initialize timing variables on first call
     if not hasattr(devDebug, "last_print_time"):
         devDebug.last_print_time = time.time()
         devDebug.frame_count = 0
         devDebug.fps = 0
-    
+
     current_time = time.time()
     devDebug.frame_count += 1
     elapsed_time = current_time - devDebug.last_print_time
-    
+
     # Only print if at least 1 second has passed
     if elapsed_time < 1.0:
         return
-    
+
     # Get player position
     x, y, z = MAOMAO.position
-    
+
     # Calculate FPS based on actual elapsed time and frame count
     devDebug.fps = devDebug.frame_count / elapsed_time
-    
+
     # Format and print debug information
-    print(f"{glutGet(GLUT_ELAPSED_TIME)} : Player Position - X={x:.2f} Y={y:.2f} Z={z:.2f}")
+    print(
+        f"{glutGet(GLUT_ELAPSED_TIME)} : Player Position - X={x:.2f} Y={y:.2f} Z={z:.2f}"
+    )
     print(f"FPS: {devDebug.fps:.2f}")
     print(f"Camera Extra Angle: {CAMERA_EXTRA_TURN}")
-    
+
     # Reset counters for next interval
     devDebug.last_print_time = current_time
     devDebug.frame_count = 0
-
-
-    
 
 
 def idle():
     global CAMERA_EXTRA_TURN
 
     if BUTTONS["a"]:
-        MAOMAO.rotate(ROTATE_ANGLE)  # Rotate left
+        MAOMAO.rotate(P_ROTATE_ANGLE)  # Rotate left
     if BUTTONS["d"]:
-        MAOMAO.rotate(-ROTATE_ANGLE)  # Rotate right
+        MAOMAO.rotate(-P_ROTATE_ANGLE)  # Rotate right
 
     angle_rad = math.radians(MAOMAO.rotation)
     if BUTTONS["w"]:
-        dx = STEP * math.cos(angle_rad)
-        dy = STEP * math.sin(angle_rad)
+        dx = P_SPEED * math.cos(angle_rad)
+        dy = P_SPEED * math.sin(angle_rad)
         MAOMAO.move(dx, dy)
     if BUTTONS["s"]:
-        dx = -STEP * math.cos(angle_rad)
-        dy = -STEP * math.sin(angle_rad)
+        dx = -P_SPEED * math.cos(angle_rad)
+        dy = -P_SPEED * math.sin(angle_rad)
         MAOMAO.move(dx, dy)
 
     # # ! Camera Movement With Limit
