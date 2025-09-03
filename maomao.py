@@ -442,10 +442,10 @@ def farmLand():
     glVertex3f(-100, 50, 0.1)
 
     # ! 6
-    glVertex3f(330, -300, 0.01)
-    glVertex3f(400, -300, 0.01)
-    glVertex3f(400, 150, 0.01)
-    glVertex3f(330, 150, 0.01)
+    glVertex3f(330, -300, 0.1)
+    glVertex3f(400, -300, 0.1)
+    glVertex3f(400, 150, 0.1)
+    glVertex3f(330, 150, 0.1)
 
     glEnd()
 
