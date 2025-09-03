@@ -8,17 +8,17 @@ import time
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
-# TODO: Make House Class --------------------------------------
+# TODO: Make House Class -------------------------------------- Mao
 # TODO: Make Fence Class -------------------------------------- Saihan [WIP]
 # TODO: Make Collision Class ---------------------------------- Saihan [WIP]
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
-# TODO: Make Car Class ----------------------------------------
-# TODO: Make Pond Class ---------------------------------------
-# TODO: Make Farmable Plot Class [With Crop Specifier] --------
+# TODO: Make Car Class ---------------------------------------- Mao
+# TODO: Make Pond Class --------------------------------------- Mao
+# TODO: Make Farmable Plot Class [With Crop Specifier] -------- 
 # TODO: Make Cows Barn Class ---------------------------------- Nusayba
 # TODO: Make Cows Class --------------------------------------- Nusayba
-# TODO: Make Hens Barn Class ----------------------------------
-# TODO: Make Hens Class ---------------------------------------
+# TODO: Make Hens Barn Class ---------------------------------- Mao
+# TODO: Make Hens Class --------------------------------------- Mao
 # TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] ---
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
 # TODO: Design User Interface
