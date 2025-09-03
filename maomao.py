@@ -1,3 +1,4 @@
+from matplotlib import scale
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -14,14 +15,14 @@ import time
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
 # TODO: Make Car Class ---------------------------------------- Mao
 # TODO: Make Pond Class --------------------------------------- Mao
-# TODO: Make Farmable Plot Class [With Crop Specifier] --------
+# TODO: Make Farmable Plot Class [With Crop Specifier] -------- Saihan [WIP]
 # TODO: Make Cows Barn Class ---------------------------------- Nusayba
 # TODO: Make Cows Class --------------------------------------- Nusayba
 # TODO: Make Hens Barn Class ---------------------------------- Mao
 # TODO: Make Hens Class --------------------------------------- Mao
 # TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] ---
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
-# TODO: Design User Interface --------------------------------- 
+# TODO: Design User Interface ---------------------------------
 
 # ! --------------------------------------- Global Variables ---------------------------------------
 # ! --------------------------------------- Global Variables ---------------------------------------
@@ -332,14 +333,50 @@ class BorderLine:
         return False
 
 
+class Plot:
+    def __init__(self, position):
+        self.position = position
+
+    def draw(self):
+        scaleX = 300
+        scaleY = 300
+        glColor3f(244/255, 223/255, 144/255)  # ? Lighter brown color for soil
+        glPushMatrix()
+        glTranslatef(*self.position)
+        glScale(scaleX, scaleY, 2)
+        glutSolidCube(1)
+        glPopMatrix()
+
+        glColor3f(180/255, 150/255, 80/255)
+        glPushMatrix()
+        glTranslatef(*self.position)
+        glTranslatef(0, 50, 0)
+        glScale(scaleX, 1, 3)
+        glutSolidCube(1)
+        glTranslatef(0, -100, 0)
+        glutSolidCube(1)
+        glPopMatrix()
+
+        glPushMatrix()
+        glTranslatef(*self.position)
+        glTranslatef(50, 0, 0)
+        glScale(1, scaleY, 3)
+        glutSolidCube(1)
+        glTranslatef(-100, 0, 0)
+        glutSolidCube(1)
+        glPopMatrix()
+
+
+
 print(BorderLine([0, 0, 0], [1, 0, 0]))
 
-MAOMAO = Player([0, 0, 0])
+MAOMAO = Player([366, -196, 0])
 
 a1 = Fence([-740, -590, 10], [740, -590, 10])
 a2 = Fence([-740, 740, 10], [740, 740, 10])
 a3 = Fence([-740, -590, 10], [-740, 740, 10])
 a4 = Fence([740, -590, 10], [740, 740, 10])
+
 FENCES = [a1, a2, a3, a4]
 
 b1 = BorderLine([-740, -590, 10], [740, -590, 10])
@@ -349,6 +386,12 @@ b4 = BorderLine([740, -590, 10], [740, 740, 10])
 
 BOUND_BOXES = [b1, b2, b3, b4]
 
+p1 = Plot([570, -20, 1])
+p2 = Plot([570, -350, 1])
+# p3 = Plot([-200, 200, 1])
+# p4 = Plot([200, -200, 1])
+
+PLOTS = [p1, p2]
 
 # ! --------------------------------------- Draw Functions ---------------------------------------
 # ! --------------------------------------- Draw Functions ---------------------------------------
@@ -369,40 +412,40 @@ def farmLand():
     glBegin(GL_QUADS)
     glColor3f(0.95, 0.95, 0.5)  # ? Road brown color
     # ! 1
-    glVertex3f(150, 250, 1)
-    glVertex3f(750, 250, 1)
-    glVertex3f(750, 150, 1)
-    glVertex3f(150, 150, 1)
+    glVertex3f(150, 250, 0.1)
+    glVertex3f(750, 250, 0.1)
+    glVertex3f(750, 150, 0.1)
+    glVertex3f(150, 150, 0.1)
 
     # ! 2
-    glVertex3f(-50, 230, 1)
-    glVertex3f(150, 150, 1)
-    glVertex3f(150, 250, 1)
-    glVertex3f(-50, 330, 1)
+    glVertex3f(-50, 230, 0.1)
+    glVertex3f(150, 150, 0.1)
+    glVertex3f(150, 250, 0.1)
+    glVertex3f(-50, 330, 0.1)
 
     # ! 3
-    glVertex3f(-750, 230, 1)
-    glVertex3f(-50, 230, 1)
-    glVertex3f(-50, 330, 1)
-    glVertex3f(-750, 330, 1)
+    glVertex3f(-750, 230, 0.1)
+    glVertex3f(-50, 230, 0.1)
+    glVertex3f(-50, 330, 0.1)
+    glVertex3f(-750, 330, 0.1)
 
     # ! 4
-    glVertex3f(-100, 50, 1)
-    glVertex3f(0, 25, 1)
-    glVertex3f(160, 160, 1)
-    glVertex3f(120, 250, 1)
+    glVertex3f(-100, 50, 0.1)
+    glVertex3f(0, 25, 0.1)
+    glVertex3f(160, 160, 0.1)
+    glVertex3f(120, 250, 0.1)
 
     # ! 5
-    glVertex3f(-100, -600, 1)
-    glVertex3f(0, -600, 1)
-    glVertex3f(0, 50, 1)
-    glVertex3f(-100, 50, 1)
+    glVertex3f(-100, -600, 0.1)
+    glVertex3f(0, -600, 0.1)
+    glVertex3f(0, 50, 0.1)
+    glVertex3f(-100, 50, 0.1)
 
     # ! 6
-    glVertex3f(330, -300, 1)
-    glVertex3f(400, -300, 1)
-    glVertex3f(400, 150, 1)
-    glVertex3f(330, 150, 1)
+    glVertex3f(330, -300, 0.01)
+    glVertex3f(400, -300, 0.01)
+    glVertex3f(400, 150, 0.01)
+    glVertex3f(330, 150, 0.01)
 
     glEnd()
 
@@ -410,6 +453,11 @@ def farmLand():
 def drawFences():
     for lathi in FENCES:
         lathi.draw()
+
+
+def drawPlots():
+    for plot in PLOTS:
+        plot.draw()
 
 
 # ! --------------------------------------- Input Functions ---------------------------------------
@@ -532,25 +580,21 @@ def setupCamera():
 
 
 def showScreen():
+    # glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+    # glEnable(GL_BLEND)
+    glEnable(GL_MULTISAMPLE)
     glEnable(GL_DEPTH_TEST)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     glViewport(0, 0, W, H)
-    # Use current system time to derive a radian value for smooth color animation
-    t = time.time()
-    rad = t % (2 * math.pi) + 100
-    glClearColor(
-        0.265 + 0.265 * math.sin(rad),
-        0.405 + 0.405 * math.sin(rad),
-        0.46 + 0.46 * math.sin(rad),
-        1
-    )  # Sky blue color
+    glClearColor(0.53, 0.81, 0.92, 1)  # Sky blue color
     setupCamera()
 
     MAOMAO.draw()
 
     farmLand()
     drawFences()
+    drawPlots()
 
     # ? Double Buffering - Smoothness
     glutSwapBuffers()
@@ -667,7 +711,6 @@ def idle():
 def main():
     glutInit()
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
-
     glutInitWindowSize(W, H)
     glutInitWindowPosition(200, 100)
     glutCreateWindow(b"MaoMao's Farm - The Game")
