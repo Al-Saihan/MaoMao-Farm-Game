@@ -20,9 +20,18 @@ import time
 # TODO: Make Cows Class --------------------------------------- Nusayba
 # TODO: Make Hens Barn Class ---------------------------------- Mao
 # TODO: Make Hens Class --------------------------------------- Mao
-# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] ---
+# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] --- Saihan [WIP]
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
+# TODO: Water Mechanism ---------------------------------------
+# TODO: Crops Grow Logic --------------------------------------
+# TODO: Harvest Logic -----------------------------------------
+# TODO: Inventory System --------------------------------------
+# TODO: Buy/ Sell Logics --------------------------------------
+# TODO: Cheat Modes -------------------------------------------
+# TODO: Rain Logic --------------------------------------------
+# TODO: Day-Night Cycle ---------------------------------------
 # TODO: Design User Interface ---------------------------------
+
 
 # ! --------------------------------------- Global Variables ---------------------------------------
 # ! --------------------------------------- Global Variables ---------------------------------------
@@ -38,6 +47,7 @@ SELFIE = False
 # ! Buttons
 BUTTONS = {"w": False, "s": False, "a": False, "d": False, "la": False, "ra": False}
 
+# ! Player Control
 P_SPEED = 0.5
 P_ROTATE_ANGLE = 0.1
 
@@ -340,14 +350,14 @@ class Plot:
     def draw(self):
         scaleX = 250
         scaleY = 250
-        glColor3f(244/255, 223/255, 144/255)  # ? Lighter brown color for soil
+        glColor3f(244 / 255, 223 / 255, 144 / 255)  # ? Lighter brown color for soil
         glPushMatrix()
         glTranslatef(*self.position)
         glScale(scaleX, scaleY, 2)
         glutSolidCube(1)
         glPopMatrix()
 
-        glColor3f(180/255, 150/255, 80/255)
+        glColor3f(180 / 255, 150 / 255, 80 / 255)
         glPushMatrix()
         glTranslatef(*self.position)
         glTranslatef(0, 50, 0)
@@ -365,7 +375,6 @@ class Plot:
         glTranslatef(-100, 0, 0)
         glutSolidCube(1)
         glPopMatrix()
-
 
 
 print(BorderLine([0, 0, 0], [1, 0, 0]))
