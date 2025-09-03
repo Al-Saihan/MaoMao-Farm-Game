@@ -10,7 +10,7 @@ import time
 # ! --------------------------------------- :TODO: ---------------------------------------
 # TODO: Make House Class -------------------------------------- Mao
 # TODO: Make Fence Class -------------------------------------- Saihan [Finished]
-# TODO: Make Collision Class ---------------------------------- Saihan [WIP]
+# TODO: Make Collision Class ---------------------------------- Saihan [Finished]
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
 # TODO: Make Car Class ---------------------------------------- Mao
 # TODO: Make Pond Class --------------------------------------- Mao
@@ -21,7 +21,7 @@ import time
 # TODO: Make Hens Class --------------------------------------- Mao
 # TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] ---
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
-# TODO: Design User Interface
+# TODO: Design User Interface --------------------------------- 
 
 # ! --------------------------------------- Global Variables ---------------------------------------
 # ! --------------------------------------- Global Variables ---------------------------------------
@@ -303,7 +303,7 @@ class Fence:
 
 
 class BorderLine:
-    def __init__(self, A, B, strength = 15):
+    def __init__(self, A, B, strength=15):
         self.A = A
         self.B = B
         self.strength = strength
@@ -536,7 +536,15 @@ def showScreen():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     glViewport(0, 0, W, H)
-    glClearColor(0.53, 0.81, 0.92, 1)  # Sky blue color
+    # Use current system time to derive a radian value for smooth color animation
+    t = time.time()
+    rad = t % (2 * math.pi) + 100
+    glClearColor(
+        0.265 + 0.265 * math.sin(rad),
+        0.405 + 0.405 * math.sin(rad),
+        0.46 + 0.46 * math.sin(rad),
+        1
+    )  # Sky blue color
     setupCamera()
 
     MAOMAO.draw()
@@ -587,42 +595,51 @@ def idle():
     global CAMERA_ROTATE
 
     if BUTTONS["a"]:
-        MAOMAO.rotate(P_ROTATE_ANGLE)  # Rotate left
+        MAOMAO.rotate(P_ROTATE_ANGLE)  # ? Rotate left
     if BUTTONS["d"]:
-        MAOMAO.rotate(-P_ROTATE_ANGLE)  # Rotate right
+        MAOMAO.rotate(-P_ROTATE_ANGLE)  # ? Rotate right
 
     angle_rad = math.radians(MAOMAO.rotation)
+
+    # ! Move Forward
     if BUTTONS["w"]:
         dx = P_SPEED * math.cos(angle_rad)
         dy = P_SPEED * math.sin(angle_rad)
         move = True
 
+        # ? Position after movement
         moveX = MAOMAO.position[0] + dx
         moveY = MAOMAO.position[1] + dy
         moveZ = MAOMAO.position[2]
 
+        # ? Check for collisions
         for collisions in BOUND_BOXES:
             if collisions([moveX, moveY, moveZ]):
                 move = False
                 break
 
+        # ? If No Collision - Move
         if move:
             MAOMAO.move(dx, dy)
 
+    # ! Move Backward
     if BUTTONS["s"]:
         dx = -P_SPEED * math.cos(angle_rad)
         dy = -P_SPEED * math.sin(angle_rad)
         move = True
 
+        # ? Position after movement
         moveX = MAOMAO.position[0] + dx
         moveY = MAOMAO.position[1] + dy
         moveZ = MAOMAO.position[2]
 
+        # ? Check for collisions
         for collisions in BOUND_BOXES:
             if collisions([moveX, moveY, moveZ]):
                 move = False
                 break
 
+        # ? If No Collision - Move
         if move:
             MAOMAO.move(dx, dy)
 
