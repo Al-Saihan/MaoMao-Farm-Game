@@ -262,18 +262,24 @@ class Pond:
     def draw_pond(self):
         glBegin(GL_QUADS)
         # ! Pond Area Border
-        glColor3f(0.4, 0.7, 0.9)  # ? Blueish pond color
-        glVertex3f(50, 0, 0.1) # ? pond left bottom point    
+        glColor3f(0.05, 0.20, 0.05)
+        glVertex3f(50, 0, 0.1) # ? pond left bottom point  
+        glColor3f(0.15, 0.35, 0.10)  
         glVertex3f(300, 0, 0.1) # ? pond right bottom point
+        glColor3f(0.30, 0.55, 0.25)
         glVertex3f(300, -530, 0.1) # ? pond right top point
+        glColor3f(0.55, 0.75, 0.40)
         glVertex3f(50 , -530, 0.1) # ? pond left top point
         glEnd()
         glBegin(GL_QUADS)
         # ! Pond Area 
-        glColor3f(0.0, 0.2, 0.6)  # ? Deep blue pond color
-        glVertex3f(80, -30, 0.5) # ? pond left bottom point    
+        glColor3f(0.0, 0.2, 0.4)
+        glVertex3f(80, -30, 0.5) # ? pond left bottom point 
+        glColor3f(0.1, 0.4, 0.2)   
         glVertex3f(270, -30, 0.5) # ? pond right bottom point
+        glColor3f(0.2, 0.6, 0.5)
         glVertex3f(270, -500, 0.5) # ? pond right top point
+        glColor3f(0.3, 0.25, 0.15)
         glVertex3f(80, -500, 0.5) # ? pond left top point
         glEnd() 
             
@@ -330,14 +336,33 @@ class House:
         glTranslatef(0, 0, 1)
         glColor3f(0.30, 0.1, 0.1)
         glutSolidCube(1)
-
-
+        glPopMatrix()
+        
+        #? house door
+        glPushMatrix()
+        glTranslatef(self.position[0], self.position[1] - 75, self.position[2] - 20)
+        glScalef(50, 1, 110)
+        glColor3f(0.2, 0.1, 0.05)
+        glutSolidCube(1)
+        glPopMatrix()
+        
+        #? house window left
+        glPushMatrix()
+        glTranslatef(self.position[0] - 70, self.position[1] - 75, self.position[2] + 30)
+        glScalef(40, 1, 30)
+        glColor3f(0.8, 0.9, 1.0)  # Blueish white color
+        glutSolidCube(1)
+        glPopMatrix()
+        
+        #? house window right 
+        glPushMatrix()
+        glTranslatef(self.position[0] + 70, self.position[1] - 75, self.position[2] + 30)
+        glScalef(40, 1, 30)
+        glColor3f(0.8, 0.9, 1.0)  # Blueish white color
+        glutSolidCube(1)
         glPopMatrix()
 
-    
-
-
-House1 = House([162, 500, 0.1])
+House1 = House([162, 600, 0.1])
 
 
 class Fence:
