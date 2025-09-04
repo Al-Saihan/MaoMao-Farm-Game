@@ -624,6 +624,19 @@ class Plot:
         glutSolidCube(1)
         glPopMatrix()
 
+class Coop:
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+
+    def draw(self):
+        height = 10
+        glPushMatrix()
+        glTranslatef(self.x, self.y, self.z + height / 2)
+        glScalef(150, 200, height)
+        glutSolidCube(1)
+        glPopMatrix()
 
 print(BorderLine([0, 0, 0], [1, 0, 0]))
 
@@ -654,6 +667,9 @@ t1 = Tree(100, 400, 0)
 t2 = Tree(650, 550, 0)
 t3 = Tree(-100, 550, 0)
 TREES = [t1, t2, t3]
+
+
+COOP = Coop(-200, -200, 0)
 
 # ! --------------------------------------- Draw Functions ---------------------------------------
 # ! --------------------------------------- Draw Functions ---------------------------------------
@@ -984,6 +1000,7 @@ def showScreen():
     farmLand()
     drawFences()
     drawPlots()
+    COOP.draw()
 
     # ! User Interface
     user_interface()
