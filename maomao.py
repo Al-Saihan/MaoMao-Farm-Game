@@ -511,21 +511,26 @@ def user_interface():
     glPushMatrix()
     glLoadIdentity()
 
-    # ! Draw UI elements here
+    # ! UI Elements
+
+    # ? MaoMao Profile Box
     glBegin(GL_QUADS)
-    glColor3f(0.98, 0.85, 0.91)
+    glColor3f(0.85, 0.7, 0.85)
     glVertex2f(15, H - 10)
     glVertex2f(100, H - 10)
     glVertex2f(100, H - 100)
     glVertex2f(15, H - 100)
     glEnd()
 
+    # ? MaoMao Eyes
     glPointSize(10)
     glBegin(GL_POINTS)
     glColor3f(0, 0, 0)
     glVertex2f(35, H - 30)
     glVertex2f(80, H - 30)
     glEnd()
+
+    # --------------------
 
     glPointSize(6)
     glBegin(GL_POINTS)
@@ -534,6 +539,7 @@ def user_interface():
     glVertex2f(80, H - 30)
     glEnd()
 
+    # ? MaoMao Mouth
     stepX = 12.5
     stepY = -8
 
@@ -546,10 +552,11 @@ def user_interface():
     glVertex2f(stepX + 55, H - 40 + stepY)
     glEnd()
 
+    # ? Profile Border
     glLineWidth(1)
     glBegin(GL_LINE_STRIP)
     glColor3f(0, 0, 0)
-    glVertex2f(15, H - 10)
+    glVertex2f(15 - 10, H - 10)
     glVertex2f(100, H - 10)
     glVertex2f(100, H - 100)
     glVertex2f(15, H - 100)
@@ -561,9 +568,9 @@ def user_interface():
     draw_text(105, H - 90, f"Time: {TIME['hour']:02}:{TIME['minute']:02}", (0, 0, 0))
 
     draw_text(W - 200, H - 30, f"Weather: {WEATHER}", (0, 0, 0))
-    
+
     draw_text(15, H - 500, "Inventory:", (0, 0, 0))
-    
+
     glColor3f(0.85, 0.7, 0.85)  # Lighter mauve color
     glBegin(GL_QUADS)
     glVertex2f(12, H - 510)
@@ -581,7 +588,7 @@ def user_interface():
     glVertex2f(12, H - 510)
     glEnd()
 
-    for k,v in INVENTORY.items():
+    for k, v in INVENTORY.items():
         index = list(INVENTORY.keys()).index(k) + 1
         draw_text(15, H - 500 - 30 * index, f"{k.capitalize()}: {v}", (0, 0, 0))
         glColor3f(0.6, 0.4, 0.6)
@@ -589,8 +596,6 @@ def user_interface():
         glVertex2f(15, H - 500 - 30 * index - 5)
         glVertex2f(140, H - 500 - 30 * index - 5)
         glEnd()
-
-    
 
     # ! Restore original projection and modelview matrices
     glPopMatrix()
