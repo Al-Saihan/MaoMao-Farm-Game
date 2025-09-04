@@ -1,7 +1,9 @@
+from tkinter import font
 from matplotlib import scale
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
+from OpenGL.GLUT import GLUT_BITMAP_HELVETICA_18
 from OpenGL.GLUT import GLUT_STROKE_ROMAN
 import math
 import time
@@ -48,8 +50,26 @@ SELFIE = False
 BUTTONS = {"w": False, "s": False, "a": False, "d": False, "la": False, "ra": False}
 
 # ! Player Control
-P_SPEED = 2
-P_ROTATE_ANGLE = 0.1
+P_SPEED = 1
+P_ROTATE_ANGLE = 0.4
+
+
+# ! GAME LOGIC VARIABLES
+BALANCE = 0.0
+TIME = {"hour": 6, "minute": 0}
+WEATHER = "clear"  # ? Clear, Rainy
+WATER = 10
+MAX_WATER = 10
+INVENTORY = {
+    "wheat": 0,
+    "potato": 0,
+    "carrot": 0,
+    "sunflower": 0,
+    "chicken": 0,
+    "egg": 0,
+    "cow": 0,
+    "milk": 0,
+}
 
 # ! --------------------------------------- CLasses ---------------------------------------
 # ! --------------------------------------- CLasses ---------------------------------------
@@ -254,76 +274,92 @@ class Player:
 
         glPopMatrix()
 
+
 class Pond:
     def __init__(self):
-        #self.position = position
+        # self.position = position
         pass
-        
+
     def draw_pond(self):
         glBegin(GL_QUADS)
         # ! Pond Area Border
         glColor3f(0.65, 0.85, 1.0)
-        glVertex3f(50, 0, 0.1) # ? pond left bottom point  
-        glColor3f(0.55, 0.75, 0.95)  
-        glVertex3f(300, 0, 0.1) # ? pond right bottom point
+        glVertex3f(50, 0, 0.1)  # ? pond left bottom point
+        glColor3f(0.55, 0.75, 0.95)
+        glVertex3f(300, 0, 0.1)  # ? pond right bottom point
         glColor3f(0.45, 0.70, 0.85)
-        glVertex3f(300, -530, 0.1) # ? pond right top point
+        glVertex3f(300, -530, 0.1)  # ? pond right top point
         glColor3f(0.05, 0.15, 0.35)
-        glVertex3f(50 , -530, 0.1) # ? pond left top point
+        glVertex3f(50, -530, 0.1)  # ? pond left top point
         glEnd()
         glBegin(GL_QUADS)
-        # ! Pond Area 
+        # ! Pond Area
         glColor3f(0.95, 0.75, 0.80)
-        glVertex3f(80, -30, 0.5) # ? pond left bottom point 
-        glColor3f(0.98, 0.70, 0.65)   
-        glVertex3f(270, -30, 0.5) # ? pond right bottom point
+        glVertex3f(80, -30, 0.5)  # ? pond left bottom point
+        glColor3f(0.98, 0.70, 0.65)
+        glVertex3f(270, -30, 0.5)  # ? pond right bottom point
         glColor3f(0.80, 0.70, 0.90)
-        glVertex3f(270, -500, 0.5) # ? pond right top point
+        glVertex3f(270, -500, 0.5)  # ? pond right top point
         glColor3f(0.70, 0.50, 0.60)
-        glVertex3f(80, -500, 0.5) # ? pond left top point
-        glEnd() 
-            
-        
-pond = Pond()    
-        
+        glVertex3f(80, -500, 0.5)  # ? pond left top point
+        glEnd()
+
+
+pond = Pond()
+
 
 class Shop:
     def __init__(self, position):
         self.position = position
         pass
+
     def draw_truck_kun(self):
-        
-        #? Truck Body
+
+        # ? Initial Truck Position
         glPushMatrix()
-        glTranslatef(self.position[0] + 100, self.position[1], self.position[2] + 10)
-        glScalef(150, 80, 100)
-        glColor3f(0.3, 0.0, 0.1)  # Dark maroon
-        glutSolidCube(1)
-        glPopMatrix()
-        
-        #? Truck Cabin
+        glTranslate(0, 0, 10)
+
+        # ? Truck Driver Jekhane Thaake [Driver Seat]
         glPushMatrix()
-        glTranslatef(self.position[0], self.position[1], self.position[2] + 25)
+        glTranslatef(self.position[0], self.position[1], self.position[2] + 36)
         glScalef(60, 60, 60)
         glColor3f(0.95, 0.6, 0.8)  # Pookie pink color
         glutSolidCube(1)
         glPopMatrix()
-        
-        #? Truck window left
-        
+
+        # ? Truck Malamal Jekhane Thake [Container]
         glPushMatrix()
-        glTranslatef(self.position[0] - 70, self.position[1] - 75, self.position[2] + 30)
-        glScalef(40, 1, 30)
-        glColor3f(0.8, 0.9, 1.0)  # Blueish white color
+        glTranslatef(self.position[0] + 100, self.position[1], self.position[2] + 35)
+        glScalef(150, 80, 60)
+        glColor3f(0.55, 0.0, 0.55)  # Dark magenta
         glutSolidCube(1)
         glPopMatrix()
-        
-        #? Truck window right
-        #? Truck window front        
 
-                
+        # ? Truck window left
+        # ? Truck window right
+        # ? Truck window front
+
+        # ? Wheels (4 wheels)
+        wheel_positions = [
+            (self.position[0] + 60, self.position[1] + 35, self.position[2] + 10),
+            (self.position[0] + 60, self.position[1] - 35, self.position[2] + 10),
+            (self.position[0] + 180, self.position[1] + 35, self.position[2] + 10),
+            (self.position[0] + 180, self.position[1] - 35, self.position[2] + 10),
+        ]
+        for wx, wy, wz in wheel_positions:
+            glPushMatrix()
+            glTranslatef(wx, wy, wz)
+            glRotatef(90, 0, 0, 1)
+            glRotatef(90, 0, 1, 0)
+            glColor3f(0.1, 0.1, 0.1)  # Black wheels
+            glutSolidTorus(4, 12, 16, 32)
+            glPopMatrix()
+
+        glPopMatrix()
+
+
 truck = Shop([480, 470, 0.1])
-        
+
 
 class House:
     def __init__(self, position):
@@ -346,60 +382,62 @@ class House:
         glTranslatef(*self.position)
         glScalef(300, 150, 100)
         glColor3f(0.80, 0.60, 0.70)
-        #glColor3f(0.8, 0.5, 0.3)
+        # glColor3f(0.8, 0.5, 0.3)
         glutSolidCube(1)
         glPopMatrix()
-
 
         # ? Roof square base
         glPushMatrix()
         glTranslatef(self.position[0], self.position[1], self.position[2] + 60)
         # glRotatef(45, 0, 1, 0)
-        glScalef(350, 150, 20) 
+        glScalef(350, 150, 20)
         glColor3f(0.5, 0.1, 0.1)
         glutSolidCube(1)
 
-        glScalef(0.8, 0.8, 1) 
+        glScalef(0.8, 0.8, 1)
         glTranslatef(0, 0, 1)
         glColor3f(0.45, 0.1, 0.1)
         glutSolidCube(1)
 
-
-        glScalef(0.8, 0.8, 1) 
+        glScalef(0.8, 0.8, 1)
         glTranslatef(0, 0, 1)
         glColor3f(0.35, 0.1, 0.1)
         glutSolidCube(1)
 
-
-        glScalef(0.8, 0.8, 1) 
+        glScalef(0.8, 0.8, 1)
         glTranslatef(0, 0, 1)
         glColor3f(0.30, 0.1, 0.1)
         glutSolidCube(1)
         glPopMatrix()
-        
-        #? house door
+
+        # ? house door
         glPushMatrix()
         glTranslatef(self.position[0], self.position[1] - 75, self.position[2] - 20)
         glScalef(50, 1, 110)
         glColor3f(0.2, 0.1, 0.05)
         glutSolidCube(1)
         glPopMatrix()
-        
-        #? house window left
+
+        # ? house window left
         glPushMatrix()
-        glTranslatef(self.position[0] - 70, self.position[1] - 75, self.position[2] + 30)
+        glTranslatef(
+            self.position[0] - 70, self.position[1] - 75, self.position[2] + 30
+        )
         glScalef(40, 1, 30)
         glColor3f(0.8, 0.9, 1.0)  # Blueish white color
         glutSolidCube(1)
         glPopMatrix()
-        
-        #? house window right 
+
+        # ? house window right
         glPushMatrix()
-        glTranslatef(self.position[0] + 70, self.position[1] - 75, self.position[2] + 30)
+        glTranslatef(
+            self.position[0] + 70, self.position[1] - 75, self.position[2] + 30
+        )
         glScalef(40, 1, 30)
         glColor3f(0.8, 0.9, 1.0)  # Blueish white color
         glutSolidCube(1)
         glPopMatrix()
+
 
 House1 = House([162, 600, 0.1])
 
@@ -528,7 +566,7 @@ class Plot:
 
 print(BorderLine([0, 0, 0], [1, 0, 0]))
 
-MAOMAO = Player([205, 378, 0], 90)
+MAOMAO = Player([570, 617, 0], -90)
 
 a1 = Fence([-740, -590, 10], [740, -590, 10])
 a2 = Fence([-740, 740, 10], [740, 740, 10])
@@ -616,6 +654,125 @@ def drawFences():
 def drawPlots():
     for plot in PLOTS:
         plot.draw()
+
+
+def draw_text(x, y, text, color, font=GLUT_BITMAP_HELVETICA_18):
+    glColor3f(*color)
+
+    glRasterPos2f(x, y)
+    for ch in text:
+        glutBitmapCharacter(font, ord(ch))
+
+
+def user_interface():
+    glDisable(GL_DEPTH_TEST)
+    glColor3f(1, 1, 1)
+    glMatrixMode(GL_PROJECTION)
+    glPushMatrix()
+    glLoadIdentity()
+
+    # ! Set up an orthographic projection that matches window coordinates
+    gluOrtho2D(0, W, 0, H)
+
+    glMatrixMode(GL_MODELVIEW)
+    glPushMatrix()
+    glLoadIdentity()
+
+    # ! UI Elements
+
+    # ? MaoMao Profile Box
+    glBegin(GL_QUADS)
+    glColor3f(0.85, 0.7, 0.85)
+    glVertex2f(15, H - 10)
+    glVertex2f(100, H - 10)
+    glVertex2f(100, H - 100)
+    glVertex2f(15, H - 100)
+    glEnd()
+
+    # ? MaoMao Eyes
+    glPointSize(10)
+    glBegin(GL_POINTS)
+    glColor3f(0, 0, 0)
+    glVertex2f(35, H - 30)
+    glVertex2f(80, H - 30)
+    glEnd()
+
+    # --------------------
+
+    glPointSize(6)
+    glBegin(GL_POINTS)
+    glColor3f(1, 1, 1)
+    glVertex2f(35, H - 30)
+    glVertex2f(80, H - 30)
+    glEnd()
+
+    # ? MaoMao Mouth
+    stepX = 12.5
+    stepY = -8
+
+    glBegin(GL_LINE_STRIP)
+    glColor3f(0, 0, 0)
+    glVertex2f(stepX + 35, H - 40 + stepY)
+    glVertex2f(stepX + 40, H - 60 + stepY)
+    glVertex2f(stepX + 45, H - 40 + stepY)
+    glVertex2f(stepX + 50, H - 60 + stepY)
+    glVertex2f(stepX + 55, H - 40 + stepY)
+    glEnd()
+
+    # ? Profile Border
+    glLineWidth(1)
+    glBegin(GL_LINE_STRIP)
+    glColor3f(0, 0, 0)
+    glVertex2f(15, H - 10)
+    glVertex2f(100, H - 10)
+    glVertex2f(100, H - 100)
+    glVertex2f(15, H - 100)
+    glVertex2f(15, H - 10)
+    glEnd()
+
+    # ? TEXTS - (Top Right)
+    draw_text(105, H - 30, "MaoMao Farming Simulator", (0, 0, 0))
+    draw_text(105, H - 60, f"Balance: {BALANCE:.2f}$", (0, 0, 0))
+    draw_text(105, H - 90, f"Time: {TIME['hour']:02}:{TIME['minute']:02}", (0, 0, 0))
+    draw_text(W - 200, H - 30, f"Weather: {WEATHER}", (0, 0, 0))
+
+    # ? TEXTS Background - (Bottom Left)
+    draw_text(15, H - 500, "Inventory:", (0, 0, 0))
+    glColor3f(0.85, 0.7, 0.85)  # Lighter mauve color
+    glBegin(GL_QUADS)
+    glVertex2f(12, H - 510)
+    glVertex2f(150, H - 510)
+    glVertex2f(150, H - 510 - 30 * len(INVENTORY) + 33)
+    glVertex2f(12, H - 510 - 30 * len(INVENTORY) + 33)
+    glEnd()
+
+    # ? Inventory Border
+    glLineWidth(1)
+    glBegin(GL_LINE_STRIP)
+    glColor3f(0, 0, 0)
+    glVertex2f(12, H - 510)
+    glVertex2f(150, H - 510)
+    glVertex2f(150, H - 510 - 30 * len(INVENTORY) + 33)
+    glVertex2f(12, H - 510 - 30 * len(INVENTORY) + 33)
+    glVertex2f(12, H - 510)
+    glEnd()
+
+    # ? Inventory Items (Write and Underline)
+    for k, v in INVENTORY.items():
+        index = list(INVENTORY.keys()).index(k) + 1
+        draw_text(15, H - 500 - 30 * index, f"{k.capitalize()}: {v}", (0, 0, 0))
+        glColor3f(0.6, 0.4, 0.6)
+        glBegin(GL_LINES)
+        glVertex2f(15, H - 500 - 30 * index - 5)
+        glVertex2f(140, H - 500 - 30 * index - 5)
+        glEnd()
+
+    # ! Restore original projection and modelview matrices
+    glPopMatrix()
+    glMatrixMode(GL_PROJECTION)
+    glPopMatrix()
+    glMatrixMode(GL_MODELVIEW)
+    glEnable(GL_DEPTH_TEST)
 
 
 # ! --------------------------------------- Input Functions ---------------------------------------
@@ -733,10 +890,8 @@ def setupCamera():
 
     cam_z = pz + height + CAMERA_Z_REWORK
 
-
     gluLookAt(cam_x, cam_y, cam_z, px, py, pz, 0, 0, 1)
-    #gluLookAt(px, py - 200, 300, px, py, pz, 0, 0, 1)
-
+    # gluLookAt(px, py - 200, 300, px, py, pz, 0, 0, 1)
 
 
 def showScreen():
@@ -755,11 +910,13 @@ def showScreen():
     House1.draw_house()
     pond.draw_pond()
     truck.draw_truck_kun()
-    
 
     farmLand()
     drawFences()
     drawPlots()
+
+    # ! User Interface
+    user_interface()
 
     # ? Double Buffering - Smoothness
     glutSwapBuffers()
