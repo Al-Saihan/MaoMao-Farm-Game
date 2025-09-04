@@ -498,6 +498,7 @@ def draw_text(x, y, text, color, font=GLUT_BITMAP_HELVETICA_18):
 
 
 def user_interface():
+    glDisable(GL_DEPTH_TEST)
     glColor3f(1, 1, 1)
     glMatrixMode(GL_PROJECTION)
     glPushMatrix()
@@ -511,14 +512,50 @@ def user_interface():
     glLoadIdentity()
 
     # ! Draw UI elements here
-    draw_text(10, H - 30, "MaoMao Farming Simulator", (0, 0, 0))
-    draw_text(10, H - 60, f"Balance : {MAOMAO.balance}", (0, 0, 0))
+    glBegin(GL_QUADS)
+    glColor3f(0.98, 0.85, 0.91)
+    glVertex2f(15, H - 10)
+    glVertex2f(100, H - 10)
+    glVertex2f(100, H - 100)
+    glVertex2f(15, H - 100)
+    glEnd()
+
+    glPointSize(10)
+    glBegin(GL_POINTS)
+    glColor3f(0, 0, 0)
+    glVertex2f(35, H - 30)
+    glVertex2f(80, H - 30)
+    glEnd()
+
+    glPointSize(6)
+    glBegin(GL_POINTS)
+    glColor3f(1, 1, 1)
+    glVertex2f(35, H - 30)
+    glVertex2f(80, H - 30)
+    glEnd()
+
+    stepX = 12.5
+    stepY = -8
+
+    glBegin(GL_LINE_STRIP)
+    glColor3f(0, 0, 0)
+    glVertex2f(stepX + 35, H - 40 + stepY)
+    glVertex2f(stepX + 40, H - 60 + stepY)
+    glVertex2f(stepX + 45, H - 40 + stepY)
+    glVertex2f(stepX + 50, H - 60 + stepY)
+    glVertex2f(stepX + 55, H - 40 + stepY)
+    glEnd()
+
+    draw_text(105, H - 30, "MaoMao Farming Simulator", (0, 0, 0))
+    draw_text(105, H - 60, f"Balance: {BALANCE:.2f}$", (0, 0, 0))
+    draw_text(105, H - 90, f"Time: {TIME['hour']:02}:{TIME['minute']:02}", (0, 0, 0))
 
     # ! Restore original projection and modelview matrices
     glPopMatrix()
     glMatrixMode(GL_PROJECTION)
     glPopMatrix()
     glMatrixMode(GL_MODELVIEW)
+    glEnable(GL_DEPTH_TEST)
 
 
 # ! --------------------------------------- Input Functions ---------------------------------------
