@@ -556,21 +556,22 @@ def user_interface():
     glLineWidth(1)
     glBegin(GL_LINE_STRIP)
     glColor3f(0, 0, 0)
-    glVertex2f(15 - 10, H - 10)
+    glVertex2f(15, H - 10)
     glVertex2f(100, H - 10)
     glVertex2f(100, H - 100)
     glVertex2f(15, H - 100)
     glVertex2f(15, H - 10)
     glEnd()
 
+    # ? TEXTS - (Top Right)
     draw_text(105, H - 30, "MaoMao Farming Simulator", (0, 0, 0))
     draw_text(105, H - 60, f"Balance: {BALANCE:.2f}$", (0, 0, 0))
     draw_text(105, H - 90, f"Time: {TIME['hour']:02}:{TIME['minute']:02}", (0, 0, 0))
-
     draw_text(W - 200, H - 30, f"Weather: {WEATHER}", (0, 0, 0))
 
-    draw_text(15, H - 500, "Inventory:", (0, 0, 0))
 
+    # ? TEXTS Background - (Bottom Left)
+    draw_text(15, H - 500, "Inventory:", (0, 0, 0))
     glColor3f(0.85, 0.7, 0.85)  # Lighter mauve color
     glBegin(GL_QUADS)
     glVertex2f(12, H - 510)
@@ -579,6 +580,8 @@ def user_interface():
     glVertex2f(12, H - 510 - 30 * len(INVENTORY) + 33)
     glEnd()
 
+    # ? Inventory Border
+    glLineWidth(1)
     glBegin(GL_LINE_STRIP)
     glColor3f(0, 0, 0)
     glVertex2f(12, H - 510)
@@ -588,6 +591,7 @@ def user_interface():
     glVertex2f(12, H - 510)
     glEnd()
 
+    # ? Inventory Items (Write and Underline)
     for k, v in INVENTORY.items():
         index = list(INVENTORY.keys()).index(k) + 1
         draw_text(15, H - 500 - 30 * index, f"{k.capitalize()}: {v}", (0, 0, 0))
