@@ -2,6 +2,7 @@ from matplotlib import scale
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
+from OpenGL.GLUT import GLUT_BITMAP_HELVETICA_18
 from OpenGL.GLUT import GLUT_STROKE_ROMAN
 import math
 import time
@@ -15,12 +16,12 @@ import time
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
 # TODO: Make Car Class ---------------------------------------- Mao
 # TODO: Make Pond Class --------------------------------------- Mao
-# TODO: Make Farmable Plot Class [With Crop Specifier] -------- 
+# TODO: Make Farmable Plot Class [With Crop Specifier] --------
 # TODO: Make Cows Barn Class ---------------------------------- Nusayba
 # TODO: Make Cows Class --------------------------------------- Nusayba
 # TODO: Make Hens Barn Class ---------------------------------- Mao
 # TODO: Make Hens Class --------------------------------------- Mao
-# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] --- 
+# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] ---
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
 # TODO: Water Mechanism ---------------------------------------
 # TODO: Crops Grow Logic --------------------------------------
@@ -469,6 +470,55 @@ def drawPlots():
         plot.draw()
 
 
+def draw_text(x, y, text, font=GLUT_BITMAP_HELVETICA_18):
+    glColor3f(1, 1, 1)
+    glMatrixMode(GL_PROJECTION)
+    glPushMatrix()
+    glLoadIdentity()
+
+    # ! Set up an orthographic projection that matches window coordinates
+    gluOrtho2D(0, W, 0, H)
+
+    glMatrixMode(GL_MODELVIEW)
+    glPushMatrix()
+    glLoadIdentity()
+    glColor3f(0, 0, 0)
+    # ! Draw text at (x, y) in screen coordinates
+    glRasterPos2f(x, y)
+    for ch in text:
+        glutBitmapCharacter(font, ord(ch))
+
+    # ! Restore original projection and modelview matrices
+    glPopMatrix()
+    glMatrixMode(GL_PROJECTION)
+    glPopMatrix()
+    glMatrixMode(GL_MODELVIEW)
+
+def user_interface():
+    glColor3f(1, 1, 1)
+    glMatrixMode(GL_PROJECTION)
+    glPushMatrix()
+    glLoadIdentity()
+
+    # ! Set up an orthographic projection that matches window coordinates
+    gluOrtho2D(0, W, 0, H)
+
+    glMatrixMode(GL_MODELVIEW)
+    glPushMatrix()
+    glLoadIdentity()
+    glColor3f(0, 0, 0)
+    # ! Draw text at (x, y) in screen coordinates
+    glRasterPos2f(x, y)
+    for ch in text:
+        glutBitmapCharacter(font, ord(ch))
+
+    # ! Restore original projection and modelview matrices
+    glPopMatrix()
+    glMatrixMode(GL_PROJECTION)
+    glPopMatrix()
+    glMatrixMode(GL_MODELVIEW)
+
+
 # ! --------------------------------------- Input Functions ---------------------------------------
 # ! --------------------------------------- Input Functions ---------------------------------------
 # ! --------------------------------------- Input Functions ---------------------------------------
@@ -601,9 +651,19 @@ def showScreen():
 
     MAOMAO.draw()
 
+    glPushMatrix()
+    glTranslatef(MAOMAO.position[0] + 100, MAOMAO.position[1], 10)
+
+    glutSolidCone(5, 10, 4, 100)
+
+    glPopMatrix()
+
     farmLand()
     drawFences()
     drawPlots()
+
+    # ! User Interface
+    draw_text(10, H - 30, "MaoMao's Farm - The Game")
 
     # ? Double Buffering - Smoothness
     glutSwapBuffers()
