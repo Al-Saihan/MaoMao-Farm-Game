@@ -372,7 +372,7 @@ class Shop:
         
         # ? Truck window right
         glPushMatrix()
-        glTranslatef(self.position[0] + 70, self.position[1] + 75, self.position[2] + 30)
+        glTranslatef(558, 467, 30)
         glScalef(20, 1, 20)
         glColor3f(0.8, 0.9, 1.0)  # Blueish white color
         glutSolidCube(1)
