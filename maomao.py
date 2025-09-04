@@ -11,12 +11,12 @@ import time
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
-# TODO: Make House Class -------------------------------------- Mao
+# TODO: Make House Class -------------------------------------- Mao [Finished]
 # TODO: Make Fence Class -------------------------------------- Saihan [Finished]
 # TODO: Make Collision Class ---------------------------------- Saihan [Finished]
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
 # TODO: Make Car/Shop(buy/sell point) Class ------------------- Mao
-# TODO: Make Pond Class --------------------------------------- Mao
+# TODO: Make Pond Class --------------------------------------- Mao [Finished]
 # TODO: Make Farmable Plot Class [With Crop Specifier] --------
 # TODO: Make Cows Barn Class ---------------------------------- Nusayba
 # TODO: Make Cows Class --------------------------------------- Nusayba
@@ -333,13 +333,33 @@ class Shop:
         glPushMatrix()
         glTranslatef(100, 0, 35)
         glScalef(150, 80, 70)
-        glColor3f(0.55, 0.0, 0.55)  # Dark magenta
+        glColor3f(0.33, 0.0, 0.13)  # Dark maroon
         glutSolidCube(1)
         glPopMatrix()
 
         # ? Truck window left
+        glPushMatrix()
+        glTranslatef(self.position[0] - 70, self.position[1] - 30, self.position[2] + 60)
+        glScalef(20, 1, 20)
+        glColor3f(0.8, 0.9, 1.0)  # Blueish white color
+        glutSolidCube(1)
+        glPopMatrix()
+        
         # ? Truck window right
+        glPushMatrix()
+        glTranslatef(self.position[0] + 70, self.position[1] + 75, self.position[2] + 30)
+        glScalef(20, 1, 20)
+        glColor3f(0.8, 0.9, 1.0)  # Blueish white color
+        glutSolidCube(1)
+        glPopMatrix()
+        
         # ? Truck window front
+        glPushMatrix()
+        glTranslatef(self.position[0] - 70, self.position[1] - 75, self.position[2] + 30)
+        glScalef(1, 40, 30)
+        glColor3f(0.8, 0.9, 1.0)  # Blueish white color
+        glutSolidCube(1)
+        glPopMatrix()
 
         # ? Wheels (4 wheels)
         wheel_positions = [
