@@ -44,7 +44,7 @@ W, H = 1280, 720
 FOV = 70  # TODO:  DEFEAULT IS 70, PLEASE CHANGE IT BACK TO 70 IF CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (God Bless You) [Saihan]
 CAMERA_Z_REWORK = 0
 CAMERA_ROTATE = 0
-SELFIE = False
+TOPVIEW = False
 
 # ! Buttons
 BUTTONS = {"w": False, "s": False, "a": False, "d": False, "la": False, "ra": False}
@@ -317,20 +317,22 @@ class Shop:
 
         # ? Initial Truck Position
         glPushMatrix()
-        glTranslate(0, 0, 10)
+        glTranslate(self.position[0], self.position[1], self.position[2] + 10)
+        glRotate(90, 0, 0, 1)
+        glScale(0.75, 0.75, 0.75)
 
         # ? Truck Driver Jekhane Thaake [Driver Seat]
         glPushMatrix()
-        glTranslatef(self.position[0], self.position[1], self.position[2] + 36)
-        glScalef(60, 60, 60)
+        glTranslatef(0, 0, 36)
+        glScalef(50, 50, 50)
         glColor3f(0.95, 0.6, 0.8)  # Pookie pink color
         glutSolidCube(1)
         glPopMatrix()
 
         # ? Truck Malamal Jekhane Thake [Container]
         glPushMatrix()
-        glTranslatef(self.position[0] + 100, self.position[1], self.position[2] + 35)
-        glScalef(150, 80, 60)
+        glTranslatef(100, 0, 35)
+        glScalef(150, 80, 70)
         glColor3f(0.55, 0.0, 0.55)  # Dark magenta
         glutSolidCube(1)
         glPopMatrix()
@@ -341,14 +343,16 @@ class Shop:
 
         # ? Wheels (4 wheels)
         wheel_positions = [
-            (self.position[0] + 60, self.position[1] + 35, self.position[2] + 10),
-            (self.position[0] + 60, self.position[1] - 35, self.position[2] + 10),
-            (self.position[0] + 180, self.position[1] + 35, self.position[2] + 10),
-            (self.position[0] + 180, self.position[1] - 35, self.position[2] + 10),
+            (75, 35, 10),
+            (75, -35, 10),
+            (180, 35, 10),
+            (180, -35, 10),
         ]
+
+        xFix = -30
         for wx, wy, wz in wheel_positions:
             glPushMatrix()
-            glTranslatef(wx, wy, wz)
+            glTranslatef(wx + xFix, wy, wz)
             glRotatef(90, 0, 0, 1)
             glRotatef(90, 0, 1, 0)
             glColor3f(0.1, 0.1, 0.1)  # Black wheels
@@ -358,7 +362,7 @@ class Shop:
         glPopMatrix()
 
 
-truck = Shop([480, 470, 0.1])
+truck = Shop([550, 470, 0.1])
 
 
 class House:
@@ -374,6 +378,14 @@ class House:
         glVertex3f(425, 380, 0.1)  # ? house area right bottom point
         glVertex3f(425, 725, 0.1)  # ? house area right top point
         glVertex3f(-100, 725, 0.1)  # ? house area left top point
+        glEnd()
+        # ! Garage
+        glBegin(GL_QUADS)
+        glColor3f(0.7, 0.7, 0.7)  # Light gray for the quad
+        glVertex3f(425, 420, 0.11)
+        glVertex3f(700, 420, 0.11)
+        glVertex3f(700, 680, 0.11)
+        glVertex3f(425, 680, 0.11)
         glEnd()
 
     def draw_house(self):
@@ -805,7 +817,7 @@ def keyboardListener(key, x, y):
 
 
 def keyboardUpListener(key, x, y):
-    global BUTTONS, SELFIE
+    global BUTTONS, TOPVIEW
 
     # ! Move forward (W key)
     if key.lower() == b"w":
@@ -825,7 +837,7 @@ def keyboardUpListener(key, x, y):
 
     # ! Selfie Mode (V Key)
     if key == b"v":
-        SELFIE = not SELFIE
+        TOPVIEW = not TOPVIEW
 
 
 def specialKeyListener(key, x, y):
@@ -843,7 +855,7 @@ def specialKeyUpListener(key, x, y):
 
 
 def mouseListener(button, state, x, y):
-    global FOV, CAMERA_Z_REWORK, SELFIE
+    global FOV, CAMERA_Z_REWORK, TOPVIEW
 
     zoomUpStep = 4
     zoomDownStep = 6
@@ -881,17 +893,19 @@ def setupCamera():
     height = 50
     angle_rad = math.radians(MAOMAO.rotation + CAMERA_ROTATE)
 
-    if SELFIE:
-        cam_x = px + distance * math.cos(angle_rad)
-        cam_y = py + distance * math.sin(angle_rad)
-    else:
-        cam_x = px - distance * math.cos(angle_rad)
-        cam_y = py - distance * math.sin(angle_rad)
+    cam_x = px - distance * math.cos(angle_rad)
+    cam_y = py - distance * math.sin(angle_rad)
 
     cam_z = pz + height + CAMERA_Z_REWORK
 
-    gluLookAt(cam_x, cam_y, cam_z, px, py, pz, 0, 0, 1)
-    # gluLookAt(px, py - 200, 300, px, py, pz, 0, 0, 1)
+    if TOPVIEW:
+        angle_rad = math.radians(MAOMAO.rotation + CAMERA_ROTATE)
+        cam_x = px - 200 * math.cos(angle_rad)
+        cam_y = py - 200 * math.sin(angle_rad)
+        cam_z = pz + 300
+        gluLookAt(cam_x, cam_y, cam_z, px, py, pz, 0, 0, 1)
+    else:
+        gluLookAt(cam_x, cam_y, cam_z, px, py, pz, 0, 0, 1)
 
 
 def showScreen():
