@@ -15,12 +15,12 @@ import time
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
 # TODO: Make Car Class ---------------------------------------- Mao
 # TODO: Make Pond Class --------------------------------------- Mao
-# TODO: Make Farmable Plot Class [With Crop Specifier] -------- Saihan [WIP]
+# TODO: Make Farmable Plot Class [With Crop Specifier] -------- 
 # TODO: Make Cows Barn Class ---------------------------------- Nusayba
 # TODO: Make Cows Class --------------------------------------- Nusayba
 # TODO: Make Hens Barn Class ---------------------------------- Mao
 # TODO: Make Hens Class --------------------------------------- Mao
-# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] --- Saihan [WIP]
+# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] --- 
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
 # TODO: Water Mechanism ---------------------------------------
 # TODO: Crops Grow Logic --------------------------------------
