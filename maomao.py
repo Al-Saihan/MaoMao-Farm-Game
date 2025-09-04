@@ -308,28 +308,30 @@ class Pond:
 pond = Pond()
 
 class Tree:
-    def __call__(self):
-        pass
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
     
     def draw_tree(self):
         # ? Tree Trunk
         glPushMatrix()
-        glTranslatef(600, 600, 0)
-        glScalef(20, 20, 80)
+        glTranslatef(self.x, self.y, self.z)
+        glScalef(10, 10, 80)
         glColor3f(0.8, 0.5, 0.6)  # Brownish pink
         glutSolidCylinder(1, 1, 10, 10)
         glPopMatrix()
         
         #? Tree Head
         glPushMatrix()
-        glTranslatef(600, 600, 80)
-        glScalef(30, 80, 80)
+        glTranslatef(self.x, self.y, self.z + 80)
+        glScalef(30, 30, 30)
         glColor3f(1.0, 0.7, 0.8)  # Sakura pink
         glutSolidSphere(1, 30, 30)
         glPopMatrix()
     
 
-tree = Tree()    
+tree = Tree(600, 600, 0)    
     
 class Shop:
     def __init__(self, position):
@@ -497,6 +499,10 @@ class House:
 House1 = House([162, 600, 0.1])
 
 
+class Coop:
+    def name(self, position):
+     pass
+
 class Fence:
     def __init__(self, start, end):
         self.start = start
@@ -643,6 +649,11 @@ p2 = Plot([570, -350, 1])
 # p4 = Plot([200, -200, 1])
 
 PLOTS = [p1, p2]
+
+t1 = Tree(100, 400, 0)
+t2 = Tree(650, 550, 0)
+t3 = Tree(-100, 550, 0)
+TREES = [t1, t2, t3]
 
 # ! --------------------------------------- Draw Functions ---------------------------------------
 # ! --------------------------------------- Draw Functions ---------------------------------------
@@ -967,7 +978,8 @@ def showScreen():
     House1.draw_house()
     pond.draw_pond()
     truck.draw_truck_kun()
-    tree.draw_tree()
+    for tree in TREES:
+        tree.draw_tree()
 
     farmLand()
     drawFences()
