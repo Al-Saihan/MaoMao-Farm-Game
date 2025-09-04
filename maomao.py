@@ -15,12 +15,12 @@ import time
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
 # TODO: Make Car/Shop(buy/sell point) Class ------------------- Mao
 # TODO: Make Pond Class --------------------------------------- Mao
-# TODO: Make Farmable Plot Class [With Crop Specifier] -------- 
+# TODO: Make Farmable Plot Class [With Crop Specifier] --------
 # TODO: Make Cows Barn Class ---------------------------------- Nusayba
 # TODO: Make Cows Class --------------------------------------- Nusayba
 # TODO: Make Hens Barn Class ---------------------------------- Mao
 # TODO: Make Hens Class --------------------------------------- Mao
-# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] --- 
+# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] ---
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
 # TODO: Water Mechanism ---------------------------------------
 # TODO: Crops Grow Logic --------------------------------------
@@ -280,43 +280,66 @@ class Pond:
         
 pond = Pond()    
         
+
 class House:
-    def __init__(self):
-        #self.position = position
+    def __init__(self, position):
+        self.position = position
         pass
-        
+
     def draw_housearea(self):
         glBegin(GL_QUADS)
         # ! House Area
         glColor3f(0.95, 0.85, 0.4)  # ? Yellowish field color
-        glVertex3f(-100, 380, 0.1) # ? house area left bottom point
-        glVertex3f(425, 380, 0.1) # ? house area right bottom point
-        glVertex3f(425, 725, 0.1) # ? house area right top point
-        glVertex3f(-100, 725, 0.1) # ? house area left top point
+        glVertex3f(-100, 380, 0.1)  # ? house area left bottom point
+        glVertex3f(425, 380, 0.1)  # ? house area right bottom point
+        glVertex3f(425, 725, 0.1)  # ? house area right top point
+        glVertex3f(-100, 725, 0.1)  # ? house area left top point
         glEnd()
-        
+
     def draw_house(self):
-        #? House Base
+        # ? House Base
         glPushMatrix()
-        glTranslatef(162, 600, 0.1)
+        glTranslatef(*self.position)
         glScalef(300, 150, 100)
-        glColor3f(0.8, 0.5, 0.3)  
-        glutSolidCube(1)  
-        glPopMatrix()
-        
-        #? Roof square base
-        glPushMatrix()  
-        glTranslatef(162, 600, 100.1)
-        #glRotatef(45, 0, 1, 0)      
-        glScalef(200, 150, 10)
-        glColor3f(0.5, 0.1, 0.1)  
+        glColor3f(0.8, 0.5, 0.3)
         glutSolidCube(1)
         glPopMatrix()
-        
-        
+
+
+        # ? Roof square base
+        glPushMatrix()
+        glTranslatef(self.position[0], self.position[1], self.position[2] + 60)
+        # glRotatef(45, 0, 1, 0)
+        glScalef(350, 150, 20) 
+        glColor3f(0.5, 0.1, 0.1)
+        glutSolidCube(1)
+
+        glScalef(0.8, 0.8, 1) 
+        glTranslatef(0, 0, 1)
+        glColor3f(0.45, 0.1, 0.1)
+        glutSolidCube(1)
+
+
+        glScalef(0.8, 0.8, 1) 
+        glTranslatef(0, 0, 1)
+        glColor3f(0.35, 0.1, 0.1)
+        glutSolidCube(1)
+
+
+        glScalef(0.8, 0.8, 1) 
+        glTranslatef(0, 0, 1)
+        glColor3f(0.30, 0.1, 0.1)
+        glutSolidCube(1)
+
+
+        glPopMatrix()
+
     
-House1 = House()   
-    
+
+
+House1 = House([162, 500, 0.1])
+
+
 class Fence:
     def __init__(self, start, end):
         self.start = start
@@ -441,7 +464,7 @@ class Plot:
 
 print(BorderLine([0, 0, 0], [1, 0, 0]))
 
-MAOMAO = Player([366, -196, 0])
+MAOMAO = Player([205, 378, 0], 90)
 
 a1 = Fence([-740, -590, 10], [740, -590, 10])
 a2 = Fence([-740, 740, 10], [740, 740, 10])
@@ -646,6 +669,7 @@ def setupCamera():
 
     cam_z = pz + height + CAMERA_Z_REWORK
 
+
     #gluLookAt(cam_x, cam_y, cam_z, px, py, pz, 0, 0, 1)
     gluLookAt(px, py - 200, 300, px, py, pz, 0, 0, 1)
 
@@ -667,6 +691,7 @@ def showScreen():
     House1.draw_house()
     pond.draw_pond()
     
+
     farmLand()
     drawFences()
     drawPlots()
