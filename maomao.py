@@ -331,13 +331,33 @@ class Shop:
         glPushMatrix()
         glTranslatef(self.position[0] + 100, self.position[1], self.position[2] + 35)
         glScalef(150, 80, 60)
-        glColor3f(0.55, 0.0, 0.55)  # Dark magenta
+        glColor3f(0.33, 0.0, 0.13)  # Dark maroon
         glutSolidCube(1)
         glPopMatrix()
 
         # ? Truck window left
+        glPushMatrix()
+        glTranslatef(self.position[0] - 70, self.position[1] - 30, self.position[2] + 60)
+        glScalef(20, 1, 20)
+        glColor3f(0.8, 0.9, 1.0)  # Blueish white color
+        glutSolidCube(1)
+        glPopMatrix()
+        
         # ? Truck window right
+        glPushMatrix()
+        glTranslatef(self.position[0] + 70, self.position[1] + 75, self.position[2] + 30)
+        glScalef(20, 1, 20)
+        glColor3f(0.8, 0.9, 1.0)  # Blueish white color
+        glutSolidCube(1)
+        glPopMatrix()
+        
         # ? Truck window front
+        glPushMatrix()
+        glTranslatef(self.position[0] - 70, self.position[1] - 75, self.position[2] + 30)
+        glScalef(1, 40, 30)
+        glColor3f(0.8, 0.9, 1.0)  # Blueish white color
+        glutSolidCube(1)
+        glPopMatrix()
 
         # ? Wheels (4 wheels)
         wheel_positions = [
@@ -890,8 +910,8 @@ def setupCamera():
 
     cam_z = pz + height + CAMERA_Z_REWORK
 
-    gluLookAt(cam_x, cam_y, cam_z, px, py, pz, 0, 0, 1)
-    # gluLookAt(px, py - 200, 300, px, py, pz, 0, 0, 1)
+    #gluLookAt(cam_x, cam_y, cam_z, px, py, pz, 0, 0, 1)
+    gluLookAt(px, py - 200, 300, px, py, pz, 0, 0, 1)
 
 
 def showScreen():
