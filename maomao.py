@@ -262,29 +262,59 @@ class Pond:
     def draw_pond(self):
         glBegin(GL_QUADS)
         # ! Pond Area Border
-        glColor3f(0.05, 0.20, 0.05)
+        glColor3f(0.65, 0.85, 1.0)
         glVertex3f(50, 0, 0.1) # ? pond left bottom point  
-        glColor3f(0.15, 0.35, 0.10)  
+        glColor3f(0.55, 0.75, 0.95)  
         glVertex3f(300, 0, 0.1) # ? pond right bottom point
-        glColor3f(0.30, 0.55, 0.25)
+        glColor3f(0.45, 0.70, 0.85)
         glVertex3f(300, -530, 0.1) # ? pond right top point
-        glColor3f(0.55, 0.75, 0.40)
+        glColor3f(0.05, 0.15, 0.35)
         glVertex3f(50 , -530, 0.1) # ? pond left top point
         glEnd()
         glBegin(GL_QUADS)
         # ! Pond Area 
-        glColor3f(0.0, 0.2, 0.4)
+        glColor3f(0.95, 0.75, 0.80)
         glVertex3f(80, -30, 0.5) # ? pond left bottom point 
-        glColor3f(0.1, 0.4, 0.2)   
+        glColor3f(0.98, 0.70, 0.65)   
         glVertex3f(270, -30, 0.5) # ? pond right bottom point
-        glColor3f(0.2, 0.6, 0.5)
+        glColor3f(0.80, 0.70, 0.90)
         glVertex3f(270, -500, 0.5) # ? pond right top point
-        glColor3f(0.3, 0.25, 0.15)
+        glColor3f(0.70, 0.50, 0.60)
         glVertex3f(80, -500, 0.5) # ? pond left top point
         glEnd() 
             
         
 pond = Pond()    
+        
+
+class Shop:
+    def __init__(self, position):
+        self.position = position
+        pass
+    def draw_truck_kun(self):
+        
+        #? Truck Body
+        glPushMatrix()
+        glTranslatef(self.position[0] + 100, self.position[1], self.position[2] + 10)
+        glScalef(150, 80, 100)
+        glColor3f(0.55, 0.0, 0.55)  # Dark magenta
+        glutSolidCube(1)
+        glPopMatrix()
+        
+        #? Truck Cabin
+        glPushMatrix()
+        glTranslatef(self.position[0], self.position[1], self.position[2] + 25)
+        glScalef(60, 60, 60)
+        glColor3f(0.95, 0.6, 0.8)  # Pookie pink color
+        glutSolidCube(1)
+        glPopMatrix()
+        
+        #? Truck window left
+        #? Truck window right
+        #? Truck window front        
+
+                
+truck = Shop([480, 470, 0.1])
         
 
 class House:
@@ -307,7 +337,8 @@ class House:
         glPushMatrix()
         glTranslatef(*self.position)
         glScalef(300, 150, 100)
-        glColor3f(0.8, 0.5, 0.3)
+        glColor3f(0.80, 0.60, 0.70)
+        #glColor3f(0.8, 0.5, 0.3)
         glutSolidCube(1)
         glPopMatrix()
 
@@ -695,8 +726,8 @@ def setupCamera():
     cam_z = pz + height + CAMERA_Z_REWORK
 
 
-    #gluLookAt(cam_x, cam_y, cam_z, px, py, pz, 0, 0, 1)
-    gluLookAt(px, py - 200, 300, px, py, pz, 0, 0, 1)
+    gluLookAt(cam_x, cam_y, cam_z, px, py, pz, 0, 0, 1)
+    #gluLookAt(px, py - 200, 300, px, py, pz, 0, 0, 1)
 
 
 
@@ -715,6 +746,7 @@ def showScreen():
     House1.draw_housearea()
     House1.draw_house()
     pond.draw_pond()
+    truck.draw_truck_kun()
     
 
     farmLand()
