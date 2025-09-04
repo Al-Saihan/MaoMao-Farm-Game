@@ -1,7 +1,9 @@
+from tkinter import font
 from matplotlib import scale
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
+from OpenGL.GLUT import GLUT_BITMAP_HELVETICA_18
 from OpenGL.GLUT import GLUT_STROKE_ROMAN
 import math
 import time
@@ -50,6 +52,24 @@ BUTTONS = {"w": False, "s": False, "a": False, "d": False, "la": False, "ra": Fa
 # ! Player Control
 P_SPEED = 2
 P_ROTATE_ANGLE = 0.1
+
+
+# ! GAME LOGIC VARIABLES
+BALANCE = 0.0
+TIME = {"hour": 6, "minute": 0}
+WEATHER = "clear"  # ? Clear, Rainy
+WATER = 10
+MAX_WATER = 10
+INVENTORY = {
+    "wheat": 0,
+    "potato": 0,
+    "carrot": 0,
+    "sunflower": 0,
+    "chicken": 0,
+    "egg": 0,
+    "cow": 0,
+    "milk": 0,
+}
 
 # ! --------------------------------------- CLasses ---------------------------------------
 # ! --------------------------------------- CLasses ---------------------------------------
@@ -610,6 +630,126 @@ def drawPlots():
         plot.draw()
 
 
+def draw_text(x, y, text, color, font=GLUT_BITMAP_HELVETICA_18):
+    glColor3f(*color)
+
+    glRasterPos2f(x, y)
+    for ch in text:
+        glutBitmapCharacter(font, ord(ch))
+
+
+def user_interface():
+    glDisable(GL_DEPTH_TEST)
+    glColor3f(1, 1, 1)
+    glMatrixMode(GL_PROJECTION)
+    glPushMatrix()
+    glLoadIdentity()
+
+    # ! Set up an orthographic projection that matches window coordinates
+    gluOrtho2D(0, W, 0, H)
+
+    glMatrixMode(GL_MODELVIEW)
+    glPushMatrix()
+    glLoadIdentity()
+
+    # ! UI Elements
+
+    # ? MaoMao Profile Box
+    glBegin(GL_QUADS)
+    glColor3f(0.85, 0.7, 0.85)
+    glVertex2f(15, H - 10)
+    glVertex2f(100, H - 10)
+    glVertex2f(100, H - 100)
+    glVertex2f(15, H - 100)
+    glEnd()
+
+    # ? MaoMao Eyes
+    glPointSize(10)
+    glBegin(GL_POINTS)
+    glColor3f(0, 0, 0)
+    glVertex2f(35, H - 30)
+    glVertex2f(80, H - 30)
+    glEnd()
+
+    # --------------------
+
+    glPointSize(6)
+    glBegin(GL_POINTS)
+    glColor3f(1, 1, 1)
+    glVertex2f(35, H - 30)
+    glVertex2f(80, H - 30)
+    glEnd()
+
+    # ? MaoMao Mouth
+    stepX = 12.5
+    stepY = -8
+
+    glBegin(GL_LINE_STRIP)
+    glColor3f(0, 0, 0)
+    glVertex2f(stepX + 35, H - 40 + stepY)
+    glVertex2f(stepX + 40, H - 60 + stepY)
+    glVertex2f(stepX + 45, H - 40 + stepY)
+    glVertex2f(stepX + 50, H - 60 + stepY)
+    glVertex2f(stepX + 55, H - 40 + stepY)
+    glEnd()
+
+    # ? Profile Border
+    glLineWidth(1)
+    glBegin(GL_LINE_STRIP)
+    glColor3f(0, 0, 0)
+    glVertex2f(15, H - 10)
+    glVertex2f(100, H - 10)
+    glVertex2f(100, H - 100)
+    glVertex2f(15, H - 100)
+    glVertex2f(15, H - 10)
+    glEnd()
+
+    # ? TEXTS - (Top Right)
+    draw_text(105, H - 30, "MaoMao Farming Simulator", (0, 0, 0))
+    draw_text(105, H - 60, f"Balance: {BALANCE:.2f}$", (0, 0, 0))
+    draw_text(105, H - 90, f"Time: {TIME['hour']:02}:{TIME['minute']:02}", (0, 0, 0))
+    draw_text(W - 200, H - 30, f"Weather: {WEATHER}", (0, 0, 0))
+
+
+    # ? TEXTS Background - (Bottom Left)
+    draw_text(15, H - 500, "Inventory:", (0, 0, 0))
+    glColor3f(0.85, 0.7, 0.85)  # Lighter mauve color
+    glBegin(GL_QUADS)
+    glVertex2f(12, H - 510)
+    glVertex2f(150, H - 510)
+    glVertex2f(150, H - 510 - 30 * len(INVENTORY) + 33)
+    glVertex2f(12, H - 510 - 30 * len(INVENTORY) + 33)
+    glEnd()
+
+    # ? Inventory Border
+    glLineWidth(1)
+    glBegin(GL_LINE_STRIP)
+    glColor3f(0, 0, 0)
+    glVertex2f(12, H - 510)
+    glVertex2f(150, H - 510)
+    glVertex2f(150, H - 510 - 30 * len(INVENTORY) + 33)
+    glVertex2f(12, H - 510 - 30 * len(INVENTORY) + 33)
+    glVertex2f(12, H - 510)
+    glEnd()
+
+    # ? Inventory Items (Write and Underline)
+    for k, v in INVENTORY.items():
+        index = list(INVENTORY.keys()).index(k) + 1
+        draw_text(15, H - 500 - 30 * index, f"{k.capitalize()}: {v}", (0, 0, 0))
+        glColor3f(0.6, 0.4, 0.6)
+        glBegin(GL_LINES)
+        glVertex2f(15, H - 500 - 30 * index - 5)
+        glVertex2f(140, H - 500 - 30 * index - 5)
+        glEnd()
+
+    # ! Restore original projection and modelview matrices
+    glPopMatrix()
+    glMatrixMode(GL_PROJECTION)
+    glPopMatrix()
+    glMatrixMode(GL_MODELVIEW)
+    glEnable(GL_DEPTH_TEST)
+
+
 # ! --------------------------------------- Input Functions ---------------------------------------
 # ! --------------------------------------- Input Functions ---------------------------------------
 # ! --------------------------------------- Input Functions ---------------------------------------
@@ -752,6 +892,9 @@ def showScreen():
     farmLand()
     drawFences()
     drawPlots()
+
+    # ! User Interface
+    user_interface()
 
     # ? Double Buffering - Smoothness
     glutSwapBuffers()
