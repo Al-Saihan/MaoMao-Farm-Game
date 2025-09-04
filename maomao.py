@@ -1,3 +1,4 @@
+from tkinter import font
 from matplotlib import scale
 from OpenGL.GL import *
 from OpenGL.GLUT import *
@@ -51,6 +52,24 @@ BUTTONS = {"w": False, "s": False, "a": False, "d": False, "la": False, "ra": Fa
 # ! Player Control
 P_SPEED = 0.5
 P_ROTATE_ANGLE = 0.1
+
+
+# ! GAME LOGIC VARIABLES
+BALANCE = 0.0
+TIME = {"hour": 6, "minute": 0}
+WEATHER = "clear"  # ? Clear, Rainy
+WATER = 10
+MAX_WATER = 10
+INVENTORY = {
+    "wheat": 0,
+    "potato": 0,
+    "carrot": 0,
+    "sunflower": 0,
+    "chicken": 0,
+    "egg": 0,
+    "cow": 0,
+    "milk": 0,
+}
 
 # ! --------------------------------------- CLasses ---------------------------------------
 # ! --------------------------------------- CLasses ---------------------------------------
@@ -470,29 +489,13 @@ def drawPlots():
         plot.draw()
 
 
-def draw_text(x, y, text, font=GLUT_BITMAP_HELVETICA_18):
-    glColor3f(1, 1, 1)
-    glMatrixMode(GL_PROJECTION)
-    glPushMatrix()
-    glLoadIdentity()
+def draw_text(x, y, text, color, font=GLUT_BITMAP_HELVETICA_18):
+    glColor3f(*color)
 
-    # ! Set up an orthographic projection that matches window coordinates
-    gluOrtho2D(0, W, 0, H)
-
-    glMatrixMode(GL_MODELVIEW)
-    glPushMatrix()
-    glLoadIdentity()
-    glColor3f(0, 0, 0)
-    # ! Draw text at (x, y) in screen coordinates
     glRasterPos2f(x, y)
     for ch in text:
         glutBitmapCharacter(font, ord(ch))
 
-    # ! Restore original projection and modelview matrices
-    glPopMatrix()
-    glMatrixMode(GL_PROJECTION)
-    glPopMatrix()
-    glMatrixMode(GL_MODELVIEW)
 
 def user_interface():
     glColor3f(1, 1, 1)
@@ -506,11 +509,10 @@ def user_interface():
     glMatrixMode(GL_MODELVIEW)
     glPushMatrix()
     glLoadIdentity()
-    glColor3f(0, 0, 0)
-    # ! Draw text at (x, y) in screen coordinates
-    glRasterPos2f(x, y)
-    for ch in text:
-        glutBitmapCharacter(font, ord(ch))
+
+    # ! Draw UI elements here
+    draw_text(10, H - 30, "MaoMao Farming Simulator", (0, 0, 0))
+    draw_text(10, H - 60, f"Balance : {MAOMAO.balance}", (0, 0, 0))
 
     # ! Restore original projection and modelview matrices
     glPopMatrix()
@@ -651,19 +653,12 @@ def showScreen():
 
     MAOMAO.draw()
 
-    glPushMatrix()
-    glTranslatef(MAOMAO.position[0] + 100, MAOMAO.position[1], 10)
-
-    glutSolidCone(5, 10, 4, 100)
-
-    glPopMatrix()
-
     farmLand()
     drawFences()
     drawPlots()
 
     # ! User Interface
-    draw_text(10, H - 30, "MaoMao's Farm - The Game")
+    user_interface()
 
     # ? Double Buffering - Smoothness
     glutSwapBuffers()
