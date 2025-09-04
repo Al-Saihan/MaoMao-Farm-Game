@@ -335,10 +335,12 @@ class BorderLine:
 class Plot:
     def __init__(self, position):
         self.position = position
+        self.slots = [[0,0,0], [0,0,0], [0,0,0]]
 
     def draw(self):
         scaleX = 250
         scaleY = 250
+
         glColor3f(244/255, 223/255, 144/255)  # ? Lighter brown color for soil
         glPushMatrix()
         glTranslatef(*self.position)
@@ -349,23 +351,22 @@ class Plot:
         glColor3f(180/255, 150/255, 80/255)
         glPushMatrix()
         glTranslatef(*self.position)
-        glTranslatef(0, 50, 0)
+        glTranslatef(0, scaleY / 6, 0)
         glScale(scaleX, 1, 3)
         glutSolidCube(1)
-        glTranslatef(0, -100, 0)
+        glTranslatef(0, -scaleY / 3, 0)
         glutSolidCube(1)
         glPopMatrix()
 
         glPushMatrix()
         glTranslatef(*self.position)
-        glTranslatef(50, 0, 0)
+        glTranslatef(scaleX / 6, 0, 0)
         glScale(1, scaleY, 3)
         glutSolidCube(1)
-        glTranslatef(-100, 0, 0)
+        glTranslatef(-scaleX / 3, 0, 0)
         glutSolidCube(1)
         glPopMatrix()
-
-
+   
 
 print(BorderLine([0, 0, 0], [1, 0, 0]))
 
