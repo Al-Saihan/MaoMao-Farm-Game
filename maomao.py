@@ -307,7 +307,30 @@ class Pond:
 
 pond = Pond()
 
+class Tree:
+    def __call__(self):
+        pass
+    
+    def draw_tree(self):
+        # ? Tree Trunk
+        glPushMatrix()
+        glTranslatef(600, 600, 0)
+        glScalef(20, 20, 80)
+        glColor3f(0.8, 0.5, 0.6)  # Brownish pink
+        glutSolidCylinder(1, 1, 10, 10)
+        glPopMatrix()
+        
+        #? Tree Head
+        glPushMatrix()
+        glTranslatef(600, 600, 80)
+        glScalef(30, 80, 80)
+        glColor3f(1.0, 0.7, 0.8)  # Sakura pink
+        glutSolidSphere(1, 30, 30)
+        glPopMatrix()
+    
 
+tree = Tree()    
+    
 class Shop:
     def __init__(self, position):
         self.position = position
@@ -930,6 +953,7 @@ def showScreen():
     House1.draw_house()
     pond.draw_pond()
     truck.draw_truck_kun()
+    tree.draw_tree()
 
     farmLand()
     drawFences()
