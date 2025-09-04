@@ -48,7 +48,7 @@ SELFIE = False
 BUTTONS = {"w": False, "s": False, "a": False, "d": False, "la": False, "ra": False}
 
 # ! Player Control
-P_SPEED = 0.5
+P_SPEED = 2
 P_ROTATE_ANGLE = 0.1
 
 # ! --------------------------------------- CLasses ---------------------------------------
@@ -254,6 +254,32 @@ class Player:
 
         glPopMatrix()
 
+class Pond:
+    def __init__(self):
+        #self.position = position
+        pass
+        
+    def draw_pond(self):
+        glBegin(GL_QUADS)
+        # ! Pond Area Border
+        glColor3f(0.4, 0.7, 0.9)  # ? Blueish pond color
+        glVertex3f(50, 0, 0.1) # ? pond left bottom point    
+        glVertex3f(300, 0, 0.1) # ? pond right bottom point
+        glVertex3f(300, -530, 0.1) # ? pond right top point
+        glVertex3f(50 , -530, 0.1) # ? pond left top point
+        glEnd()
+        glBegin(GL_QUADS)
+        # ! Pond Area 
+        glColor3f(0.0, 0.2, 0.6)  # ? Deep blue pond color
+        glVertex3f(80, -30, 0.5) # ? pond left bottom point    
+        glVertex3f(270, -30, 0.5) # ? pond right bottom point
+        glVertex3f(270, -500, 0.5) # ? pond right top point
+        glVertex3f(80, -500, 0.5) # ? pond left top point
+        glEnd() 
+            
+        
+pond = Pond()    
+        
 class House:
     def __init__(self):
         #self.position = position
@@ -287,14 +313,7 @@ class House:
         glutSolidCube(1)
         glPopMatrix()
         
-        #? Roof triangular prism
-        glPushMatrix()
-        glTranslatef(162, 600, 120.1)
-        glRotatef(45, 0, 1, 0)  
-        glScalef(220, 150, 50)
-        glColor3f(0.7, 0.1, 0.1)    
-        glutSolidCone(1)
-        glPopMatrix()
+        
     
 House1 = House()   
     
@@ -627,9 +646,8 @@ def setupCamera():
 
     cam_z = pz + height + CAMERA_Z_REWORK
 
-mao-try1
     #gluLookAt(cam_x, cam_y, cam_z, px, py, pz, 0, 0, 1)
-    gluLookAt(100, 100, 500, px, py, pz, 0, 1, 0)
+    gluLookAt(px, py - 200, 300, px, py, pz, 0, 0, 1)
 
 
 
@@ -647,6 +665,7 @@ def showScreen():
     MAOMAO.draw()
     House1.draw_housearea()
     House1.draw_house()
+    pond.draw_pond()
     
     farmLand()
     drawFences()
