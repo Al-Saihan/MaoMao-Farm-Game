@@ -1594,11 +1594,7 @@ def keyboardUpListener(key, x, y):
     if key.lower() == b"v":
         TOPVIEW = not TOPVIEW
         
-    if key.lower() == b"q":
-        if Plot.get_slot_at(MAOMAO.position[0], MAOMAO.position[1]):
-            
-            if INVENTORY['wheat slot'] > 0:
-                INVENTORY['wheat slot'] -= 1
+    
               
 
 
@@ -1692,6 +1688,11 @@ def updateTime():
                 TIME["hour"] = 0
                 global DAY
                 DAY += 1
+                if INVENTORY["chickens"] > 0:
+                    INVENTORY["egg"] += INVENTORY["chickens"]
+                if INVENTORY["cows"] > 0:
+                    INVENTORY["milk"] += INVENTORY["cows"]
+                        
 
             if 18 > TIME["hour"] > 6:
                 NIGHT = False
