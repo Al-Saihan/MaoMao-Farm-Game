@@ -1583,9 +1583,11 @@ def keyboardUpListener(key, x, y):
     if key.lower() == b"v":
         TOPVIEW = not TOPVIEW
         
-    if key.lower() == b"q" and get_slot:
-        if INVENTORY['wheat slot'] > 0:
-            INVENTORY['wheat slot'] -= 1
+    if key.lower() == b"q":
+        if Plot.get_slot_at(MAOMAO.position[0], MAOMAO.position[1]):
+            
+            if INVENTORY['wheat slot'] > 0:
+                INVENTORY['wheat slot'] -= 1
               
 
 
