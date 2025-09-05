@@ -15,24 +15,24 @@ import time
 # TODO: Make Fence Class -------------------------------------- Saihan [Finished]
 # TODO: Make Collision Class ---------------------------------- Saihan [Finished]
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
-# TODO: Make Car/Shop(buy/sell point) Class ------------------- Mao
+# TODO: Make Car/Shop(buy/sell point) Class ------------------- Mao [Finished]
 # TODO: Make Pond Class --------------------------------------- Mao [Finished]
 # TODO: Make Farmable Plot Class [With Crop Specifier] --------
 # TODO: Make Cows Barn Class ---------------------------------- Nusayba
 # TODO: Make Cows Class --------------------------------------- Nusayba
-# TODO: Make Hens Barn Class ---------------------------------- Mao
-# TODO: Make Hens Class --------------------------------------- Mao
+# TODO: Make Hens Barn Class ---------------------------------- Mao [Finished]
+# TODO: Make Hens Class --------------------------------------- Mao [Finished]
 # TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] ---
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
 # TODO: Water Mechanism ---------------------------------------
 # TODO: Crops Grow Logic --------------------------------------
 # TODO: Harvest Logic -----------------------------------------
 # TODO: Inventory System --------------------------------------
-# TODO: Buy/ Sell Logics --------------------------------------
+# TODO: Buy/ Sell Logics -------------------------------------- Saihan [WIP]
 # TODO: Cheat Modes -------------------------------------------
 # TODO: Rain Logic --------------------------------------------
 # TODO: Day-Night Cycle ---------------------------------------
-# TODO: Design User Interface --------------------------------- Sauihan [WIP]
+# TODO: Design User Interface --------------------------------- Sauihan [Finished]
 
 
 # ! --------------------------------------- Global Variables ---------------------------------------
