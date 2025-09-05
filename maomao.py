@@ -8,39 +8,29 @@ import time
 import os
 from random import randint
 
-# ! IGNORE THIS, IT'S JUST FOR DEBUGGING PURPOSES
-# Open config.txt if it exists, otherwise create it
-config_path = "config.txt"
-if not os.path.exists(config_path):
-    with open(config_path, "w") as f:
-        f.write("# Configuration file\n")
-else:
-    with open(config_path, "r") as f:
-        pass  # File exists, just open it
-
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
-# TODO: Make House Class -------------------------------------- Mao [Finished]
+# TODO: Make House Class -------------------------------------- Zarin [Finished]
 # TODO: Make Fence Class -------------------------------------- Saihan [Finished]
-# TODO: Make Collision Class ---------------------------------- Saihan [Finished]
+# TODO: Make Collision Class ---------------------------------- Saihan [Finished]``
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
-# TODO: Make Car/Shop(buy/sell point) Class ------------------- Mao [Finished]
-# TODO: Make Pond Class --------------------------------------- Mao [Finished]
+# TODO: Make Car/Shop(buy/sell point) Class ------------------- Zarin [Finished]
+# TODO: Make Pond Class --------------------------------------- Zarin [Finished]
 # TODO: Make Farmable Plot Class [With Crop Specifier] -------- Nusayba [Finished]
 # TODO: Make Cows Barn Class ---------------------------------- Nusayba [Finished]
 # TODO: Make Cows Class --------------------------------------- Nusayba [Finished]
-# TODO: Make Hens Barn Class ---------------------------------- Mao [Finished]
-# TODO: Make Hens Class --------------------------------------- Mao [Finished]
+# TODO: Make Hens Barn Class ---------------------------------- Zarin [Finished]
+# TODO: Make Hens Class --------------------------------------- Zarin [Finished]
 # TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] --- Nusayba [Finished]
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
 # TODO: Crop Planting Logic ----------------------------------- Nusayba [Finished]
-# TODO: Water Mechanism --------------------------------------- Mao [Finished]
+# TODO: Water Mechanism --------------------------------------- Zarin [Finished]
 # TODO: Crops Grow Logic -------------------------------------- Nusayba [Finished]
 # TODO: Harvest Logic ----------------------------------------- Nusayba [Finished]
 # TODO: Inventory System -------------------------------------- Saihan [Finished]
 # TODO: Buy/ Sell Logics -------------------------------------- Saihan [Finished]
-# TODO: Cheat Modes ------------------------------------------- WIP ------------------------------------
+# TODO: Cheat Modes ------------------------------------------- Zarin [Finished]
 # TODO: Day-Night Cycle --------------------------------------- Amra Shobai Raja [Finished]
 # TODO: Design User Interface --------------------------------- Saihan [Finished]
 
@@ -78,14 +68,14 @@ POND_FLAG = False
 WATER = 10
 MAX_WATER = 10
 INVENTORY = {
-    "wheat": 0,
-    "wheat seed": 0,
-    "carrot": 0,
-    "carrot seed": 0,
-    "chickens": 1,
-    "egg": 0,
-    "cows": 1,
-    "milk": 0,
+    "wheat": 10,
+    "wheat seed": 10,
+    "carrot": 10,
+    "carrot seed": 10,
+    "chickens": 5,
+    "egg": 10,
+    "cows": 3,
+    "milk": 10,
 }
 INSTRUCTIONS = False
 
@@ -1067,12 +1057,12 @@ class Barn:
         glPushMatrix()
         glTranslatef(0, 0, 25)
         glScalef(180, 120, 50)
-        glColor3f(0.8, 0.5, 0.6)  # Pinkish brown
+        glColor3f(0.8, 0.1, 0.1)
         glutSolidCube(1)
         glPopMatrix()
 
         # roof
-        glColor3f(0.33, 0.0, 0.13)  # Dark maroon pink
+        glColor3f(0.5, 0.25, 0.1)  # brown
         glBegin(GL_TRIANGLES)
         # front
         glVertex3f(-90, -60, 50)
@@ -1099,15 +1089,15 @@ class Barn:
         glPushMatrix()
         glTranslatef(-40, -60.1, 15)
         glScalef(20, 1, 30)
-        glColor3f(0.5, 0.0, 0.13)
+        glColor3f(0.3, 0.15, 0.05)  # dark brown
         glutSolidCube(1)
         glPopMatrix()
 
-        # big door
+        # big foor
         glPushMatrix()
         glTranslatef(30, -60.2, 20)
         glScalef(60, 1, 40)
-        glColor3f(0.5, 0.0, 0.13)
+        glColor3f(0.35, 0.2, 0.1)
         glutSolidCube(1)
         glPopMatrix()
 
@@ -1285,7 +1275,34 @@ b25 = BorderLine([12, 524, 0], [12, 678, 0])
 # shop
 b26 = BorderLine([550, 468, 0], [550, 610, 0], strength=40)
 
-BOUND_BOXES = [b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21, b22, b23, b24, b25, b26]
+BOUND_BOXES = [
+    b1,
+    b2,
+    b3,
+    b4,
+    b5,
+    b6,
+    b7,
+    b8,
+    b9,
+    b10,
+    b11,
+    b12,
+    b13,
+    b14,
+    b15,
+    b16,
+    b17,
+    b18,
+    b19,
+    b20,
+    b21,
+    b22,
+    b23,
+    b24,
+    b25,
+    b26,
+]
 
 PLOT1 = Plot([570, -20, 1])
 PLOT2 = Plot([570, -350, 1])
@@ -1537,9 +1554,9 @@ def user_interface():
     glColor3f(0.85, 0.7, 0.85)  # Lighter mauve color
     glBegin(GL_QUADS)
     glVertex2f(12, H - 480)
-    glVertex2f(210, H - 480)
-    glVertex2f(210, H - 510 - 30 * len(INVENTORY) + 30)
-    glVertex2f(12, H - 510 - 30 * len(INVENTORY) + 30)
+    glVertex2f(150, H - 480)
+    glVertex2f(150, H - 510 - 30 * len(INVENTORY) + 33)
+    glVertex2f(12, H - 510 - 30 * len(INVENTORY) + 33)
     glEnd()
 
     # ? Inventory Border
@@ -1547,9 +1564,9 @@ def user_interface():
     glBegin(GL_LINE_STRIP)
     glColor3f(0, 0, 0)
     glVertex2f(12, H - 480)
-    glVertex2f(210, H - 480)
-    glVertex2f(210, H - 510 - 30 * len(INVENTORY) + 30)
-    glVertex2f(12, H - 510 - 30 * len(INVENTORY) + 30)
+    glVertex2f(150, H - 480)
+    glVertex2f(150, H - 510 - 30 * len(INVENTORY) + 33)
+    glVertex2f(12, H - 510 - 30 * len(INVENTORY) + 33)
     glVertex2f(12, H - 480)
     glEnd()
 
@@ -1612,7 +1629,7 @@ def user_interface():
         glColor3f(0.6, 0.4, 0.6)
         glBegin(GL_LINES)
         glVertex2f(15, H - 470 - 30 * index - 5)
-        glVertex2f(210, H - 470 - 30 * index - 5)
+        glVertex2f(140, H - 470 - 30 * index - 5)
         glEnd()
 
     text = ["W", " A", " T", " E", " R"]
@@ -1622,7 +1639,7 @@ def user_interface():
     # ? Water Bucket (Bottom Right)
     if WATER:
         glBegin(GL_QUADS)
-        glColor3f(0.95, 0.7, 0.85)  # Pinkish mauve color
+        glColor3f(0.2, 0.5, 1)  # Lighter mauve color
         glVertex2f(W - 30, 10)
         glVertex2f(W - 10, 10)
         glVertex2f(W - 10, 20 * WATER)
@@ -1644,7 +1661,6 @@ def user_interface():
             "F: Open/Close Shop (Go Near Your Truck!)",
             "I: Show/Hide Instructions",
             "ESC: Exit Game",
-
             "Plant and then water your crops 3 times to harvest them!",
             "Your animals might randomly lay eggs,",
             "or produce milk each day :)",
@@ -1655,9 +1671,9 @@ def user_interface():
         # ? Draw instructions background
         glColor3f(0.95, 0.9, 0.98)
         glBegin(GL_QUADS)
-        glVertex2f(W - 510, H - 10)      # Move further left, make wider
+        glVertex2f(W - 510, H - 10)  # Move further left, make wider
         glVertex2f(W - 10, H - 10)
-        glVertex2f(W - 10, H - 410)      # Make taller
+        glVertex2f(W - 10, H - 410)  # Make taller
         glVertex2f(W - 510, H - 410)
         glEnd()
 
@@ -1672,7 +1688,9 @@ def user_interface():
         glEnd()
 
         for idx, line in enumerate(instructions):
-            draw_text(W - 490, H - 50 - idx * 32, line, (0.2, 0.1, 0.2))  # Move text further left, more space between lines
+            draw_text(
+                W - 490, H - 50 - idx * 32, line, (0.2, 0.1, 0.2)
+            )  # Move text further left, more space between lines
 
     # ! Restore original projection and modelview matrices
     glPopMatrix()
@@ -1710,12 +1728,12 @@ def keyboardListener(key, x, y):
     if key.lower() == b"r":
         global BUCKET_FLAG
         BUCKET_FLAG = not BUCKET_FLAG
-    
+
     # ! Cheat Mode (C Key)
     if key.lower() == b"c":
         global CHEAT
         CHEAT = not CHEAT
-        cheat_mode(CHEAT)    
+        cheat_mode(CHEAT)
 
     # ! Shop Mode (F key)
     car_pos = truck.position
@@ -1835,13 +1853,6 @@ def mouseListener(button, state, x, y):
     zoomDownStep = 6
 
     if button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
-        with open(config_path, "a") as f:
-            print("Writing to config.txt")
-            f.write(
-                f"a = Fence({MAOMAO.position[0]}, {MAOMAO.position[1]}, {MAOMAO.position[2]})\n"
-            )
-        global WATER
-
         px, py, pz = MAOMAO.position
 
         for plot in PLOTS:
@@ -1975,8 +1986,10 @@ def mouseListener(button, state, x, y):
         FOV = min(FOV + zoomDownStep, 80)
         CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, (2 * zoomDownStep))
 
+
 # Put this at the top of your file
 CHEAT_BACKUP = {}
+
 
 def cheat_mode(CHEAT):
     global BALANCE, INVENTORY, WATER, MAX_WATER, CHEAT_BACKUP
@@ -2040,8 +2053,7 @@ def updateTime():
                     INVENTORY["egg"] += randint(0, INVENTORY["chickens"])
                 if INVENTORY["cows"] > 0:
                     INVENTORY["milk"] += randint(0, INVENTORY["cows"])
-                BALANCE += 50  # Daily allowance  
-                        
+                BALANCE += 50  # Daily allowance
 
             if 18 > TIME["hour"] > 6:
                 NIGHT = False
@@ -2094,7 +2106,7 @@ def showScreen():
     if NIGHT:
         glClearColor(0.25, 0.15, 0.25, 1)  # Dark mauve color for night
     else:
-        glClearColor(0.90, 0.80, 0.85, 1)  # Pinkish lavender day-like color
+        glClearColor(0.85, 0.85, 0.95, 1)  # Lighter pink color
 
     setupCamera()
     MAOMAO.draw()
@@ -2130,6 +2142,7 @@ def showScreen():
 
     # ? Double Buffering - Smoothness
     glutSwapBuffers()
+
 
 def idle():
     global CAMERA_ROTATE
