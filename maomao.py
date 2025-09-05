@@ -33,14 +33,14 @@ else:
 # TODO: Make Hens Class --------------------------------------- Mao [Finished]
 # TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] --- Nusayba [Finished]
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
-# TODO: Crop Planting Logic ----------------------------------- WIP
-# TODO: Water Mechanism --------------------------------------- WIP
-# TODO: Crops Grow Logic -------------------------------------- WIP
-# TODO: Harvest Logic ----------------------------------------- WIP
+# TODO: Crop Planting Logic ----------------------------------- WIP ------------------------------------
+# TODO: Water Mechanism --------------------------------------- Nusayba, Mao [Finished]
+# TODO: Crops Grow Logic -------------------------------------- Nusayba [Finished]
+# TODO: Harvest Logic ----------------------------------------- WIP ------------------------------------
 # TODO: Inventory System -------------------------------------- Saihan [Finished]
 # TODO: Buy/ Sell Logics -------------------------------------- Saihan [WIP]
-# TODO: Cheat Modes ------------------------------------------- WIP
-# TODO: Rain Logic -------------------------------------------- WIP
+# TODO: Cheat Modes ------------------------------------------- WIP ------------------------------------
+# TODO: Rain Logic -------------------------------------------- WIP ------------------------------------
 # TODO: Day-Night Cycle --------------------------------------- Amra Shobai Raja [Finished]
 # TODO: Design User Interface --------------------------------- Saihan [Finished]
 
@@ -65,6 +65,7 @@ P_ROTATE_ANGLE = 0.4
 
 
 # ! GAME LOGIC VARIABLES
+SHOP = False
 LAST_TIME_UPDATE = time.time()
 DAY = 0
 BALANCE = 0.0
@@ -77,11 +78,9 @@ WATER = 10
 MAX_WATER = 10
 INVENTORY = {
     "wheat": 0,
-    'wheat seed': 5,
-    "potato": 0,
+    "wheat seeds": 5,
     "carrot": 0,
-    'carrot seed': 5,
-    "sunflower": 0,
+    "carrot seeds": 5,
     "chickens": 0,
     "egg": 0,
     "cows": 2,
@@ -711,6 +710,18 @@ class Plot:
 
     def water_slot(self, i, j):
         self.watered[i][j] = True
+
+    def get_slot_at(self, x,y):
+        scaleX, scaleY = self.scaleX, self.scaleY
+        slot_width = scaleX/3
+        slot_height = scaleY/3
+        min_x = self.position[0] - scaleX/2
+        min_y = self.position[1] - scaleY/2
+        if min_x <= x <= min_x+scaleX and min_y <= y <= min_y+scaleY:
+            i = int((x-min_x)//slot_width)
+            j = int((y-min_y)//slot_height)
+            return i,j
+        return None
 
     def draw(self):
         scaleX = self.scaleX
@@ -1614,13 +1625,30 @@ def mouseListener(button, state, x, y):
     zoomUpStep = 4
     zoomDownStep = 6
 
-    if button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
-        # with open(config_path, "a") as f:
-        #     print("Writing to config.txt")
-        #     f.write(
-        #         f"a = Fence({MAOMAO.position[0]}, {MAOMAO.position[1]}, {MAOMAO.position[2]})\n"
-        #     )
+    # if button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
+    #     # with open(config_path, "a") as f:
+    #     #     print("Writing to config.txt")
+    #     #     f.write(
+    #     #         f"a = Fence({MAOMAO.position[0]}, {MAOMAO.position[1]}, {MAOMAO.position[2]})\n"
+    #     #     )
+    #     global WATER
+
+    if button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN and BUCKET_FLAG:
         global WATER
+
+        px,py,pz = MAOMAO.position
+
+        for plot in PLOTS:
+            slot = plot.get_slot_at(px,py)
+            if slot:
+                if WATER > 0:
+                    i,j = slot
+                    plot.water_slot(i,j)
+                    print(f"Watered slot ({i},{j}) in plot at {plot.position}")
+                    WATER -= 1
+                    break
+
+
         if BUCKET_FLAG and WATER > 0:
             WATER -= 1
             print("Watering! Remaining:", WATER)
