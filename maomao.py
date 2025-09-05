@@ -1,5 +1,3 @@
-from tkinter import font
-from matplotlib import scale
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -78,7 +76,7 @@ INVENTORY = {
     "sunflower": 0,
     "chickens": 0,
     "egg": 0,
-    "cows": 3,
+    "cows": 2,
     "milk": 0,
 }
 
@@ -606,8 +604,8 @@ class Plot:
         self.position = position
 
     def draw(self):
-        scaleX = 250
-        scaleY = 250
+        scaleX = 150
+        scaleY = 150
         glColor3f(244 / 255, 223 / 255, 144 / 255)  # ? Lighter brown color for soil
         glPushMatrix()
         glTranslatef(*self.position)
