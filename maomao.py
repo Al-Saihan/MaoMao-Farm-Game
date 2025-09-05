@@ -70,6 +70,7 @@ BALANCE = 0.0
 TIME = {"hour": 6, "minute": 0}
 WEATHER = "clear"  # ? Clear, Rainy
 NIGHT = False
+BUCKET_FLAG = False
 WATER = 10
 MAX_WATER = 10
 INVENTORY = {
@@ -1440,8 +1441,10 @@ def specialKeyUpListener(key, x, y):
         BUTTONS["ra"] = False
 
 
+plot_coordinates = [(570, -20), (570, -350)]  # Add more plot coordinates as needed
+
 def mouseListener(button, state, x, y):
-    global FOV, CAMERA_Z_REWORK, TOPVIEW
+    global FOV, CAMERA_Z_REWORK, TOPVIEW, BUCKET_FLAG
 
     zoomUpStep = 4
     zoomDownStep = 6
@@ -1464,6 +1467,30 @@ def mouseListener(button, state, x, y):
         print("Scroll Down")
         FOV = min(FOV + zoomDownStep, 80)
         CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, (2 * zoomDownStep))
+    
+    if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
+        if x, y in plot_coordinates:
+            if BUCKET_FLAG == True:
+                print("Bucket Clicked")
+                if INVENTORY["water_buckets"] > 0:
+                    INVENTORY["water_buckets"] -= 1
+                    for plot in PLOTS:
+                        if (plot.x, plot.y) == (x, y):
+                            if plot.planted and plot.growth_stage < 3:
+                                plot.last_growth_time -= 60
+                                
+            else:                    
+                print("Plot Clicked")
+                if INVENTORY["seeds"] > 0:
+                    INVENTORY["seeds"] -= 1
+                    for plot in PLOTS:
+                        if (plot.x, plot.y) == (x, y):
+                            plot.planted = True
+                            plot.growth_stage = 0
+                            plot.last_growth_time = time.time()
+                            print(f"Planted at plot ({plot.x}, {plot.y})")
+                else:
+                    print("No seeds available to plant.")
 
     glutPostRedisplay()
 
