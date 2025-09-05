@@ -284,24 +284,24 @@ class Pond:
         glBegin(GL_QUADS)
         # ! Pond Area Border
         glColor3f(0.65, 0.85, 1.0)
-        glVertex3f(50, 0, 0.1)  # ? pond left bottom point
+        glVertex3f(50, 0, 1)  # ? pond left bottom point
         glColor3f(0.55, 0.75, 0.95)
-        glVertex3f(300, 0, 0.1)  # ? pond right bottom point
+        glVertex3f(300, 0, 1)  # ? pond right bottom point
         glColor3f(0.45, 0.70, 0.85)
-        glVertex3f(300, -530, 0.1)  # ? pond right top point
+        glVertex3f(300, -530, 1)  # ? pond right top point
         glColor3f(0.05, 0.15, 0.35)
-        glVertex3f(50, -530, 0.1)  # ? pond left top point
+        glVertex3f(50, -530, 1)  # ? pond left top point
         glEnd()
         glBegin(GL_QUADS)
         # ! Pond Area
         glColor3f(0.95, 0.75, 0.80)
-        glVertex3f(80, -30, 0.5)  # ? pond left bottom point
+        glVertex3f(80, -30, 1.5)  # ? pond left bottom point
         glColor3f(0.98, 0.70, 0.65)
-        glVertex3f(270, -30, 0.5)  # ? pond right bottom point
+        glVertex3f(270, -30, 1.5)  # ? pond right bottom point
         glColor3f(0.80, 0.70, 0.90)
-        glVertex3f(270, -500, 0.5)  # ? pond right top point
+        glVertex3f(270, -500, 1.5)  # ? pond right top point
         glColor3f(0.70, 0.50, 0.60)
-        glVertex3f(80, -500, 0.5)  # ? pond left top point
+        glVertex3f(80, -500, 1.5)  # ? pond left top point
         glEnd()
 
 
@@ -364,24 +364,24 @@ class Shop:
 
         # ? Truck window left
         glPushMatrix()
-        glTranslatef(0, 0, 36)
-        glScalef(20, 1, 20)
+        glTranslatef(0, -20, 40)
+        glScalef(30, 15, 20)
         glColor3f(0.8, 0.9, 1.0)  # Blueish white color
         glutSolidCube(1)
         glPopMatrix()
         
         # ? Truck window right
         glPushMatrix()
-        glTranslatef(0, 0, 36)
-        glScalef(20, 1, 20)
+        glTranslatef(0, 20, 40)
+        glScalef(30, 15, 20)
         glColor3f(0.8, 0.9, 1.0)  # Blueish white color
         glutSolidCube(1)
         glPopMatrix()
         
         # ? Truck window front
         glPushMatrix()
-        glTranslatef(550, 445, 36)
-        glScalef(1, 40, 30)
+        glTranslatef(-25, 0, 40)
+        glScalef(10, 40, 20)
         glColor3f(0.8, 0.9, 1.0)  # Blueish white color
         glutSolidCube(1)
         glPopMatrix()
@@ -390,8 +390,12 @@ class Shop:
         wheel_positions = [
             (75, 35, 10),
             (75, -35, 10),
+            (105, 35, 10),
+            (105, -35, 10),
             (180, 35, 10),
             (180, -35, 10),
+            (150, 35, 10),
+            (150, -35, 10),
         ]
 
         xFix = -30
@@ -419,18 +423,18 @@ class House:
         glBegin(GL_QUADS)
         # ! House Area
         glColor3f(0.95, 0.85, 0.4)  # ? Yellowish field color
-        glVertex3f(-100, 380, 0.1)  # ? house area left bottom point
-        glVertex3f(425, 380, 0.1)  # ? house area right bottom point
-        glVertex3f(425, 725, 0.1)  # ? house area right top point
-        glVertex3f(-100, 725, 0.1)  # ? house area left top point
+        glVertex3f(-100, 380, 1)  # ? house area left bottom point
+        glVertex3f(425, 380, 1)  # ? house area right bottom point
+        glVertex3f(425, 725, 1)  # ? house area right top point
+        glVertex3f(-100, 725, 1)  # ? house area left top point
         glEnd()
         # ! Garage
         glBegin(GL_QUADS)
         glColor3f(0.7, 0.7, 0.7)  # Light gray for the quad
-        glVertex3f(425, 420, 0.11)
-        glVertex3f(700, 420, 0.11)
-        glVertex3f(700, 680, 0.11)
-        glVertex3f(425, 680, 0.11)
+        glVertex3f(425, 420, 1)
+        glVertex3f(700, 420, 1)
+        glVertex3f(700, 680, 1)
+        glVertex3f(425, 680, 1)
         glEnd()
 
     def draw_house(self):
@@ -764,7 +768,7 @@ class Chicken:
         # ? Chicken Legs -- left
         glPushMatrix()
         glTranslatef(self.x, self.y + 1, self.z + 5)
-        glScalef(1, 1, 2)
+        glScalef(1, 1, 3)
         glColor3f(1.0, 0.5, 0.0)  # Orange color for legs
         glutSolidCube(1)
         glPopMatrix()
@@ -772,7 +776,7 @@ class Chicken:
         # ? Chicken Legs -- right
         glPushMatrix()
         glTranslatef(self.x, self.y - 1, self.z + 5)
-        glScalef(1, 1, 2)
+        glScalef(1, 1, 3)
         glColor3f(1.0, 0.5, 0.0)  # Orange color for legs
         glutSolidCube(1)
         glPopMatrix()
@@ -798,12 +802,7 @@ class Chicken:
         glColor3f(0.9, 0.5, 0.7)  # Lighter pink
         glutSolidCube(1)
         glPopMatrix()
-        
-        
-
-chicken1 = Chicken(-150, -150, 0)
-chicken2 = Chicken(-130, -130, 0)
-chicken3 = Chicken(-170, -130, 0)            
+             
         
 class Pillar:
     def __init__(self, x, y, z):
@@ -825,16 +824,17 @@ coop = Coop(-200, -200, 0)
 
 print(BorderLine([0, 0, 0], [1, 0, 0]))
 
-MAOMAO = Player([570, 617, 0], -90)
+MAOMAO = Player([-70, -100, 0], -150)
 
 a1 = Fence([-740, -590, 10], [740, -590, 10])
 a2 = Fence([-740, 740, 10], [740, 740, 10])
 a3 = Fence([-740, -590, 10], [-740, 740, 10])
 a4 = Fence([740, -590, 10], [740, 740, 10])
+# Chicken Fences
 a5 = Fence([-130, -290, 10], [-130, -110, 10])
 a6 = Fence([-265, -290, 10], [-130, -290, 10])
 a7 = Fence([-265, -110, 10], [-130, -110, 10])
-a8 = Fence([-265, -110, 10], [-265, -290, 10])
+a8 = Fence([-265, -290, 10], [-265, -110, 10])
 
 FENCES = [a1, a2, a3, a4, a5, a6, a7, a8]
 
@@ -864,8 +864,8 @@ pl4 = Pillar(-200, -280, 0)
 PILLARS = [pl1, pl2, pl3, pl4]
 
 chicken1 = Chicken(-150, -150, 0)
-chicken2 = Chicken(-130, -130, 0)
-chicken3 = Chicken(-170, -130, 0) 
+chicken2 = Chicken(-200, -130, 0)
+chicken3 = Chicken(-170, -180, 0) 
 CHICKENS = [chicken1, chicken2, chicken3]
 
 
@@ -889,40 +889,40 @@ def farmLand():
     glBegin(GL_QUADS)
     glColor3f(0.95, 0.95, 0.5)  # ? Road brown color
     # ! 1
-    glVertex3f(150, 250, 0.1)
-    glVertex3f(750, 250, 0.1)
-    glVertex3f(750, 150, 0.1)
-    glVertex3f(150, 150, 0.1)
+    glVertex3f(150, 250, 1)
+    glVertex3f(750, 250, 1)
+    glVertex3f(750, 150, 1)
+    glVertex3f(150, 150, 1)
 
     # ! 2
-    glVertex3f(-50, 230, 0.1)
-    glVertex3f(150, 150, 0.1)
-    glVertex3f(150, 250, 0.1)
-    glVertex3f(-50, 330, 0.1)
+    glVertex3f(-50, 230, 1)
+    glVertex3f(150, 150, 1)
+    glVertex3f(150, 250, 1)
+    glVertex3f(-50, 330, 1)
 
     # ! 3
-    glVertex3f(-750, 230, 0.1)
-    glVertex3f(-50, 230, 0.1)
-    glVertex3f(-50, 330, 0.1)
-    glVertex3f(-750, 330, 0.1)
+    glVertex3f(-750, 230, 1)
+    glVertex3f(-50, 230, 1)
+    glVertex3f(-50, 330, 1)
+    glVertex3f(-750, 330, 1)
 
     # ! 4
-    glVertex3f(-100, 50, 0.1)
-    glVertex3f(0, 25, 0.1)
-    glVertex3f(160, 160, 0.1)
-    glVertex3f(120, 250, 0.1)
+    glVertex3f(-100, 50, 1)
+    glVertex3f(0, 25, 1)
+    glVertex3f(160, 160, 1)
+    glVertex3f(120, 250, 1)
 
     # ! 5
-    glVertex3f(-100, -600, 0.1)
-    glVertex3f(0, -600, 0.1)
-    glVertex3f(0, 50, 0.1)
-    glVertex3f(-100, 50, 0.1)
+    glVertex3f(-100, -600, 1)
+    glVertex3f(0, -600, 1)
+    glVertex3f(0, 50, 1)
+    glVertex3f(-100, 50, 1)
 
     # ! 6
-    glVertex3f(330, -300, 0.1)
-    glVertex3f(400, -300, 0.1)
-    glVertex3f(400, 150, 0.1)
-    glVertex3f(330, 150, 0.1)
+    glVertex3f(330, -300, 1)
+    glVertex3f(400, -300, 1)
+    glVertex3f(400, 150, 1)
+    glVertex3f(330, 150, 1)
 
     glEnd()
 
