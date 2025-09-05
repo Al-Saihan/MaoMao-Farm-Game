@@ -80,14 +80,14 @@ POND_FLAG = False
 WATER = 10
 MAX_WATER = 10
 INVENTORY = {
-    "wheat": 10,
-    "wheat seed": 10,
-    "carrot": 10,
-    "carrot seed": 10,
-    "chickens": 5,
-    "egg": 10,
-    "cows": 3,
-    "milk": 10,
+    "wheat": 0,
+    "wheat seed": 0,
+    "carrot": 0,
+    "carrot seed": 0,
+    "chickens": 1,
+    "egg": 0,
+    "cows": 1,
+    "milk": 0,
 }
 
 # ! --------------------------------------- CLasses ---------------------------------------
@@ -1068,12 +1068,12 @@ class Barn:
         glPushMatrix()
         glTranslatef(0, 0, 25)
         glScalef(180, 120, 50)
-        glColor3f(0.8, 0.1, 0.1)
+        glColor3f(0.8, 0.5, 0.6)  # Pinkish brown
         glutSolidCube(1)
         glPopMatrix()
 
         # roof
-        glColor3f(0.5, 0.25, 0.1)  # brown
+        glColor3f(0.33, 0.0, 0.13)  # Dark maroon pink
         glBegin(GL_TRIANGLES)
         # front
         glVertex3f(-90, -60, 50)
@@ -1100,15 +1100,15 @@ class Barn:
         glPushMatrix()
         glTranslatef(-40, -60.1, 15)
         glScalef(20, 1, 30)
-        glColor3f(0.3, 0.15, 0.05)  # dark brown
+        glColor3f(0.5, 0.0, 0.13)
         glutSolidCube(1)
         glPopMatrix()
 
-        # big foor
+        # big door
         glPushMatrix()
         glTranslatef(30, -60.2, 20)
         glScalef(60, 1, 40)
-        glColor3f(0.35, 0.2, 0.1)
+        glColor3f(0.5, 0.0, 0.13)
         glutSolidCube(1)
         glPopMatrix()
 
@@ -1561,9 +1561,9 @@ def user_interface():
     glColor3f(0.85, 0.7, 0.85)  # Lighter mauve color
     glBegin(GL_QUADS)
     glVertex2f(12, H - 480)
-    glVertex2f(150, H - 480)
-    glVertex2f(150, H - 510 - 30 * len(INVENTORY) + 33)
-    glVertex2f(12, H - 510 - 30 * len(INVENTORY) + 33)
+    glVertex2f(210, H - 480)
+    glVertex2f(210, H - 510 - 30 * len(INVENTORY) + 30)
+    glVertex2f(12, H - 510 - 30 * len(INVENTORY) + 30)
     glEnd()
 
     # ? Inventory Border
@@ -1571,9 +1571,9 @@ def user_interface():
     glBegin(GL_LINE_STRIP)
     glColor3f(0, 0, 0)
     glVertex2f(12, H - 480)
-    glVertex2f(150, H - 480)
-    glVertex2f(150, H - 510 - 30 * len(INVENTORY) + 33)
-    glVertex2f(12, H - 510 - 30 * len(INVENTORY) + 33)
+    glVertex2f(210, H - 480)
+    glVertex2f(210, H - 510 - 30 * len(INVENTORY) + 30)
+    glVertex2f(12, H - 510 - 30 * len(INVENTORY) + 30)
     glVertex2f(12, H - 480)
     glEnd()
 
@@ -1636,7 +1636,7 @@ def user_interface():
         glColor3f(0.6, 0.4, 0.6)
         glBegin(GL_LINES)
         glVertex2f(15, H - 470 - 30 * index - 5)
-        glVertex2f(140, H - 470 - 30 * index - 5)
+        glVertex2f(210, H - 470 - 30 * index - 5)
         glEnd()
 
     text = ["W", " A", " T", " E", " R"]
@@ -1646,7 +1646,7 @@ def user_interface():
     # ? Water Bucket (Bottom Right)
     if WATER:
         glBegin(GL_QUADS)
-        glColor3f(0.2, 0.5, 1)  # Lighter mauve color
+        glColor3f(0.95, 0.7, 0.85)  # Pinkish mauve color
         glVertex2f(W - 30, 10)
         glVertex2f(W - 10, 10)
         glVertex2f(W - 10, 20 * WATER)
@@ -2068,7 +2068,7 @@ def showScreen():
     if NIGHT:
         glClearColor(0.25, 0.15, 0.25, 1)  # Dark mauve color for night
     else:
-        glClearColor(0.85, 0.85, 0.95, 1)  # Lighter pink color
+        glClearColor(0.90, 0.80, 0.85, 1)  # Pinkish lavender day-like color
 
     setupCamera()
     MAOMAO.draw()
