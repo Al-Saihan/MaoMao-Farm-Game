@@ -369,7 +369,11 @@ class Tree:
         self.x = x
         self.y = y
         self.z = z
-        BOUND_BOXES.append(BorderLine([self.x, self.y, self.z], [self.x, self.y, self.z + 20], strength=20))
+        BOUND_BOXES.append(
+            BorderLine(
+                [self.x, self.y, self.z], [self.x, self.y, self.z + 20], strength=20
+            )
+        )
 
     def draw_tree(self):
         # ? Tree Trunk
@@ -720,16 +724,16 @@ class Plot:
     def water_slot(self, i, j):
         self.watered[i][j] = True
 
-    def get_slot_at(self, x,y):
+    def get_slot_at(self, x, y):
         scaleX, scaleY = self.scaleX, self.scaleY
-        slot_width = scaleX/3
-        slot_height = scaleY/3
-        min_x = self.position[0] - scaleX/2
-        min_y = self.position[1] - scaleY/2
-        if min_x <= x <= min_x+scaleX and min_y <= y <= min_y+scaleY:
-            i = int((x-min_x)//slot_width)
-            j = int((y-min_y)//slot_height)
-            return i,j
+        slot_width = scaleX / 3
+        slot_height = scaleY / 3
+        min_x = self.position[0] - scaleX / 2
+        min_y = self.position[1] - scaleY / 2
+        if min_x <= x <= min_x + scaleX and min_y <= y <= min_y + scaleY:
+            i = int((x - min_x) // slot_width)
+            j = int((y - min_y) // slot_height)
+            return i, j
         return None
 
     def draw(self):
@@ -1682,9 +1686,6 @@ def keyboardUpListener(key, x, y):
     # ! Selfie Mode (V Key)
     if key.lower() == b"v":
         TOPVIEW = not TOPVIEW
-        
-    
-              
 
 
 def specialKeyListener(key, x, y):
@@ -1719,18 +1720,17 @@ def mouseListener(button, state, x, y):
             )
         global WATER
 
-        px,py,pz = MAOMAO.position
+        px, py, pz = MAOMAO.position
 
         for plot in PLOTS:
-            slot = plot.get_slot_at(px,py)
+            slot = plot.get_slot_at(px, py)
             if slot:
                 if WATER > 0:
-                    i,j = slot
-                    plot.water_slot(i,j)
+                    i, j = slot
+                    plot.water_slot(i, j)
                     print(f"Watered slot ({i},{j}) in plot at {plot.position}")
                     WATER -= 1
                     break
-
 
         if BUCKET_FLAG and WATER > 0:
             WATER -= 1
@@ -1787,6 +1787,59 @@ def mouseListener(button, state, x, y):
                 else:
                     print("Not enough balance to buy Cow")
 
+            elif 456 < x < 785 and 347 < y < 364:
+                print("Clicked on Water Capacity")
+                if BALANCE >= 500.0:
+                    BALANCE -= 500.0
+                    MAX_WATER += 5
+                    print("Increased max water capacity by 5")
+                else:
+                    print("Not enough balance to increase water capacity")
+
+            elif 456 < x < 785 and 375 < y < 392:
+                print("Clicked on Wheat")
+                if INVENTORY["wheat"] > 0:
+                    BALANCE += 15.0 * INVENTORY["wheat"]
+                    print(
+                        f"Sold {INVENTORY['wheat']} Wheat for ${15.0 * INVENTORY['wheat']:.2f}"
+                    )
+                    INVENTORY["wheat"] = 0
+                else:
+                    print("No Wheat to sell")
+
+            elif 456 < x < 785 and 403 < y < 420:
+                print("Clicked on Carrot")
+                if INVENTORY["carrot"] > 0:
+                    BALANCE += 25.0 * INVENTORY["carrot"]
+                    print(
+                        f"Sold {INVENTORY['carrot']} Carrot for ${25.0 * INVENTORY['carrot']:.2f}"
+                    )
+                    INVENTORY["carrot"] = 0
+                else:
+                    print("No Carrot to sell")
+
+            elif 456 < x < 785 and 431 < y < 448:
+                print("Clicked on Egg")
+                if INVENTORY["egg"] > 0:
+                    BALANCE += 30.0 * INVENTORY["egg"]
+                    print(
+                        f"Sold {INVENTORY['egg']} Egg for ${30.0 * INVENTORY['egg']:.2f}"
+                    )
+                    INVENTORY["egg"] = 0
+                else:
+                    print("No Egg to sell")
+
+            elif 456 < x < 785 and 459 < y < 476:
+                print("Clicked on Milk")
+                if INVENTORY["milk"] > 0:
+                    BALANCE += 60.0 * INVENTORY["milk"]
+                    print(
+                        f"Sold {INVENTORY['milk']} Milk for ${60.0 * INVENTORY['milk']:.2f}"
+                    )
+                    INVENTORY["milk"] = 0
+                else:
+                    print("No Milk to sell")
+
         else:
             if 50 < MAOMAO.position[0] < 300 and -515 < MAOMAO.position[1] < -10:
                 print("Pond Clicked")
@@ -1826,7 +1879,6 @@ def updateTime():
                     INVENTORY["egg"] += INVENTORY["chickens"]
                 if INVENTORY["cows"] > 0:
                     INVENTORY["milk"] += INVENTORY["cows"]
-                        
 
             if 18 > TIME["hour"] > 6:
                 NIGHT = False
