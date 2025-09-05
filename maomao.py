@@ -1975,9 +1975,27 @@ def mouseListener(button, state, x, y):
         FOV = min(FOV + zoomDownStep, 80)
         CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, (2 * zoomDownStep))
 
+# Put this at the top of your file
+CHEAT_BACKUP = {}
+
 def cheat_mode(CHEAT):
+    global BALANCE, INVENTORY, WATER, MAX_WATER, CHEAT_BACKUP
+
     if CHEAT:
-        global BALANCE, INVENTORY, WATER, MAX_WATER
+        # Save current state before overwriting
+        CHEAT_BACKUP = {
+            "BALANCE": BALANCE,
+            "wheat": INVENTORY["wheat"],
+            "carrot": INVENTORY["carrot"],
+            "wheat seed": INVENTORY["wheat seed"],
+            "carrot seed": INVENTORY["carrot seed"],
+            "egg": INVENTORY["egg"],
+            "milk": INVENTORY["milk"],
+            "WATER": WATER,
+            "MAX_WATER": MAX_WATER,
+        }
+
+        # Apply cheat values
         BALANCE = 999999999999.99
         INVENTORY["wheat"] = 99999999
         INVENTORY["carrot"] = 99999999
@@ -1988,8 +2006,22 @@ def cheat_mode(CHEAT):
         WATER = 9999999
         MAX_WATER = 9999999999
         print("Cheat mode activated!")
+
     else:
-        pass    
+        if CHEAT_BACKUP:  # Restore only if backup exists
+            BALANCE = CHEAT_BACKUP["BALANCE"]
+            INVENTORY["wheat"] = CHEAT_BACKUP["wheat"]
+            INVENTORY["carrot"] = CHEAT_BACKUP["carrot"]
+            INVENTORY["wheat seed"] = CHEAT_BACKUP["wheat seed"]
+            INVENTORY["carrot seed"] = CHEAT_BACKUP["carrot seed"]
+            INVENTORY["egg"] = CHEAT_BACKUP["egg"]
+            INVENTORY["milk"] = CHEAT_BACKUP["milk"]
+            WATER = CHEAT_BACKUP["WATER"]
+            MAX_WATER = CHEAT_BACKUP["MAX_WATER"]
+            print("Cheat mode deactivated!")
+        else:
+            print("Cheat mode was never activated, nothing to restore.")
+
 
 def updateTime():
     global TIME, LAST_TIME_UPDATE, NIGHT, BALANCE
