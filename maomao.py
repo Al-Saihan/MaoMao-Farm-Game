@@ -75,7 +75,6 @@ BUCKET_FLAG = False
 POND_FLAG = False
 WATER = 10
 MAX_WATER = 10
-WATER_MODE = False
 INVENTORY = {
     "wheat": 0,
     'wheat seed': 5,
@@ -473,7 +472,6 @@ truck = Shop([550, 470, 0.1])
 class Bucket:
     def __init__(self, position, rotation = 0):
         self.position = position
-        pass
 
     def draw_bucket(self):
         glPushMatrix()
@@ -482,14 +480,17 @@ class Bucket:
         glPushMatrix()
         glTranslatef(0, 0, 5)
         glScalef(5, 5, 5)
-        glColor3f(0.8, 0.8, 0.9)  # Light grayish blue
+        glColor3f(0.6, 0.6, 0.7)  # Light grayish blue
         glutSolidCube(1)
         glPopMatrix()
 
         glPushMatrix()
         glTranslatef(0, 0, 7.5)
         glScalef(4, 4, 0.1)
-        glColor3f(0.2, 0.2, 0.2)  # Dark grey for empty inside effect
+        if WATER == 0:
+            glColor3f(0.2, 0.2, 0.2)  # Dark grey for empty inside effect
+        else:
+            glColor3f(0.85, 0.7, 0.85)  # Mauve color water
         glutSolidCube(1)
         glPopMatrix()
         glPopMatrix()
@@ -1502,6 +1503,21 @@ def user_interface():
         glVertex2f(140, H - 470 - 30 * index - 5)
         glEnd()
 
+
+    text = ["W", " A", " T", " E", " R"]
+    for i in range(len(text)):
+        draw_text(W - 60, 130 - i * 20, text[i], (0, 0, 0))
+
+    # ? Water Bucket (Bottom Right)
+    if WATER:
+        glBegin(GL_QUADS)
+        glColor3f(0.2, 0.5, 1)  # Lighter mauve color
+        glVertex2f(W - 30, 10)
+        glVertex2f(W - 10, 10)
+        glVertex2f(W - 10, 20 * WATER)
+        glVertex2f(W - 30, 20 * WATER)
+        glEnd()
+
     # ! Restore original projection and modelview matrices
     glPopMatrix()
     glMatrixMode(GL_PROJECTION)
@@ -1536,8 +1552,8 @@ def keyboardListener(key, x, y):
 
     # ! Water Mode (R key)
     if key.lower() == b"r":
-        global WATER_MODE
-        WATER_MODE = not WATER_MODE
+        global BUCKET_FLAG
+        BUCKET_FLAG = not BUCKET_FLAG
 
     # ! Escape key to exit game
     if key == b"\x1b":
@@ -1597,11 +1613,24 @@ def mouseListener(button, state, x, y):
     zoomDownStep = 6
 
     if button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
-        with open(config_path, "a") as f:
-            print("Writing to config.txt")
-            f.write(
-                f"a = Fence({MAOMAO.position[0]}, {MAOMAO.position[1]}, {MAOMAO.position[2]})\n"
-            )
+        # with open(config_path, "a") as f:
+        #     print("Writing to config.txt")
+        #     f.write(
+        #         f"a = Fence({MAOMAO.position[0]}, {MAOMAO.position[1]}, {MAOMAO.position[2]})\n"
+        #     )
+        global WATER
+        if BUCKET_FLAG and WATER > 0:
+            WATER -= 1
+            print("Watering! Remaining:", WATER)
+
+    if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
+        if 50 < MAOMAO.position[0] < 300 and -515 < MAOMAO.position[1] < -10:
+            print("Pond Clicked")
+            if WATER < MAX_WATER:
+                WATER += 1
+                print(f"Collected water. Total water buckets: {WATER}")
+            else:
+                print("Water buckets full.")  
 
     # ? Scroll Up:
     if button == 3 and state == GLUT_DOWN:
@@ -1615,39 +1644,9 @@ def mouseListener(button, state, x, y):
         FOV = min(FOV + zoomDownStep, 80)
         CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, (2 * zoomDownStep))
     
-    if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
-        if (x, y) in plot_coordinates:
-            if BUCKET_FLAG == True:
-                print("Bucket Clicked")
-                if INVENTORY["water_buckets"] > 0:
-                    INVENTORY["water_buckets"] -= 1
-                    for plot in PLOTS:
-                        if (plot.x, plot.y) == (x, y):
-                            if plot.planted and plot.growth_stage < 3:
-                                plot.last_growth_time -= 60
-                                
-            else:                    
-                print("Plot Clicked")
-                if INVENTORY["seeds"] > 0:
-                    INVENTORY["seeds"] -= 1
-                    for plot in PLOTS:
-                        if (plot.x, plot.y) == (x, y):
-                            plot.planted = True
-                            plot.growth_stage = 0
-                            plot.last_growth_time = time.time()
-                            print(f"Planted at plot ({plot.x}, {plot.y})")
-                else:
-                    print("No seeds available to plant.")
-        
-        if (x, y) in pond_coordinates:
-            print("Pond Clicked")
-            if INVENTORY["water_buckets"] < 5:
-                INVENTORY["water_buckets"] += 1
-                print(f"Collected water. Total water buckets: {INVENTORY['water_buckets']}")
-            else:
-                print("Water buckets full.")            
 
-    glutPostRedisplay()
+                  
+
 
 
 def updateTime():
@@ -1736,7 +1735,7 @@ def showScreen():
         COWS[i].draw()
 
     BUCKET.position = [MAOMAO.position[0], MAOMAO.position[1], 20]
-    if WATER_MODE:
+    if BUCKET_FLAG:
         BUCKET.draw_bucket()
 
     COOP.draw()
@@ -1854,7 +1853,7 @@ def idle():
     if BUTTONS["ra"]:
         CAMERA_ROTATE += 0.2
 
-    devDebug()
+    # devDebug()
     glutPostRedisplay()
 
 
