@@ -7,6 +7,17 @@ from OpenGL.GLUT import GLUT_BITMAP_HELVETICA_18
 from OpenGL.GLUT import GLUT_STROKE_ROMAN
 import math
 import time
+import os
+
+# ! IGNORE THIS, IT'S JUST FOR DEBUGGING PURPOSES
+# Open config.txt if it exists, otherwise create it
+config_path = "config.txt"
+if not os.path.exists(config_path):
+    with open(config_path, "w") as f:
+        f.write("# Configuration file\n")
+else:
+    with open(config_path, "r") as f:
+        pass  # File exists, just open it
 
 # ! --------------------------------------- :TODO: ---------------------------------------
 # ! --------------------------------------- :TODO: ---------------------------------------
@@ -332,7 +343,6 @@ class Tree:
         glPopMatrix()
 
 
-tree = Tree(600, 600, 0)
 
 
 class Shop:
@@ -987,7 +997,8 @@ class Cow:
         glPopMatrix()
 
 
-coop = Coop(-200, -200, 0)
+COOP = Coop(-200, -200, 0)
+BARN = Barn([-400, 400, 0])
 
 print(BorderLine([0, 0, 0], [1, 0, 0]))
 
@@ -1019,10 +1030,24 @@ p2 = Plot([570, -350, 1])
 
 PLOTS = [p1, p2]
 
-t1 = Tree(100, 400, 0)
-t2 = Tree(650, 550, 0)
-t3 = Tree(-100, 550, 0)
-TREES = [t1, t2, t3]
+t1 = Tree(203.79333586600404, 58.59383956134186, 0)
+t2 = Tree(396.9853972831635, 343.36338720735466, 0)
+t3 = Tree(-184, -499, 0)
+t4 = Tree(-290, -430, 0)
+t5 = Tree(-518, -502, 0)
+t6 = Tree(-696, -456, 0)
+t7 = Tree(-552, -295, 0)
+t8 = Tree(-611, -90, 0)
+t9 = Tree(-611, -90, 0)
+t10 = Tree(-340, -112, 0)
+t11 = Tree(-546, 121, 0)
+t12 = Tree(-275, 108, 0)
+t13 = Tree(-216, 527, 0)
+t14 = Tree(-427, 628, 0)
+t15 = Tree(-601, 427, 0)
+t16 = Tree(-653, 648, 0)
+t17 = Tree(374, -461, 0)
+TREES = [t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17]
 
 pl1 = Pillar(-200, -260, 0)
 pl2 = Pillar(-240, -260, 0)
@@ -1295,6 +1320,11 @@ def mouseListener(button, state, x, y):
     zoomUpStep = 4
     zoomDownStep = 6
 
+    if button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
+        with open(config_path, "a") as f:
+            print("Writing to config.txt")
+            f.write(f"t = Tree({MAOMAO.position[0]}, {MAOMAO.position[1]}, {MAOMAO.position[2]})\n")
+
     # ? Scroll Up:
     if button == 3 and state == GLUT_DOWN:
         print("Scroll Up")
@@ -1368,11 +1398,13 @@ def showScreen():
     for chimken in CHICKENS:
         chimken.draw_chicken()
 
-    coop.draw()
-    coop.draw_coop()
+    COOP.draw()
+    COOP.draw_coop()
     farmLand()
     drawFences()
     drawPlots()
+    BARN.draw_barn()
+
 
     # ! User Interface
     user_interface()
