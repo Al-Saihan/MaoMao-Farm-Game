@@ -716,7 +716,6 @@ class Plot:
         self.slot_colors[i][j] = color
 
     def water_slot(self, i, j):
-        """Increase water count and update crop color if ready"""
         if self.slots[i][j] != 0:  # only water if crop planted
             self.watered[i][j] += 1
             print(f"Slot ({i},{j}) watered {self.watered[i][j]} times.")
@@ -1976,13 +1975,11 @@ def mouseListener(button, state, x, y):
 
     # ? Scroll Up:
     if button == 3 and state == GLUT_DOWN:
-        print("Scroll Up")
         FOV = max(FOV - zoomUpStep, 60)
         CAMERA_Z_REWORK = max(CAMERA_Z_REWORK - zoomUpStep, -(4 * zoomUpStep))
 
     # ? Scroll Down:
     if button == 4 and state == GLUT_DOWN:
-        print("Scroll Down")
         FOV = min(FOV + zoomDownStep, 80)
         CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, (2 * zoomDownStep))
 
