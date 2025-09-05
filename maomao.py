@@ -66,8 +66,9 @@ P_ROTATE_ANGLE = 0.4
 
 # ! GAME LOGIC VARIABLES
 LAST_TIME_UPDATE = time.time()
+SHOP_OPEN = False
 DAY = 0
-BALANCE = 0.0
+BALANCE = 1000.0
 TIME = {"hour": 6, "minute": 0}
 WEATHER = "clear"  # ? Clear, Rainy
 NIGHT = False
@@ -77,12 +78,12 @@ WATER = 10
 MAX_WATER = 10
 INVENTORY = {
     "wheat": 0,
-    "potato": 0,
+    "wheat seed": 0,
     "carrot": 0,
-    "sunflower": 0,
-    "chickens": 0,
+    "carrot seed": 0,
+    "chickens": 5,
     "egg": 0,
-    "cows": 2,
+    "cows": 0,
     "milk": 0,
 }
 
@@ -300,20 +301,26 @@ class Pond:
             glBegin(GL_QUADS)
             # ! Pond Area Border
             # Night Mode Gradient
-            glColor3f(0.18, 0.18, 0.38)      # Slightly lighter blue-purple for the bottom-left
-            glVertex3f(50, 0, 1)        
+            glColor3f(
+                0.18, 0.18, 0.38
+            )  # Slightly lighter blue-purple for the bottom-left
+            glVertex3f(50, 0, 1)
 
-            glColor3f(0.12, 0.12, 0.28)      # Lighter deep blue for the bottom-right
-            glVertex3f(300, 0, 1)       
+            glColor3f(0.12, 0.12, 0.28)  # Lighter deep blue for the bottom-right
+            glVertex3f(300, 0, 1)
 
-            glColor3f(0.08, 0.08, 0.18)      # Still dark, but a bit lighter for the top-right
-            glVertex3f(300, -530, 1)    
+            glColor3f(
+                0.08, 0.08, 0.18
+            )  # Still dark, but a bit lighter for the top-right
+            glVertex3f(300, -530, 1)
 
-            glColor3f(0.05, 0.05, 0.12)      # Almost black, but with a hint of blue for the top-left
-            glVertex3f(50, -530, 1)     
+            glColor3f(
+                0.05, 0.05, 0.12
+            )  # Almost black, but with a hint of blue for the top-left
+            glVertex3f(50, -530, 1)
 
             glEnd()
-            
+
             glBegin(GL_QUADS)
             # ! Pond Area
             # Night Mode: Slightly darker gradient for pond area
@@ -338,7 +345,7 @@ class Pond:
             glColor3f(0.05, 0.15, 0.35)
             glVertex3f(50, -530, 1)  # ? pond left top point
             glEnd()
-            
+
             glBegin(GL_QUADS)
             # ! Pond Area
             glColor3f(0.95, 0.75, 0.80)
@@ -468,13 +475,13 @@ truck = Shop([550, 470, 0.1])
 
 
 class Bucket:
-    def __init__(self, position, rotation = 0):
+    def __init__(self, position, rotation=0):
         self.position = position
 
     def draw_bucket(self):
         glPushMatrix()
         glTranslatef(self.position[0], self.position[1], self.position[2])
-        glRotate(MAOMAO.rotation, 0,0,1)
+        glRotate(MAOMAO.rotation, 0, 0, 1)
         glPushMatrix()
         glTranslatef(0, 0, 5)
         glScalef(5, 5, 5)
@@ -915,30 +922,35 @@ class Coop:
 
 
 class Chicken:
-    def __init__(self, x, y, z):
+    def __init__(self, x, y, z, rotation=0):
         self.x = x
         self.y = y
         self.z = z
+        self.rotation = rotation
 
     def draw_chicken(self):
+        glPushMatrix()
+        glTranslatef(self.x, self.y, self.z)
+        glRotatef(self.rotation, 0, 0, 1)
+
         # ? Chicken Body
         glColor3f(1.0, 0.8, 0.9)  # Light pink
         glPushMatrix()
-        glTranslatef(self.x, self.y, self.z + 10)
+        glTranslatef(0, 0, 10)
         glScalef(10, 5, 7)
         glutSolidCube(1)
         glPopMatrix()
 
         # ? Chicken Head
         glPushMatrix()
-        glTranslatef(self.x + 5, self.y, self.z + 15)
+        glTranslatef(5, 0, 15)
         glScalef(5, 5, 5)
         glutSolidCube(1)
         glPopMatrix()
 
         # ? beck
         glPushMatrix()
-        glTranslatef(self.x + 9, self.y, self.z + 15)
+        glTranslatef(9, 0, 15)
         glScalef(3, 4, 1)
         glColor3f(1.0, 0.5, 0.0)  # Orange color for beck
         glutSolidCube(1)
@@ -946,7 +958,7 @@ class Chicken:
 
         # ? red comb
         glPushMatrix()
-        glTranslatef(self.x + 7, self.y, self.z + 14)
+        glTranslatef(7, 0, 14)
         glScalef(2, 2, 2)
         glColor3f(1.0, 0.0, 0.0)  # Red color for comb
         glutSolidCube(1)
@@ -954,7 +966,7 @@ class Chicken:
 
         # ? Chicken Legs -- left
         glPushMatrix()
-        glTranslatef(self.x, self.y + 1, self.z + 5)
+        glTranslatef(0, 1, 5)
         glScalef(1, 1, 3)
         glColor3f(1.0, 0.5, 0.0)  # Orange color for legs
         glutSolidCube(1)
@@ -962,7 +974,7 @@ class Chicken:
 
         # ? Chicken Legs -- right
         glPushMatrix()
-        glTranslatef(self.x, self.y - 1, self.z + 5)
+        glTranslatef(0, -1, 5)
         glScalef(1, 1, 3)
         glColor3f(1.0, 0.5, 0.0)  # Orange color for legs
         glutSolidCube(1)
@@ -971,23 +983,24 @@ class Chicken:
         # ? Chicken Eyes
         glBegin(GL_POINTS)
         glColor3f(0.0, 0.0, 0.0)  # Black color for eyes
-        glVertex3f(self.x + 7.8, self.y - 1, self.z + 17)
-        glVertex3f(self.x + 7.8, self.y + 1, self.z + 17)
+        glVertex3f(7.8, -1, 17)
+        glVertex3f(7.8, 1, 17)
         glEnd()
 
         # ? chicken wings
         glPushMatrix()
-        glTranslatef(self.x, self.y - 2.8, self.z + 10)
+        glTranslatef(0, -2.8, 10)
         glScalef(6, 1, 4)
         glColor3f(0.9, 0.5, 0.7)  # Lighter pink
         glutSolidCube(1)
         glPopMatrix()
 
         glPushMatrix()
-        glTranslatef(self.x, self.y + 2.8, self.z + 10)
+        glTranslatef(0, 2.8, 10)
         glScalef(6, 1, 4)
         glColor3f(0.9, 0.5, 0.7)  # Lighter pink
         glutSolidCube(1)
+        glPopMatrix()
         glPopMatrix()
 
 
@@ -1276,10 +1289,12 @@ pl3 = Pillar(-240, -280, 0)
 pl4 = Pillar(-200, -280, 0)
 PILLARS = [pl1, pl2, pl3, pl4]
 
-chicken1 = Chicken(-150, -150, 0)
-chicken2 = Chicken(-200, -130, 0)
-chicken3 = Chicken(-170, -180, 0)
-CHICKENS = [chicken1, chicken2, chicken3]
+chicken1 = Chicken(-150, -150, 0, rotation=30)
+chicken2 = Chicken(-200, -130, 0, rotation=-20)
+chicken3 = Chicken(-170, -180, 0, rotation=90)
+chicken4 = Chicken(-250, -150, 0)
+chicken5 = Chicken(-230, -180, 0, rotation=-90)
+CHICKENS = [chicken1, chicken2, chicken3, chicken4, chicken5]
 
 cow1 = Cow([-276, 418, 0], scale=6, rotation=-30, body_color=(0.85, 0.85, 0.85))
 cow2 = Cow(
@@ -1393,6 +1408,7 @@ def draw_text(x, y, text, color, font=GLUT_BITMAP_HELVETICA_18):
 
 
 def user_interface():
+    global SHOP_OPEN
     glDisable(GL_DEPTH_TEST)
     glColor3f(1, 1, 1)
     glMatrixMode(GL_PROJECTION)
@@ -1491,6 +1507,58 @@ def user_interface():
     glVertex2f(12, H - 480)
     glEnd()
 
+    # Show "Press F to open Shop" if player is near the car/shop
+    car_pos = truck.position
+    player_pos = MAOMAO.position
+    dist = math.sqrt(
+        (player_pos[0] - car_pos[0]) ** 2 + (player_pos[1] - car_pos[1]) ** 2
+    )
+    if dist >= 80:
+        SHOP_OPEN = False
+    elif dist < 80 and SHOP_OPEN == False:
+        draw_text(W // 2 - 100, 80, "Press F to open Shop", (0.2, 0.1, 0.1))
+
+    elif dist < 80 and SHOP_OPEN:
+        draw_text(W // 2 - 100, 80, "Press F to close Shop", (0.2, 0.1, 0.1))
+
+        # ? Draw shop menu background
+        glColor3f(0.95, 0.9, 0.98)
+        glBegin(GL_QUADS)
+        glVertex2f(W // 2 - 220, H // 2 + 180)
+        glVertex2f(W // 2 + 220, H // 2 + 180)
+        glVertex2f(W // 2 + 220, H // 2 - 180)
+        glVertex2f(W // 2 - 220, H // 2 - 180)
+        glEnd()
+
+        # ? Border
+        glColor3f(0.3, 0.1, 0.3)
+        glLineWidth(2)
+        glBegin(GL_LINE_LOOP)
+        glVertex2f(W // 2 - 220, H // 2 + 180)
+        glVertex2f(W // 2 + 220, H // 2 + 180)
+        glVertex2f(W // 2 + 220, H // 2 - 180)
+        glVertex2f(W // 2 - 220, H // 2 - 180)
+        glEnd()
+
+        draw_text(W // 2 - 60, H // 2 + 150, "SHOP MENU", (0.2, 0.1, 0.2))
+
+        shop_items = [
+            ("Wheat Seed", 10.0, "Buy"),
+            ("Carrot Seed", 20.0, "Buy"),
+            ("Chicken", 50.0, "Buy"),
+            ("Cow", 100.0, "Buy"),
+            ("Water Capacity", 500.0, "Buy"),
+            ("Wheat", 15.0, "Sell"),
+            ("Carrot", 25.0, "Sell"),
+            ("Egg", 30.0, "Sell"),
+            ("Milk", 60.0, "Sell"),
+        ]
+
+        for idx, (item, price, action) in enumerate(shop_items):
+            y = H // 2 + 110 - idx * 28
+            draw_text(W // 2 - 180, y, f"{item}", (0, 0, 0))
+            draw_text(W // 2 + 20, y, f"{action} -- ${price:.2f}", (0.1, 0.1, 0.1))
+
     # ? Inventory Items (Write and Underline)
     for k, v in INVENTORY.items():
         index = list(INVENTORY.keys()).index(k) + 1
@@ -1500,7 +1568,6 @@ def user_interface():
         glVertex2f(15, H - 470 - 30 * index - 5)
         glVertex2f(140, H - 470 - 30 * index - 5)
         glEnd()
-
 
     text = ["W", " A", " T", " E", " R"]
     for i in range(len(text)):
@@ -1553,6 +1620,16 @@ def keyboardListener(key, x, y):
         global BUCKET_FLAG
         BUCKET_FLAG = not BUCKET_FLAG
 
+    # ! Shop Mode (F key)
+    car_pos = truck.position
+    player_pos = MAOMAO.position
+    dist = math.sqrt(
+        (player_pos[0] - car_pos[0]) ** 2 + (player_pos[1] - car_pos[1]) ** 2
+    )
+    if key.lower() == b"f" and dist < 80:
+        global SHOP_OPEN
+        SHOP_OPEN = not SHOP_OPEN
+
     # ! Escape key to exit game
     if key == b"\x1b":
         glutLeaveMainLoop()
@@ -1599,8 +1676,9 @@ def specialKeyUpListener(key, x, y):
 plot_coordinates = [(570, -20), (570, -350)]  # Add more plot coordinates as needed
 pond_coordinates = [(0, 0)]  # Placeholder for pond coordinates
 
+
 def mouseListener(button, state, x, y):
-    global FOV, CAMERA_Z_REWORK, TOPVIEW, BUCKET_FLAG, POND_FLAG
+    global FOV, CAMERA_Z_REWORK, TOPVIEW, BUCKET_FLAG, POND_FLAG, SHOP_OPEN, BALANCE, INVENTORY, WATER, MAX_WATER
 
     zoomUpStep = 4
     zoomDownStep = 6
@@ -1617,13 +1695,64 @@ def mouseListener(button, state, x, y):
             print("Watering! Remaining:", WATER)
 
     if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
-        if 50 < MAOMAO.position[0] < 300 and -515 < MAOMAO.position[1] < -10:
-            print("Pond Clicked")
-            if WATER < MAX_WATER:
-                WATER += 1
-                print(f"Collected water. Total water buckets: {WATER}")
-            else:
-                print("Water buckets full.")  
+
+        if SHOP_OPEN:
+            if 456 < x < 785 and 235 < y < 252:
+                print("Clicked on Wheat Seed")
+                if BALANCE >= 10.0:
+                    if INVENTORY["wheat seed"] < 20:
+                        BALANCE -= 10.0
+                        INVENTORY["wheat seed"] += 1
+                        print("Bought 1 Wheat Seed")
+                    else:
+                        print("Max limit reached for Wheat Seed")
+                else:
+                    print("Not enough balance to buy Wheat Seed")
+
+            elif 456 < x < 785 and 263 < y < 280:
+                print("Clicked on Carrot Seed")
+                if BALANCE >= 20.0:
+                    if INVENTORY["carrot seed"] < 20:
+                        BALANCE -= 20.0
+                        INVENTORY["carrot seed"] += 1
+                        print("Bought 1 Carrot Seed")
+                    else:
+                        print("Max limit reached for Carrot Seed")
+                else:
+                    print("Not enough balance to buy Carrot Seed")
+
+            elif 456 < x < 785 and 291 < y < 308:
+                print("Clicked on Chicken")
+                if BALANCE >= 50.0:
+                    if INVENTORY["chickens"] < 5:
+                        BALANCE -= 50.0
+                        INVENTORY["chickens"] += 1
+                        print("Bought 1 Chicken")
+                    else:
+                        print("Max limit reached for Chickens")
+                else:
+                    print("Not enough balance to buy Chicken")
+
+            elif 456 < x < 785 and 319 < y < 336:
+                print("Clicked on Cow")
+                if BALANCE >= 100.0:
+                    if INVENTORY["cows"] < 3:
+                        BALANCE -= 100.0
+                        INVENTORY["cows"] += 1
+                        print("Bought 1 Cow")
+                    else:
+                        print("Max limit reached for Cows")
+                else:
+                    print("Not enough balance to buy Cow")
+
+        else:
+            if 50 < MAOMAO.position[0] < 300 and -515 < MAOMAO.position[1] < -10:
+                print("Pond Clicked")
+                if WATER < MAX_WATER:
+                    WATER += 1
+                    print(f"Collected water. Total water buckets: {WATER}")
+                else:
+                    print("Water buckets full.")
 
     # ? Scroll Up:
     if button == 3 and state == GLUT_DOWN:
@@ -1636,10 +1765,6 @@ def mouseListener(button, state, x, y):
         print("Scroll Down")
         FOV = min(FOV + zoomDownStep, 80)
         CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, (2 * zoomDownStep))
-    
-
-                  
-
 
 
 def updateTime():
@@ -1721,8 +1846,8 @@ def showScreen():
     for pillar in PILLARS:
         pillar.draw()
 
-    for chimken in CHICKENS:
-        chimken.draw_chicken()
+    for i in range(INVENTORY["chickens"]):
+        CHICKENS[i].draw_chicken()
 
     for i in range(INVENTORY["cows"]):
         COWS[i].draw()
