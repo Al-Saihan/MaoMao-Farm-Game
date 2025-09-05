@@ -307,12 +307,13 @@ class Pond:
 
 pond = Pond()
 
+
 class Tree:
     def __init__(self, x, y, z):
         self.x = x
         self.y = y
         self.z = z
-    
+
     def draw_tree(self):
         # ? Tree Trunk
         glPushMatrix()
@@ -321,18 +322,19 @@ class Tree:
         glColor3f(0.8, 0.5, 0.6)  # Brownish pink
         glutSolidCylinder(1, 1, 10, 10)
         glPopMatrix()
-        
-        #? Tree Head
+
+        # ? Tree Head
         glPushMatrix()
         glTranslatef(self.x, self.y, self.z + 80)
         glScalef(30, 30, 30)
         glColor3f(1.0, 0.7, 0.8)  # Sakura pink
         glutSolidSphere(1, 30, 30)
         glPopMatrix()
-    
 
-tree = Tree(600, 600, 0)    
-    
+
+tree = Tree(600, 600, 0)
+
+
 class Shop:
     def __init__(self, position):
         self.position = position
@@ -369,7 +371,7 @@ class Shop:
         glColor3f(0.8, 0.9, 1.0)  # Blueish white color
         glutSolidCube(1)
         glPopMatrix()
-        
+
         # ? Truck window right
         glPushMatrix()
         glTranslatef(0, 20, 40)
@@ -377,7 +379,7 @@ class Shop:
         glColor3f(0.8, 0.9, 1.0)  # Blueish white color
         glutSolidCube(1)
         glPopMatrix()
-        
+
         # ? Truck window front
         glPushMatrix()
         glTranslatef(-25, 0, 40)
@@ -624,6 +626,7 @@ class Plot:
         glutSolidCube(1)
         glPopMatrix()
 
+
 class Coop:
     def __init__(self, x, y, z):
         self.x = x
@@ -638,68 +641,67 @@ class Coop:
         glColor3f(0.95, 0.85, 0.4)  # Yellowish field color
         glutSolidCube(1)
         glPopMatrix()
-        
+
     def draw_coop(self):
         # ? Base
         glPushMatrix()
         glTranslatef(self.x - 20, self.y - 70, self.z + 20)
-        #glRotatef(45, 0, 1, 0)
+        # glRotatef(45, 0, 1, 0)
         glScalef(50, 30, 20)
         glColor3f(0.8, 0.5, 0.6)  # Pinkish brown
         glutSolidCube(1)
-        glPopMatrix()  
-        
+        glPopMatrix()
+
         # ? Roof 1st layer
         glPushMatrix()
         glTranslatef(self.x - 20, self.y - 70, self.z + 31)
-        #glRotatef(45, 0, 1, 0)
+        # glRotatef(45, 0, 1, 0)
         glScalef(60, 40, 5)
         glColor3f(0.33, 0.0, 0.13)  # Dark maroon pink
         glutSolidCube(1)
-        glPopMatrix()  
-        
+        glPopMatrix()
+
         # ? Roof 2nd layer
         glPushMatrix()
         glTranslatef(self.x - 20, self.y - 70, self.z + 36)
-        #glRotatef(45, 0, 1, 0)
+        # glRotatef(45, 0, 1, 0)
         glScalef(50, 30, 5)
         glColor3f(0.40, 0.0, 0.20)  # Dark maroon pink
         glutSolidCube(1)
-        glPopMatrix() 
-        
+        glPopMatrix()
+
         # ? Roof 3rd layer
         glPushMatrix()
         glTranslatef(self.x - 20, self.y - 70, self.z + 41)
-        #glRotatef(45, 0, 1, 0)
+        # glRotatef(45, 0, 1, 0)
         glScalef(40, 20, 5)
         glColor3f(0.5, 0.0, 0.13)  # Maroon color
         glutSolidCube(1)
-        glPopMatrix() 
-        
-        
+        glPopMatrix()
+
         # ? windows
         glPushMatrix()
         glTranslatef(self.x - 20, self.y - 54, self.z + 20)
-        glScalef(15, 2, 10)     
+        glScalef(15, 2, 10)
         glColor3f(0.33, 0.0, 0.13)  # Dark maroon color
         glutSolidCube(1)
         glPopMatrix()
-        
+
         # ? designs
         glPushMatrix()
         glTranslatef(self.x - 40, self.y - 54, self.z + 20)
-        glScalef(10, 2, 20)     
+        glScalef(10, 2, 20)
         glColor3f(0.5, 0.0, 0.13)  # Maroon color
         glutSolidCube(1)
         glPopMatrix()
-        
+
         glPushMatrix()
         glTranslatef(self.x, self.y - 54, self.z + 20)
-        glScalef(10, 2, 20)     
+        glScalef(10, 2, 20)
         glColor3f(0.5, 0.0, 0.13)  # Maroon color
         glutSolidCube(1)
         glPopMatrix()
-        
+
         glPushMatrix()
 
         # Move cube so its pivot (bottom edge) starts at the origin
@@ -731,7 +733,7 @@ class Chicken:
         self.x = x
         self.y = y
         self.z = z
-        
+
     def draw_chicken(self):
         # ? Chicken Body
         glColor3f(1.0, 0.8, 0.9)  # Light pink
@@ -740,22 +742,21 @@ class Chicken:
         glScalef(10, 5, 7)
         glutSolidCube(1)
         glPopMatrix()
-        
+
         # ? Chicken Head
         glPushMatrix()
         glTranslatef(self.x + 5, self.y, self.z + 15)
         glScalef(5, 5, 5)
         glutSolidCube(1)
         glPopMatrix()
-        
-        
+
         # ? beck
         glPushMatrix()
-        glTranslatef(self.x + 9, self.y, self.z + 15)   
+        glTranslatef(self.x + 9, self.y, self.z + 15)
         glScalef(3, 4, 1)
         glColor3f(1.0, 0.5, 0.0)  # Orange color for beck
         glutSolidCube(1)
-        glPopMatrix()    
+        glPopMatrix()
 
         # ? red comb
         glPushMatrix()
@@ -764,7 +765,7 @@ class Chicken:
         glColor3f(1.0, 0.0, 0.0)  # Red color for comb
         glutSolidCube(1)
         glPopMatrix()
-        
+
         # ? Chicken Legs -- left
         glPushMatrix()
         glTranslatef(self.x, self.y + 1, self.z + 5)
@@ -772,7 +773,7 @@ class Chicken:
         glColor3f(1.0, 0.5, 0.0)  # Orange color for legs
         glutSolidCube(1)
         glPopMatrix()
-        
+
         # ? Chicken Legs -- right
         glPushMatrix()
         glTranslatef(self.x, self.y - 1, self.z + 5)
@@ -780,30 +781,30 @@ class Chicken:
         glColor3f(1.0, 0.5, 0.0)  # Orange color for legs
         glutSolidCube(1)
         glPopMatrix()
-    
+
         # ? Chicken Eyes
         glBegin(GL_POINTS)
         glColor3f(0.0, 0.0, 0.0)  # Black color for eyes
         glVertex3f(self.x + 7.8, self.y - 1, self.z + 17)
         glVertex3f(self.x + 7.8, self.y + 1, self.z + 17)
-        glEnd()   
-        
+        glEnd()
+
         # ? chicken wings
-        glPushMatrix()  
+        glPushMatrix()
         glTranslatef(self.x, self.y - 2.8, self.z + 10)
         glScalef(6, 1, 4)
         glColor3f(0.9, 0.5, 0.7)  # Lighter pink
         glutSolidCube(1)
         glPopMatrix()
-        
-        glPushMatrix()  
+
+        glPushMatrix()
         glTranslatef(self.x, self.y + 2.8, self.z + 10)
         glScalef(6, 1, 4)
         glColor3f(0.9, 0.5, 0.7)  # Lighter pink
         glutSolidCube(1)
         glPopMatrix()
-             
-        
+
+
 class Pillar:
     def __init__(self, x, y, z):
         self.x = x
@@ -817,8 +818,8 @@ class Pillar:
         glScalef(5, 5, 40)
         glColor3f(0.33, 0.0, 0.13)  # Dark maroon pink
         glutSolidCylinder(0.5, 0.3, 10, 10)
-        glPopMatrix()  
-                  
+        glPopMatrix()
+
 
 coop = Coop(-200, -200, 0)
 
@@ -865,9 +866,8 @@ PILLARS = [pl1, pl2, pl3, pl4]
 
 chicken1 = Chicken(-150, -150, 0)
 chicken2 = Chicken(-200, -130, 0)
-chicken3 = Chicken(-170, -180, 0) 
+chicken3 = Chicken(-170, -180, 0)
 CHICKENS = [chicken1, chicken2, chicken3]
-
 
 
 # ! --------------------------------------- Draw Functions ---------------------------------------
@@ -1195,19 +1195,18 @@ def showScreen():
     truck.draw_truck_kun()
     for tree in TREES:
         tree.draw_tree()
-    
+
     for pillar in PILLARS:
-        pillar.draw()  
-        
+        pillar.draw()
+
     for chimken in CHICKENS:
-        chimken.draw_chicken()     
-        
+        chimken.draw_chicken()
+
     coop.draw()
     coop.draw_coop()
     farmLand()
     drawFences()
     drawPlots()
-    
 
     # ! User Interface
     user_interface()
