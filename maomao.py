@@ -40,7 +40,7 @@ else:
 # TODO: Buy/ Sell Logics -------------------------------------- Saihan [WIP]
 # TODO: Cheat Modes -------------------------------------------
 # TODO: Rain Logic --------------------------------------------
-# TODO: Day-Night Cycle ---------------------------------------
+# TODO: Day-Night Cycle --------------------------------------- 
 # TODO: Design User Interface --------------------------------- Sauihan [Finished]
 
 
@@ -374,7 +374,7 @@ class Shop:
         glPushMatrix()
         glTranslatef(0, -20, 40)
         glScalef(30, 15, 20)
-        glColor3f(0.8, 0.9, 1.0)  # Blueish white color
+        glColor4f(0.6, 0.6, 0.65, 0.5)
         glutSolidCube(1)
         glPopMatrix()
 
@@ -382,7 +382,7 @@ class Shop:
         glPushMatrix()
         glTranslatef(0, 20, 40)
         glScalef(30, 15, 20)
-        glColor3f(0.8, 0.9, 1.0)  # Blueish white color
+        glColor4f(0.6, 0.6, 0.65, 0.5)
         glutSolidCube(1)
         glPopMatrix()
 
@@ -390,7 +390,7 @@ class Shop:
         glPushMatrix()
         glTranslatef(-25, 0, 40)
         glScalef(10, 40, 20)
-        glColor3f(0.8, 0.9, 1.0)  # Blueish white color
+        glColor4f(0.6, 0.6, 0.65, 0.5)
         glutSolidCube(1)
         glPopMatrix()
 
@@ -1094,10 +1094,13 @@ COWS = [cow1, cow2, cow3]
 def farmLand():
     glBegin(GL_QUADS)
     # ! Grass Land
-    glColor3f(0.0, 0.8, 0.0)  # ? Grass green color
+    glColor3f(0.05, 0.35, 0.05)
     glVertex3f(-750, -600, 0)
+    glColor3f(0.10, 0.55, 0.10)
     glVertex3f(750, -600, 0)
+    glColor3f(0.30, 0.70, 0.20)
     glVertex3f(750, 750, 0)
+    glColor3f(0.55, 0.85, 0.40)
     glVertex3f(-750, 750, 0)
     glEnd()
 
