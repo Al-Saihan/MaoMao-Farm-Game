@@ -423,6 +423,27 @@ class Shop:
 
 truck = Shop([550, 470, 0.1])
 
+class Bucket:
+    def __init__(self, position):
+        self.position = position
+        pass
+
+    def draw_bucket(self):
+        glPushMatrix()
+        glTranslatef(self.position[0], self.position[1], self.position[2] + 5)
+        glScalef(5, 5, 5)
+        glColor3f(0.8, 0.8, 0.9)  # Light grayish blue
+        glutSolidCube(1)
+        glPopMatrix()
+        
+        glPushMatrix()
+        glTranslatef(self.position[0], self.position[1], self.position[2] + 7.5)
+        glScalef(4, 4, 0.1)
+        glColor3f(0.2, 0.2, 0.2)  # Dark grey for empty inside effect
+        glutSolidCube(1)
+        glPopMatrix()
+
+bucket = Bucket([200, 200, 0.1])
 
 class House:
     def __init__(self, position):
@@ -1433,6 +1454,9 @@ def showScreen():
     for i in range(INVENTORY['cows']):
         COWS[i].draw()
 
+    bucket.draw_bucket()
+    
+    
     COOP.draw()
     COOP.draw_coop()
     farmLand()
