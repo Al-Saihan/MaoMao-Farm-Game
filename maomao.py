@@ -6,7 +6,6 @@ from OpenGL.GLUT import GLUT_STROKE_ROMAN
 import math
 import time
 import os
-import random
 from random import randint
 
 # ! IGNORE THIS, IT'S JUST FOR DEBUGGING PURPOSES
@@ -73,7 +72,6 @@ SHOP_OPEN = False
 DAY = 0
 BALANCE = 1000.0
 TIME = {"hour": 6, "minute": 0}
-WEATHER = "clear"  # ? Clear, Rainy
 NIGHT = False
 BUCKET_FLAG = False
 POND_FLAG = False
@@ -89,6 +87,7 @@ INVENTORY = {
     "cows": 3,
     "milk": 10,
 }
+INSTRUCTIONS = False
 
 # ! --------------------------------------- CLasses ---------------------------------------
 # ! --------------------------------------- CLasses ---------------------------------------
@@ -1286,33 +1285,7 @@ b25 = BorderLine([12, 524, 0], [12, 678, 0])
 # shop
 b26 = BorderLine([550, 468, 0], [550, 610, 0], strength=40)
 
-BOUND_BOXES = []
-BOUND_BOXES.append(b1)
-BOUND_BOXES.append(b2)
-BOUND_BOXES.append(b3)
-BOUND_BOXES.append(b4)
-BOUND_BOXES.append(b5)
-BOUND_BOXES.append(b6)
-BOUND_BOXES.append(b7)
-BOUND_BOXES.append(b8)
-BOUND_BOXES.append(b9)
-BOUND_BOXES.append(b10)
-BOUND_BOXES.append(b11)
-BOUND_BOXES.append(b12)
-BOUND_BOXES.append(b13)
-BOUND_BOXES.append(b14)
-BOUND_BOXES.append(b15)
-BOUND_BOXES.append(b16)
-BOUND_BOXES.append(b17)
-BOUND_BOXES.append(b18)
-BOUND_BOXES.append(b19)
-BOUND_BOXES.append(b20)
-BOUND_BOXES.append(b21)
-BOUND_BOXES.append(b22)
-BOUND_BOXES.append(b23)
-BOUND_BOXES.append(b24)
-BOUND_BOXES.append(b25)
-BOUND_BOXES.append(b26)
+BOUND_BOXES = [b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21, b22, b23, b24, b25, b26]
 
 PLOT1 = Plot([570, -20, 1])
 PLOT2 = Plot([570, -350, 1])
@@ -1553,9 +1526,12 @@ def user_interface():
     draw_text(105, H - 30, "MaoMao Farming Simulator", textColor)
     draw_text(105, H - 60, f"Balance: {BALANCE:.2f}$", textColor)
     draw_text(105, H - 90, f"Time: {TIME['hour']:02}:{TIME['minute']:02}", textColor)
-    draw_text(W - 200, H - 30, f"Weather: {WEATHER}", textColor)
+    draw_text(W - 200, H - 30, f"Currently: {'Night' if NIGHT else 'Day'}", textColor)
     draw_text(W - 165, H - 60, f"Day: {DAY}", textColor)
-
+    if INSTRUCTIONS:
+        draw_text(W // 2 - 125, 110, "Press I to hide instructions", textColor)
+    else:
+        draw_text(W // 2 - 125, 110, "Press I to check instructions", textColor)
     draw_text(13, H - 473, "Inventory:", (0, 0, 0))
     # ? TEXTS Background - (Bottom Left)
     glColor3f(0.85, 0.7, 0.85)  # Lighter mauve color
@@ -1653,6 +1629,51 @@ def user_interface():
         glVertex2f(W - 30, 20 * WATER)
         glEnd()
 
+    #! INSTRUCTIONSONSKNSNS
+    if INSTRUCTIONS:
+        instructions = [
+            "INSTRUCTIONS:",
+            "WASD: To Move MaoMao",
+            "Arrow Keys: Rotate Camera",
+            "Q: Plant Wheat (Need Wheat Seed)",
+            "E: Plant Carrot (Need Carrot Seed)",
+            "T: Harvest Crops (Need to be Watered)",
+            "R: Toggle Bucket [You need this to water Plants!]",
+            "C: Toggle Cheat Mode >:(",
+            "V: Toggle Top View",
+            "F: Open/Close Shop (Go Near Your Truck!)",
+            "I: Show/Hide Instructions",
+            "ESC: Exit Game",
+
+            "Plant and then water your crops 3 times to harvest them!",
+            "Your animals might randomly lay eggs,",
+            "or produce milk each day :)",
+            "Good Luck have Fun!",
+            "",
+        ]
+
+        # ? Draw instructions background
+        glColor3f(0.95, 0.9, 0.98)
+        glBegin(GL_QUADS)
+        glVertex2f(W - 510, H - 10)      # Move further left, make wider
+        glVertex2f(W - 10, H - 10)
+        glVertex2f(W - 10, H - 410)      # Make taller
+        glVertex2f(W - 510, H - 410)
+        glEnd()
+
+        # ? Border
+        glColor3f(0.3, 0.1, 0.3)
+        glLineWidth(2)
+        glBegin(GL_LINE_LOOP)
+        glVertex2f(W - 510, H - 10)
+        glVertex2f(W - 10, H - 10)
+        glVertex2f(W - 10, H - 410)
+        glVertex2f(W - 510, H - 410)
+        glEnd()
+
+        for idx, line in enumerate(instructions):
+            draw_text(W - 490, H - 50 - idx * 32, line, (0.2, 0.1, 0.2))  # Move text further left, more space between lines
+
     # ! Restore original projection and modelview matrices
     glPopMatrix()
     glMatrixMode(GL_PROJECTION)
@@ -1705,6 +1726,11 @@ def keyboardListener(key, x, y):
     if key.lower() == b"f" and dist < 80:
         global SHOP_OPEN
         SHOP_OPEN = not SHOP_OPEN
+
+    # ! Instructions (I key)
+    if key.lower() == b"i":
+        global INSTRUCTIONS
+        INSTRUCTIONS = not INSTRUCTIONS
 
     # ! Escape key to exit game
     if key == b"\x1b":
