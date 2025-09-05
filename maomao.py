@@ -293,28 +293,60 @@ class Pond:
         pass
 
     def draw_pond(self):
-        glBegin(GL_QUADS)
-        # ! Pond Area Border
-        glColor3f(0.65, 0.85, 1.0)
-        glVertex3f(50, 0, 1)  # ? pond left bottom point
-        glColor3f(0.55, 0.75, 0.95)
-        glVertex3f(300, 0, 1)  # ? pond right bottom point
-        glColor3f(0.45, 0.70, 0.85)
-        glVertex3f(300, -530, 1)  # ? pond right top point
-        glColor3f(0.05, 0.15, 0.35)
-        glVertex3f(50, -530, 1)  # ? pond left top point
-        glEnd()
-        glBegin(GL_QUADS)
-        # ! Pond Area
-        glColor3f(0.95, 0.75, 0.80)
-        glVertex3f(80, -30, 1.5)  # ? pond left bottom point
-        glColor3f(0.98, 0.70, 0.65)
-        glVertex3f(270, -30, 1.5)  # ? pond right bottom point
-        glColor3f(0.80, 0.70, 0.90)
-        glVertex3f(270, -500, 1.5)  # ? pond right top point
-        glColor3f(0.70, 0.50, 0.60)
-        glVertex3f(80, -500, 1.5)  # ? pond left top point
-        glEnd()
+        if NIGHT:
+            glBegin(GL_QUADS)
+            # ! Pond Area Border
+            # Night Mode Gradient
+            glColor3f(0.18, 0.18, 0.38)      # Slightly lighter blue-purple for the bottom-left
+            glVertex3f(50, 0, 1)        
+
+            glColor3f(0.12, 0.12, 0.28)      # Lighter deep blue for the bottom-right
+            glVertex3f(300, 0, 1)       
+
+            glColor3f(0.08, 0.08, 0.18)      # Still dark, but a bit lighter for the top-right
+            glVertex3f(300, -530, 1)    
+
+            glColor3f(0.05, 0.05, 0.12)      # Almost black, but with a hint of blue for the top-left
+            glVertex3f(50, -530, 1)     
+
+            glEnd()
+            
+            glBegin(GL_QUADS)
+            # ! Pond Area
+            # Night Mode: Slightly darker gradient for pond area
+            glColor3f(0.55, 0.45, 0.55)
+            glVertex3f(80, -30, 1.5)  # pond left bottom point
+            glColor3f(0.60, 0.40, 0.50)
+            glVertex3f(270, -30, 1.5)  # pond right bottom point
+            glColor3f(0.45, 0.40, 0.60)
+            glVertex3f(270, -500, 1.5)  # pond right top point
+            glColor3f(0.40, 0.30, 0.40)
+            glVertex3f(80, -500, 1.5)  # pond left top point
+            glEnd()
+        else:
+            glBegin(GL_QUADS)
+            # ! Pond Area Border
+            glColor3f(0.65, 0.85, 1.0)
+            glVertex3f(50, 0, 1)  # ? pond left bottom point
+            glColor3f(0.55, 0.75, 0.95)
+            glVertex3f(300, 0, 1)  # ? pond right bottom point
+            glColor3f(0.45, 0.70, 0.85)
+            glVertex3f(300, -530, 1)  # ? pond right top point
+            glColor3f(0.05, 0.15, 0.35)
+            glVertex3f(50, -530, 1)  # ? pond left top point
+            glEnd()
+            
+            glBegin(GL_QUADS)
+            # ! Pond Area
+            glColor3f(0.95, 0.75, 0.80)
+            glVertex3f(80, -30, 1.5)  # ? pond left bottom point
+            glColor3f(0.98, 0.70, 0.65)
+            glVertex3f(270, -30, 1.5)  # ? pond right bottom point
+            glColor3f(0.80, 0.70, 0.90)
+            glVertex3f(270, -500, 1.5)  # ? pond right top point
+            glColor3f(0.70, 0.50, 0.60)
+            glVertex3f(80, -500, 1.5)  # ? pond left top point
+            glEnd()
 
 
 pond = Pond()
@@ -583,7 +615,7 @@ class Fence:
         else:
             glScalef(connectorWidth, connectorLength, connectorHeight)
 
-        glColor3f(0.9, 0.9, 0.9)  # ? Off-White Color
+        glColor3f(0.0, 0.0, 0.0)  # Black color
         glutSolidCube(1)
         glPopMatrix()
 
@@ -1499,7 +1531,7 @@ def showScreen():
     if NIGHT:
         glClearColor(0.25, 0.15, 0.25, 1)  # Dark mauve color for night
     else:
-        glClearColor(0.95, 0.6, 0.8, 1)  # Pookie pink color
+        glClearColor(1.0, 0.85, 0.95, 1)  # Lighter pink color
 
     setupCamera()
     MAOMAO.draw()
