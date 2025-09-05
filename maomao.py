@@ -364,9 +364,11 @@ pond = Pond()
 
 class Tree:
     def __init__(self, x, y, z):
+        global BOUND_BOXES
         self.x = x
         self.y = y
         self.z = z
+        BOUND_BOXES.append(BorderLine([self.x, self.y, self.z], [self.x, self.y, self.z + 20], strength=20))
 
     def draw_tree(self):
         # ? Tree Trunk
@@ -1231,6 +1233,12 @@ b11 = BorderLine([-126, 350, 10], [-126, 455, 10], strength=11)
 b12 = BorderLine([693, 433, 0], [692, 667, 10])
 b13 = BorderLine([439, 667, 0], [692, 667, 10])
 b14 = BorderLine([439, 433, 0], [439, 667, 10])
+# Pool Border
+b15 = BorderLine([86, -36, 0], [86, -495, 0])
+b16 = BorderLine([86, -495, 0], [265, -495, 0])
+b17 = BorderLine([265, -495, 0], [265, -36, 0])
+b18 = BorderLine([265, -36, 0], [86, -36, 0])
+
 
 BOUND_BOXES = []
 BOUND_BOXES.append(b1)
@@ -1247,6 +1255,10 @@ BOUND_BOXES.append(b11)
 BOUND_BOXES.append(b12)
 BOUND_BOXES.append(b13)
 BOUND_BOXES.append(b14)
+BOUND_BOXES.append(b15)
+BOUND_BOXES.append(b16)
+BOUND_BOXES.append(b17)
+BOUND_BOXES.append(b18)
 
 PLOT1 = Plot([570, -20, 1])
 PLOT2 = Plot([570, -350, 1])
@@ -1264,8 +1276,8 @@ PLOT2.water_slot(2, 2)
 
 PLOTS = [PLOT1, PLOT2]
 
-t1 = Tree(203.79333586600404, 58.59383956134186, 0)
-t2 = Tree(396.9853972831635, 343.36338720735466, 0)
+t1 = Tree(203.79, 58.59, 0)
+t2 = Tree(396.99, 343.36, 0)
 t3 = Tree(-184, -499, 0)
 t4 = Tree(-290, -430, 0)
 t5 = Tree(-518, -502, 0)
@@ -1684,11 +1696,11 @@ def mouseListener(button, state, x, y):
     zoomDownStep = 6
 
     if button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
-        # with open(config_path, "a") as f:
-        #     print("Writing to config.txt")
-        #     f.write(
-        #         f"a = Fence({MAOMAO.position[0]}, {MAOMAO.position[1]}, {MAOMAO.position[2]})\n"
-        #     )
+        with open(config_path, "a") as f:
+            print("Writing to config.txt")
+            f.write(
+                f"a = Fence({MAOMAO.position[0]}, {MAOMAO.position[1]}, {MAOMAO.position[2]})\n"
+            )
         global WATER
         if BUCKET_FLAG and WATER > 0:
             WATER -= 1
@@ -1971,7 +1983,7 @@ def idle():
     if BUTTONS["ra"]:
         CAMERA_ROTATE += 0.2
 
-    # devDebug()
+    devDebug()
     glutPostRedisplay()
 
 
