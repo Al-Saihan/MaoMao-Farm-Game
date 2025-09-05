@@ -78,8 +78,10 @@ MAX_WATER = 10
 WATER_MODE = False
 INVENTORY = {
     "wheat": 0,
+    'wheat seed': 5,
     "potato": 0,
     "carrot": 0,
+    'carrot seed': 5,
     "sunflower": 0,
     "chickens": 0,
     "egg": 0,
@@ -1564,6 +1566,11 @@ def keyboardUpListener(key, x, y):
     # ! Selfie Mode (V Key)
     if key.lower() == b"v":
         TOPVIEW = not TOPVIEW
+        
+    if key.lower() == b"q" and get_slot:
+        if INVENTORY['wheat slot'] > 0:
+            INVENTORY['wheat slot'] -= 1
+              
 
 
 def specialKeyListener(key, x, y):
