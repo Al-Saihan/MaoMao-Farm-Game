@@ -66,6 +66,7 @@ P_ROTATE_ANGLE = 1
 
 
 # ! GAME LOGIC VARIABLES
+CHEAT = False
 SHOP = False
 LAST_TIME_UPDATE = time.time()
 SHOP_OPEN = False
@@ -1688,6 +1689,12 @@ def keyboardListener(key, x, y):
     if key.lower() == b"r":
         global BUCKET_FLAG
         BUCKET_FLAG = not BUCKET_FLAG
+    
+    # ! Cheat Mode (C Key)
+    if key.lower() == b"c":
+        global CHEAT
+        CHEAT = not CHEAT
+        cheat_mode(CHEAT)    
 
     # ! Shop Mode (F key)
     car_pos = truck.position
@@ -1942,9 +1949,24 @@ def mouseListener(button, state, x, y):
         FOV = min(FOV + zoomDownStep, 80)
         CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, (2 * zoomDownStep))
 
+def cheat_mode(CHEAT):
+    if CHEAT:
+        global BALANCE, INVENTORY, WATER, MAX_WATER
+        BALANCE = 999999999999.99
+        INVENTORY["wheat"] = 99999999
+        INVENTORY["carrot"] = 99999999
+        INVENTORY["wheat seed"] = 99999999
+        INVENTORY["carrot seed"] = 99999999
+        INVENTORY["egg"] = 99999999
+        INVENTORY["milk"] = 99999999
+        WATER = 9999999
+        MAX_WATER = 9999999999
+        print("Cheat mode activated!")
+    else:
+        pass    
 
 def updateTime():
-    global TIME, LAST_TIME_UPDATE, NIGHT
+    global TIME, LAST_TIME_UPDATE, NIGHT, BALANCE
 
     if time.time() - LAST_TIME_UPDATE >= 0.5:  # Update every 1 second
         LAST_TIME_UPDATE = time.time()
@@ -1960,6 +1982,8 @@ def updateTime():
                     INVENTORY["egg"] += randint(0, INVENTORY["chickens"])
                 if INVENTORY["cows"] > 0:
                     INVENTORY["milk"] += randint(0, INVENTORY["cows"])
+                BALANCE += 50  # Daily allowance  
+                        
 
             if 18 > TIME["hour"] > 6:
                 NIGHT = False
