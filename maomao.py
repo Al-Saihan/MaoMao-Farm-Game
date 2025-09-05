@@ -65,6 +65,7 @@ P_ROTATE_ANGLE = 0.4
 
 # ! GAME LOGIC VARIABLES
 LAST_TIME_UPDATE = time.time()
+DAY = 0
 BALANCE = 0.0
 TIME = {"hour": 6, "minute": 0}
 WEATHER = "clear"  # ? Clear, Rainy
@@ -1273,6 +1274,7 @@ def user_interface():
     draw_text(105, H - 60, f"Balance: {BALANCE:.2f}$", textColor)
     draw_text(105, H - 90, f"Time: {TIME['hour']:02}:{TIME['minute']:02}", textColor)
     draw_text(W - 200, H - 30, f"Weather: {WEATHER}", textColor)
+    draw_text(W - 165, H - 60, f"Day: {DAY}", textColor)
 
     draw_text(13, H - 473, "Inventory:", (0, 0, 0))
     # ? TEXTS Background - (Bottom Left)
@@ -1423,6 +1425,8 @@ def updateTime():
             TIME["hour"] += 1
             if TIME["hour"] >= 24:
                 TIME["hour"] = 0
+                global DAY
+                DAY += 1
             
             if 18 > TIME["hour"] > 6:
                 NIGHT = False
