@@ -62,7 +62,7 @@ BUTTONS = {"w": False, "s": False, "a": False, "d": False, "la": False, "ra": Fa
 
 # ! Player Control
 P_SPEED = 1
-P_ROTATE_ANGLE = 0.4
+P_ROTATE_ANGLE = 1
 
 
 # ! GAME LOGIC VARIABLES
@@ -76,7 +76,7 @@ WEATHER = "clear"  # ? Clear, Rainy
 NIGHT = False
 BUCKET_FLAG = False
 POND_FLAG = False
-WATER = 100000
+WATER = 10
 MAX_WATER = 10
 INVENTORY = {
     "wheat": 10,
@@ -705,23 +705,24 @@ class BorderLine:
 class Plot:
     def __init__(self, position):
         self.position = position
-        self.slots = [[0,0,0],[0,0,0],[0,0,0]] 
-        self.watered = [[0 for _ in range(3)] for _ in range(3)] # 0=empty,1=wheat,2=carrot
+        self.slots = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+        self.watered = [
+            [0 for _ in range(3)] for _ in range(3)
+        ]  # 0=empty,1=wheat,2=carrot
         self.slot_colors = []
         self.watered = []
         for i in range(3):
             row_colors = []
             row_watered = []
             for j in range(3):
-                row_colors.append([0,1,0])   # default green
-                row_watered.append(False)     
+                row_colors.append([0, 1, 0])  # default green
+                row_watered.append(False)
             self.slot_colors.append(row_colors)
             self.watered.append(row_watered)
-        self.scaleX = 150
-        self.scaleY = 150
+        self.scaleX = 250
+        self.scaleY = 250
 
-
-    def set_slot_color(self, i,j,color):
+    def set_slot_color(self, i, j, color):
         self.slot_colors[i][j] = color
 
     def water_slot(self, i, j):
@@ -737,100 +738,120 @@ class Plot:
                 elif self.slots[i][j] == 2:  # carrot
                     self.set_slot_color(i, j, [1, 0.5, 0])  # orange
 
-    def get_slot_at(self, x,y):
+    def get_slot_at(self, x, y):
         scaleX, scaleY = self.scaleX, self.scaleY
-        slot_width = scaleX/3
-        slot_height = scaleY/3
-        min_x = self.position[0] - scaleX/2
-        min_y = self.position[1] - scaleY/2
-        if min_x <= x <= min_x+scaleX and min_y <= y <= min_y+scaleY:
-            i = int((x-min_x)//slot_width)
-            j = int((y-min_y)//slot_height)
-            return i,j
+        slot_width = scaleX / 3
+        slot_height = scaleY / 3
+        min_x = self.position[0] - scaleX / 2
+        min_y = self.position[1] - scaleY / 2
+        if min_x <= x <= min_x + scaleX and min_y <= y <= min_y + scaleY:
+            i = int((x - min_x) // slot_width)
+            j = int((y - min_y) // slot_height)
+            return i, j
         return None
 
     def draw(self):
         scaleX = self.scaleX
         scaleY = self.scaleY
-        slot_width = scaleX/3
-        slot_height = scaleY/3
+        slot_width = scaleX / 3
+        slot_height = scaleY / 3
 
-       
         for i in range(3):
             for j in range(3):
                 glPushMatrix()
-                x = self.position[0] - scaleX/2 + slot_width/2 + i*slot_width
-                y = self.position[1] - scaleY/2 + slot_height/2 + j*slot_height
-                glTranslatef(x, y, 1) 
+                x = self.position[0] - scaleX / 2 + slot_width / 2 + i * slot_width
+                y = self.position[1] - scaleY / 2 + slot_height / 2 + j * slot_height
+                glTranslatef(x, y, 1)
                 glScalef(slot_width, slot_height, 2)
 
                 if self.watered[i][j]:
-                    glColor3f(0.36, 0.25, 0.2)  
+                    glColor3f(0.36, 0.25, 0.2)
                 else:
-                    glColor3f(244/255, 223/255, 144/255)  
+                    glColor3f(244 / 255, 223 / 255, 144 / 255)
 
                 glutSolidCube(1)
                 glPopMatrix()
 
-               
                 if self.slots[i][j] == 1:
-                    self.draw_wheat(i, j, slot_width, slot_height, self.slot_colors[i][j])
+                    self.draw_wheat(
+                        i, j, slot_width, slot_height, self.slot_colors[i][j]
+                    )
                 elif self.slots[i][j] == 2:
-                    self.draw_carrot(i, j, slot_width, slot_height, self.slot_colors[i][j])
+                    self.draw_carrot(
+                        i, j, slot_width, slot_height, self.slot_colors[i][j]
+                    )
 
-      
-        glColor3f(180/255, 150/255, 80/255)
+        glColor3f(180 / 255, 150 / 255, 80 / 255)
 
-       
         glPushMatrix()
-        glTranslatef(self.position[0], self.position[1] - slot_height/2, 3)  
+        glTranslatef(self.position[0], self.position[1] - slot_height / 2, 3)
         glScalef(scaleX, 1, 3)
         glutSolidCube(1)
         glPopMatrix()
 
         glPushMatrix()
-        glTranslatef(self.position[0], self.position[1] + slot_height/2, 3)
+        glTranslatef(self.position[0], self.position[1] + slot_height / 2, 3)
         glScalef(scaleX, 1, 3)
         glutSolidCube(1)
         glPopMatrix()
 
-      
         glPushMatrix()
-        glTranslatef(self.position[0] - slot_width/2, self.position[1], 3)
+        glTranslatef(self.position[0] - slot_width / 2, self.position[1], 3)
         glScalef(1, scaleY, 3)
         glutSolidCube(1)
         glPopMatrix()
 
         glPushMatrix()
-        glTranslatef(self.position[0] + slot_width/2, self.position[1], 3)
+        glTranslatef(self.position[0] + slot_width / 2, self.position[1], 3)
         glScalef(1, scaleY, 3)
         glutSolidCube(1)
         glPopMatrix()
 
-    def draw_wheat(self,i,j,slot_width,slot_height,color):
+    def draw_wheat(self, i, j, slot_width, slot_height, color):
         glColor3f(*color)
         # 2 rows × 4 columns = 8 sticks
         for row in range(2):
             for col in range(4):
                 glPushMatrix()
-                x = self.position[0] - self.scaleX/2 + i*slot_width + (col + 0.5)*slot_width/4
-                y = self.position[1] - self.scaleY/2 + j*slot_height + (row + 0.5)*slot_height/2
-                glTranslatef(x,y,2)
-                glScalef(2,2,10)
+                x = (
+                    self.position[0]
+                    - self.scaleX / 2
+                    + i * slot_width
+                    + (col + 0.5) * slot_width / 4
+                )
+                y = (
+                    self.position[1]
+                    - self.scaleY / 2
+                    + j * slot_height
+                    + (row + 0.5) * slot_height / 2
+                )
+                glTranslatef(x, y, 2)
+                glScalef(2, 2, 10)
                 glutSolidCube(1)
                 glPopMatrix()
 
-    def draw_carrot(self,i,j,slot_width,slot_height,color):
+    def draw_carrot(self, i, j, slot_width, slot_height, color):
         glColor3f(*color)
         for row in range(2):
             for col in range(4):
                 glPushMatrix()
-                x = self.position[0] - self.scaleX/2 + i*slot_width + (col + 0.5)*slot_width/4
-                y = self.position[1] - self.scaleY/2 + j*slot_height + (row + 0.5)*slot_height/2
-                glTranslatef(x,y,2)
-                glScalef(2,2,10)
+                x = (
+                    self.position[0]
+                    - self.scaleX / 2
+                    + i * slot_width
+                    + (col + 0.5) * slot_width / 4
+                )
+                y = (
+                    self.position[1]
+                    - self.scaleY / 2
+                    + j * slot_height
+                    + (row + 0.5) * slot_height / 2
+                )
+                glTranslatef(x, y, 2)
+                glScalef(2, 2, 10)
                 glutSolidCube(1)
                 glPopMatrix()
+
 
 class Coop:
     def __init__(self, x, y, z):
@@ -1229,7 +1250,7 @@ a16 = Fence([439, 667, 0], [692, 667, 10])
 a17 = Fence([439, 433, 0], [439, 667, 10])
 
 
-FENCES = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15,a16, a17]
+FENCES = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17]
 
 b1 = BorderLine([-740, -590, 10], [740, -590, 10])
 b2 = BorderLine([-740, 740, 10], [740, 740, 10])
@@ -1256,7 +1277,13 @@ b18 = BorderLine([265, -36, 0], [86, -36, 0])
 b19 = BorderLine([-460, 350, 10], [-460, 510, 10], strength=11)
 b20 = BorderLine([-460, 510, 10], [-310, 510, 10], strength=11)
 b21 = BorderLine([-310, 455, 10], [-310, 510, 10], strength=11)
-
+# House Border
+b22 = BorderLine([12, 524, 0], [315, 524, 0])
+b23 = BorderLine([315, 524, 0], [315, 678, 0])
+b24 = BorderLine([315, 678, 0], [12, 678, 0])
+b25 = BorderLine([12, 524, 0], [12, 678, 0])
+# shop
+b26 = BorderLine([550, 468, 0], [550, 610, 0], strength=40)
 
 BOUND_BOXES = []
 BOUND_BOXES.append(b1)
@@ -1280,6 +1307,11 @@ BOUND_BOXES.append(b18)
 BOUND_BOXES.append(b19)
 BOUND_BOXES.append(b20)
 BOUND_BOXES.append(b21)
+BOUND_BOXES.append(b22)
+BOUND_BOXES.append(b23)
+BOUND_BOXES.append(b24)
+BOUND_BOXES.append(b25)
+BOUND_BOXES.append(b26)
 
 PLOT1 = Plot([570, -20, 1])
 PLOT2 = Plot([570, -350, 1])
@@ -1671,7 +1703,6 @@ def keyboardListener(key, x, y):
     if key == b"\x1b":
         glutLeaveMainLoop()
 
-    
     px, py, pz = MAOMAO.position
 
     # --- Plant wheat with Q ---
@@ -1710,7 +1741,7 @@ def keyboardListener(key, x, y):
                     INVENTORY["wheat"] += 3
                     plot.slots[i][j] = 0
                     plot.slot_colors[i][j] = [0, 1, 0]  # reset to default
-                    plot.watered[i][j] = 0 
+                    plot.watered[i][j] = 0
 
                 # Check for carrot
                 elif plot.slots[i][j] == 2 and plot.watered[i][j] >= 3:
@@ -1720,7 +1751,6 @@ def keyboardListener(key, x, y):
                     plot.watered[i][j] = 0
 
                 break
-
 
 
 def keyboardUpListener(key, x, y):
@@ -1860,9 +1890,7 @@ def mouseListener(button, state, x, y):
                 if INVENTORY["wheat"] > 0:
                     BALANCE += 15.0
                     INVENTORY["wheat"] -= 1
-                    print(
-                        f"Sold 1 Wheat for $15.00"
-                    )
+                    print(f"Sold 1 Wheat for $15.00")
                 else:
                     print("No Wheat to sell")
 
@@ -1871,9 +1899,7 @@ def mouseListener(button, state, x, y):
                 if INVENTORY["carrot"] > 0:
                     BALANCE += 25.0
                     INVENTORY["carrot"] -= 1
-                    print(
-                        f"Sold 1 Carrot for $25.00"
-                    )
+                    print(f"Sold 1 Carrot for $25.00")
                 else:
                     print("No Carrot to sell")
 
@@ -1882,9 +1908,7 @@ def mouseListener(button, state, x, y):
                 if INVENTORY["egg"] > 0:
                     BALANCE += 30.0
                     INVENTORY["egg"] -= 1
-                    print(
-                        f"Sold 1 Egg for $30.00"
-                    )
+                    print(f"Sold 1 Egg for $30.00")
                 else:
                     print("No Egg to sell")
 
@@ -1892,9 +1916,7 @@ def mouseListener(button, state, x, y):
                 print("Clicked on Milk")
                 if INVENTORY["milk"] > 0:
                     BALANCE += 60.0
-                    print(
-                        f"Sold 1 Milk for $60.00"
-                    )
+                    print(f"Sold 1 Milk for $60.00")
                     INVENTORY["milk"] -= 1
                 else:
                     print("No Milk to sell")
@@ -1938,7 +1960,6 @@ def updateTime():
                     INVENTORY["egg"] += randint(0, INVENTORY["chickens"])
                 if INVENTORY["cows"] > 0:
                     INVENTORY["milk"] += randint(0, INVENTORY["cows"])
-                        
 
             if 18 > TIME["hour"] > 6:
                 NIGHT = False
@@ -2028,42 +2049,6 @@ def showScreen():
     # ? Double Buffering - Smoothness
     glutSwapBuffers()
 
-
-def devDebug():  # ! Clearly AI Written, Remove After Finishing. Thank You.
-    # Initialize timing variables on first call
-    if not hasattr(devDebug, "last_print_time"):
-        devDebug.last_print_time = time.time()
-        devDebug.frame_count = 0
-        devDebug.fps = 0
-
-    current_time = time.time()
-    devDebug.frame_count += 1
-    elapsed_time = current_time - devDebug.last_print_time
-
-    # Only print if at least 1 second has passed
-    if elapsed_time < 1.0:
-        return
-
-    # Get player position
-    x, y, z = MAOMAO.position
-
-    # Calculate FPS based on actual elapsed time and frame count
-    devDebug.fps = devDebug.frame_count / elapsed_time
-
-    # Format and print debug information
-    print(
-        f"{glutGet(GLUT_ELAPSED_TIME)} : Player Position - X={x:.2f} Y={y:.2f} Z={z:.2f}"
-    )
-    print(f"FPS: {devDebug.fps:.2f}")
-    print(f"Camera Extra Angle: {CAMERA_ROTATE}")
-
-    # Reset counters for next interval
-    devDebug.last_print_time = current_time
-    devDebug.frame_count = 0
-
-    # print(b1(MAOMAO.position))
-
-
 def idle():
     global CAMERA_ROTATE
 
@@ -2130,7 +2115,6 @@ def idle():
     if BUTTONS["ra"]:
         CAMERA_ROTATE += 0.2
 
-    devDebug()
     glutPostRedisplay()
 
 
