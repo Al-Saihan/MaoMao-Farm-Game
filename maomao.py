@@ -26,22 +26,23 @@ else:
 # TODO: Make Road --------------------------------------------- Saihan [Finished]
 # TODO: Make Car/Shop(buy/sell point) Class ------------------- Mao [Finished]
 # TODO: Make Pond Class --------------------------------------- Mao [Finished]
-# TODO: Make Farmable Plot Class [With Crop Specifier] --------
-# TODO: Make Cows Barn Class ---------------------------------- Nusayba
-# TODO: Make Cows Class --------------------------------------- Nusayba
+# TODO: Make Farmable Plot Class [With Crop Specifier] -------- Nusayba [Finished]
+# TODO: Make Cows Barn Class ---------------------------------- Nusayba [Finished]
+# TODO: Make Cows Class --------------------------------------- Nusayba [Finished]
 # TODO: Make Hens Barn Class ---------------------------------- Mao [Finished]
 # TODO: Make Hens Class --------------------------------------- Mao [Finished]
-# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] ---
+# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] --- Nusayba [Finished]
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
-# TODO: Water Mechanism ---------------------------------------
-# TODO: Crops Grow Logic --------------------------------------
-# TODO: Harvest Logic -----------------------------------------
-# TODO: Inventory System --------------------------------------
+# TODO: Crop Planting Logic ----------------------------------- WIP
+# TODO: Water Mechanism --------------------------------------- WIP
+# TODO: Crops Grow Logic -------------------------------------- WIP
+# TODO: Harvest Logic ----------------------------------------- WIP
+# TODO: Inventory System -------------------------------------- Saihan [Finished]
 # TODO: Buy/ Sell Logics -------------------------------------- Saihan [WIP]
-# TODO: Cheat Modes -------------------------------------------
-# TODO: Rain Logic --------------------------------------------
-# TODO: Day-Night Cycle ---------------------------------------
-# TODO: Design User Interface --------------------------------- Sauihan [Finished]
+# TODO: Cheat Modes ------------------------------------------- WIP
+# TODO: Rain Logic -------------------------------------------- WIP
+# TODO: Day-Night Cycle --------------------------------------- Amra Shobai Raja [Finished]
+# TODO: Design User Interface --------------------------------- Saihan [Finished]
 
 
 # ! --------------------------------------- Global Variables ---------------------------------------
@@ -72,6 +73,7 @@ WEATHER = "clear"  # ? Clear, Rainy
 NIGHT = False
 WATER = 10
 MAX_WATER = 10
+WATER_MODE = False
 INVENTORY = {
     "wheat": 0,
     "potato": 0,
@@ -465,23 +467,27 @@ truck = Shop([550, 470, 0.1])
 
 
 class Bucket:
-    def __init__(self, position):
+    def __init__(self, position, rotation = 0):
         self.position = position
         pass
 
     def draw_bucket(self):
         glPushMatrix()
-        glTranslatef(self.position[0], self.position[1], self.position[2] + 5)
+        glTranslatef(self.position[0], self.position[1], self.position[2])
+        glRotate(MAOMAO.rotation, 0,0,1)
+        glPushMatrix()
+        glTranslatef(0, 0, 5)
         glScalef(5, 5, 5)
         glColor3f(0.8, 0.8, 0.9)  # Light grayish blue
         glutSolidCube(1)
         glPopMatrix()
 
         glPushMatrix()
-        glTranslatef(self.position[0], self.position[1], self.position[2] + 7.5)
+        glTranslatef(0, 0, 7.5)
         glScalef(4, 4, 0.1)
         glColor3f(0.2, 0.2, 0.2)  # Dark grey for empty inside effect
         glutSolidCube(1)
+        glPopMatrix()
         glPopMatrix()
 
 
@@ -615,7 +621,7 @@ class Fence:
         else:
             glScalef(connectorWidth, connectorLength, connectorHeight)
 
-        glColor3f(0.0, 0.0, 0.0)  # Black color
+        glColor3f(0.3, 0.3, 0.3)  # Light dark black
         glutSolidCube(1)
         glPopMatrix()
 
@@ -1524,10 +1530,10 @@ def keyboardListener(key, x, y):
     if key.lower() == b"d":
         BUTTONS["d"] = True
 
-    # ! CHEAT: Night On/Off (R key)
+    # ! Water Mode (R key)
     if key.lower() == b"r":
-        global NIGHT
-        NIGHT = not NIGHT
+        global WATER_MODE
+        WATER_MODE = not WATER_MODE
 
     # ! Escape key to exit game
     if key == b"\x1b":
@@ -1554,7 +1560,7 @@ def keyboardUpListener(key, x, y):
         BUTTONS["d"] = False
 
     # ! Selfie Mode (V Key)
-    if key == b"v":
+    if key.lower() == b"v":
         TOPVIEW = not TOPVIEW
 
 
@@ -1665,7 +1671,7 @@ def showScreen():
     if NIGHT:
         glClearColor(0.25, 0.15, 0.25, 1)  # Dark mauve color for night
     else:
-        glClearColor(1.0, 0.85, 0.95, 1)  # Lighter pink color
+        glClearColor(0.85, 0.85, 0.95, 1)  # Lighter pink color
 
     setupCamera()
     MAOMAO.draw()
@@ -1685,8 +1691,9 @@ def showScreen():
     for i in range(INVENTORY["cows"]):
         COWS[i].draw()
 
-    BUCKET.position = [MAOMAO.position[0] + 10, MAOMAO.position[1] - 10, 10]
-    BUCKET.draw_bucket()
+    BUCKET.position = [MAOMAO.position[0], MAOMAO.position[1], 20]
+    if WATER_MODE:
+        BUCKET.draw_bucket()
 
     COOP.draw()
     COOP.draw_coop()
