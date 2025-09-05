@@ -6,6 +6,8 @@ from OpenGL.GLUT import GLUT_STROKE_ROMAN
 import math
 import time
 import os
+import random
+from random import randint
 
 # ! IGNORE THIS, IT'S JUST FOR DEBUGGING PURPOSES
 # Open config.txt if it exists, otherwise create it
@@ -1823,9 +1825,9 @@ def updateTime():
                 global DAY
                 DAY += 1
                 if INVENTORY["chickens"] > 0:
-                    INVENTORY["egg"] += INVENTORY["chickens"]
+                    INVENTORY["egg"] += randint(0, INVENTORY["chickens"])
                 if INVENTORY["cows"] > 0:
-                    INVENTORY["milk"] += INVENTORY["cows"]
+                    INVENTORY["milk"] += randint(0, INVENTORY["cows"])
                         
 
             if 18 > TIME["hour"] > 6:
