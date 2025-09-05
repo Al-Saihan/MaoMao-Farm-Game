@@ -431,6 +431,7 @@ class Shop:
 
 truck = Shop([550, 470, 0.1])
 
+
 class Bucket:
     def __init__(self, position):
         self.position = position
@@ -443,7 +444,7 @@ class Bucket:
         glColor3f(0.8, 0.8, 0.9)  # Light grayish blue
         glutSolidCube(1)
         glPopMatrix()
-        
+
         glPushMatrix()
         glTranslatef(self.position[0], self.position[1], self.position[2] + 7.5)
         glScalef(4, 4, 0.1)
@@ -634,7 +635,13 @@ class BorderLine:
 
         distance = cross_mag / AB_mag if AB_mag != 0 else 0
 
-        if abs(distance) < self.strength:
+        # ? Limit check: projection must be between A and B
+        BC = [C[i] - self.B[i] for i in range(3)]
+        dot1 = sum([AB[i] * AC[i] for i in range(3)])
+        dot2 = sum([(-AB[i]) * BC[i] for i in range(3)])
+        is_between = dot1 >= 0 and dot2 >= 0
+
+        if is_between and abs(distance) < self.strength:
             return True
         return False
 
@@ -642,106 +649,125 @@ class BorderLine:
 class Plot:
     def __init__(self, position):
         self.position = position
-        self.slots = [[0,0,0],[0,0,0],[0,0,0]]  # 0=empty,1=wheat,2=carrot
+        self.slots = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]  # 0=empty,1=wheat,2=carrot
         self.slot_colors = []
         self.watered = []
         for i in range(3):
             row_colors = []
             row_watered = []
             for j in range(3):
-                row_colors.append([0,1,0])   # default green
-                row_watered.append(False)     
+                row_colors.append([0, 1, 0])  # default green
+                row_watered.append(False)
             self.slot_colors.append(row_colors)
             self.watered.append(row_watered)
         self.scaleX = 150
         self.scaleY = 150
 
-    def set_slot_color(self, i,j,color):
+    def set_slot_color(self, i, j, color):
         self.slot_colors[i][j] = color
 
-    def water_slot(self,i,j):
+    def water_slot(self, i, j):
         self.watered[i][j] = True
 
     def draw(self):
         scaleX = self.scaleX
         scaleY = self.scaleY
-        slot_width = scaleX/3
-        slot_height = scaleY/3
+        slot_width = scaleX / 3
+        slot_height = scaleY / 3
 
-       
         for i in range(3):
             for j in range(3):
                 glPushMatrix()
-                x = self.position[0] - scaleX/2 + slot_width/2 + i*slot_width
-                y = self.position[1] - scaleY/2 + slot_height/2 + j*slot_height
-                glTranslatef(x, y, 1) 
+                x = self.position[0] - scaleX / 2 + slot_width / 2 + i * slot_width
+                y = self.position[1] - scaleY / 2 + slot_height / 2 + j * slot_height
+                glTranslatef(x, y, 1)
                 glScalef(slot_width, slot_height, 2)
 
                 if self.watered[i][j]:
-                    glColor3f(0.36, 0.25, 0.2)  
+                    glColor3f(0.36, 0.25, 0.2)
                 else:
-                    glColor3f(244/255, 223/255, 144/255)  
+                    glColor3f(244 / 255, 223 / 255, 144 / 255)
 
                 glutSolidCube(1)
                 glPopMatrix()
 
-               
                 if self.slots[i][j] == 1:
-                    self.draw_wheat(i, j, slot_width, slot_height, self.slot_colors[i][j])
+                    self.draw_wheat(
+                        i, j, slot_width, slot_height, self.slot_colors[i][j]
+                    )
                 elif self.slots[i][j] == 2:
-                    self.draw_carrot(i, j, slot_width, slot_height, self.slot_colors[i][j])
+                    self.draw_carrot(
+                        i, j, slot_width, slot_height, self.slot_colors[i][j]
+                    )
 
-      
-        glColor3f(180/255, 150/255, 80/255)
+        glColor3f(180 / 255, 150 / 255, 80 / 255)
 
-       
         glPushMatrix()
-        glTranslatef(self.position[0], self.position[1] - slot_height/2, 3)  
+        glTranslatef(self.position[0], self.position[1] - slot_height / 2, 3)
         glScalef(scaleX, 1, 3)
         glutSolidCube(1)
         glPopMatrix()
 
         glPushMatrix()
-        glTranslatef(self.position[0], self.position[1] + slot_height/2, 3)
+        glTranslatef(self.position[0], self.position[1] + slot_height / 2, 3)
         glScalef(scaleX, 1, 3)
         glutSolidCube(1)
         glPopMatrix()
 
-      
         glPushMatrix()
-        glTranslatef(self.position[0] - slot_width/2, self.position[1], 3)
+        glTranslatef(self.position[0] - slot_width / 2, self.position[1], 3)
         glScalef(1, scaleY, 3)
         glutSolidCube(1)
         glPopMatrix()
 
         glPushMatrix()
-        glTranslatef(self.position[0] + slot_width/2, self.position[1], 3)
+        glTranslatef(self.position[0] + slot_width / 2, self.position[1], 3)
         glScalef(1, scaleY, 3)
         glutSolidCube(1)
         glPopMatrix()
 
-    def draw_wheat(self,i,j,slot_width,slot_height,color):
+    def draw_wheat(self, i, j, slot_width, slot_height, color):
         glColor3f(*color)
         # 2 rows × 4 columns = 8 sticks
         for row in range(2):
             for col in range(4):
                 glPushMatrix()
-                x = self.position[0] - self.scaleX/2 + i*slot_width + (col + 0.5)*slot_width/4
-                y = self.position[1] - self.scaleY/2 + j*slot_height + (row + 0.5)*slot_height/2
-                glTranslatef(x,y,2)
-                glScalef(2,2,10)
+                x = (
+                    self.position[0]
+                    - self.scaleX / 2
+                    + i * slot_width
+                    + (col + 0.5) * slot_width / 4
+                )
+                y = (
+                    self.position[1]
+                    - self.scaleY / 2
+                    + j * slot_height
+                    + (row + 0.5) * slot_height / 2
+                )
+                glTranslatef(x, y, 2)
+                glScalef(2, 2, 10)
                 glutSolidCube(1)
                 glPopMatrix()
 
-    def draw_carrot(self,i,j,slot_width,slot_height,color):
+    def draw_carrot(self, i, j, slot_width, slot_height, color):
         glColor3f(*color)
         for row in range(2):
             for col in range(4):
                 glPushMatrix()
-                x = self.position[0] - self.scaleX/2 + i*slot_width + (col + 0.5)*slot_width/4
-                y = self.position[1] - self.scaleY/2 + j*slot_height + (row + 0.5)*slot_height/2
-                glTranslatef(x,y,2)
-                glScalef(2,2,10)
+                x = (
+                    self.position[0]
+                    - self.scaleX / 2
+                    + i * slot_width
+                    + (col + 0.5) * slot_width / 4
+                )
+                y = (
+                    self.position[1]
+                    - self.scaleY / 2
+                    + j * slot_height
+                    + (row + 0.5) * slot_height / 2
+                )
+                glTranslatef(x, y, 2)
+                glScalef(2, 2, 10)
                 glutSolidCube(1)
                 glPopMatrix()
 
@@ -1138,8 +1164,35 @@ b1 = BorderLine([-740, -590, 10], [740, -590, 10])
 b2 = BorderLine([-740, 740, 10], [740, 740, 10])
 b3 = BorderLine([-740, -590, 10], [-740, 740, 10])
 b4 = BorderLine([740, -590, 10], [740, 740, 10])
+# Chicken Fences
+b5 = BorderLine([-130, -290, 10], [-130, -110, 10], strength=11)
+b6 = BorderLine([-265, -290, 10], [-130, -290, 10], strength=11)
+b7 = BorderLine([-265, -110, 10], [-130, -110, 10], strength=11)
+b8 = BorderLine([-265, -290, 10], [-265, -110, 10], strength=11)
+# cow fences
+b9 = BorderLine([-310, 350, 10], [-126, 350, 10], strength=11)
+b10 = BorderLine([-310, 455, 10], [-126, 455, 10], strength=11)
+b11 = BorderLine([-126, 350, 10], [-126, 455, 10], strength=11)
+# Garage Fence
+b12 = BorderLine([693, 433, 0], [692, 667, 10])
+b13 = BorderLine([439, 667, 0], [692, 667, 10])
+b14 = BorderLine([439, 433, 0], [439, 667, 10])
 
-BOUND_BOXES = [b1, b2, b3, b4]
+BOUND_BOXES = []
+BOUND_BOXES.append(b1)
+BOUND_BOXES.append(b2)
+BOUND_BOXES.append(b3)
+BOUND_BOXES.append(b4)
+BOUND_BOXES.append(b5)
+BOUND_BOXES.append(b6)
+BOUND_BOXES.append(b7)
+BOUND_BOXES.append(b8)
+BOUND_BOXES.append(b9)
+BOUND_BOXES.append(b10)
+BOUND_BOXES.append(b11)
+BOUND_BOXES.append(b12)
+BOUND_BOXES.append(b13)
+BOUND_BOXES.append(b14)
 
 PLOT1 = Plot([570, -20, 1])
 PLOT2 = Plot([570, -350, 1])
@@ -1149,11 +1202,11 @@ PLOT1.slots[1][1] = 2  # carrot
 PLOT2.slots[2][2] = 1  # wheat
 
 
-PLOT1.set_slot_color(0,0,[1,1,0])   # yellow wheat
-PLOT1.set_slot_color(1,1,[1,0.5,0]) # orange carrot
+PLOT1.set_slot_color(0, 0, [1, 1, 0])  # yellow wheat
+PLOT1.set_slot_color(1, 1, [1, 0.5, 0])  # orange carrot
 
 
-PLOT2.water_slot(2,2)
+PLOT2.water_slot(2, 2)
 
 PLOTS = [PLOT1, PLOT2]
 
@@ -1514,6 +1567,7 @@ def mouseListener(button, state, x, y):
 
     glutPostRedisplay()
 
+
 def updateTime():
     global TIME, LAST_TIME_UPDATE, NIGHT
 
@@ -1527,11 +1581,12 @@ def updateTime():
                 TIME["hour"] = 0
                 global DAY
                 DAY += 1
-            
+
             if 18 > TIME["hour"] > 6:
                 NIGHT = False
             else:
                 NIGHT = True
+
 
 # ! --------------------------------------- Camera Function ---------------------------------------
 # ! ------------------------------------- ShowScreen Function -------------------------------------
@@ -1600,8 +1655,7 @@ def showScreen():
 
     BUCKET.position = [MAOMAO.position[0] + 10, MAOMAO.position[1] - 10, 10]
     BUCKET.draw_bucket()
-    
-    
+
     COOP.draw()
     COOP.draw_coop()
     farmLand()
