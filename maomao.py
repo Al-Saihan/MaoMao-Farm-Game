@@ -451,7 +451,6 @@ class Bucket:
         glutSolidCube(1)
         glPopMatrix()
 
-bucket = Bucket([200, 200, 0.1])
 
 class House:
     def __init__(self, position):
@@ -643,35 +642,108 @@ class BorderLine:
 class Plot:
     def __init__(self, position):
         self.position = position
+        self.slots = [[0,0,0],[0,0,0],[0,0,0]]  # 0=empty,1=wheat,2=carrot
+        self.slot_colors = []
+        self.watered = []
+        for i in range(3):
+            row_colors = []
+            row_watered = []
+            for j in range(3):
+                row_colors.append([0,1,0])   # default green
+                row_watered.append(False)     
+            self.slot_colors.append(row_colors)
+            self.watered.append(row_watered)
+        self.scaleX = 150
+        self.scaleY = 150
+
+    def set_slot_color(self, i,j,color):
+        self.slot_colors[i][j] = color
+
+    def water_slot(self,i,j):
+        self.watered[i][j] = True
 
     def draw(self):
-        scaleX = 150
-        scaleY = 150
-        glColor3f(244 / 255, 223 / 255, 144 / 255)  # ? Lighter brown color for soil
+        scaleX = self.scaleX
+        scaleY = self.scaleY
+        slot_width = scaleX/3
+        slot_height = scaleY/3
+
+       
+        for i in range(3):
+            for j in range(3):
+                glPushMatrix()
+                x = self.position[0] - scaleX/2 + slot_width/2 + i*slot_width
+                y = self.position[1] - scaleY/2 + slot_height/2 + j*slot_height
+                glTranslatef(x, y, 1) 
+                glScalef(slot_width, slot_height, 2)
+
+                if self.watered[i][j]:
+                    glColor3f(0.36, 0.25, 0.2)  
+                else:
+                    glColor3f(244/255, 223/255, 144/255)  
+
+                glutSolidCube(1)
+                glPopMatrix()
+
+               
+                if self.slots[i][j] == 1:
+                    self.draw_wheat(i, j, slot_width, slot_height, self.slot_colors[i][j])
+                elif self.slots[i][j] == 2:
+                    self.draw_carrot(i, j, slot_width, slot_height, self.slot_colors[i][j])
+
+      
+        glColor3f(180/255, 150/255, 80/255)
+
+       
         glPushMatrix()
-        glTranslatef(*self.position)
-        glScale(scaleX, scaleY, 2)
+        glTranslatef(self.position[0], self.position[1] - slot_height/2, 3)  
+        glScalef(scaleX, 1, 3)
         glutSolidCube(1)
         glPopMatrix()
 
-        glColor3f(180 / 255, 150 / 255, 80 / 255)
         glPushMatrix()
-        glTranslatef(*self.position)
-        glTranslatef(0, 50, 0)
-        glScale(scaleX, 1, 3)
+        glTranslatef(self.position[0], self.position[1] + slot_height/2, 3)
+        glScalef(scaleX, 1, 3)
         glutSolidCube(1)
-        glTranslatef(0, -100, 0)
+        glPopMatrix()
+
+      
+        glPushMatrix()
+        glTranslatef(self.position[0] - slot_width/2, self.position[1], 3)
+        glScalef(1, scaleY, 3)
         glutSolidCube(1)
         glPopMatrix()
 
         glPushMatrix()
-        glTranslatef(*self.position)
-        glTranslatef(50, 0, 0)
-        glScale(1, scaleY, 3)
-        glutSolidCube(1)
-        glTranslatef(-100, 0, 0)
+        glTranslatef(self.position[0] + slot_width/2, self.position[1], 3)
+        glScalef(1, scaleY, 3)
         glutSolidCube(1)
         glPopMatrix()
+
+    def draw_wheat(self,i,j,slot_width,slot_height,color):
+        glColor3f(*color)
+        # 2 rows × 4 columns = 8 sticks
+        for row in range(2):
+            for col in range(4):
+                glPushMatrix()
+                x = self.position[0] - self.scaleX/2 + i*slot_width + (col + 0.5)*slot_width/4
+                y = self.position[1] - self.scaleY/2 + j*slot_height + (row + 0.5)*slot_height/2
+                glTranslatef(x,y,2)
+                glScalef(2,2,10)
+                glutSolidCube(1)
+                glPopMatrix()
+
+    def draw_carrot(self,i,j,slot_width,slot_height,color):
+        glColor3f(*color)
+        for row in range(2):
+            for col in range(4):
+                glPushMatrix()
+                x = self.position[0] - self.scaleX/2 + i*slot_width + (col + 0.5)*slot_width/4
+                y = self.position[1] - self.scaleY/2 + j*slot_height + (row + 0.5)*slot_height/2
+                glTranslatef(x,y,2)
+                glScalef(2,2,10)
+                glutSolidCube(1)
+                glPopMatrix()
 
 
 class Coop:
@@ -1038,10 +1110,8 @@ class Cow:
 
 COOP = Coop(-200, -200, 0)
 BARN = Barn([-400, 400, 0])
-
-print(BorderLine([0, 0, 0], [1, 0, 0]))
-
 MAOMAO = Player([-161, 299, 0], 110)
+BUCKET = Bucket([MAOMAO.position[0] + 10, MAOMAO.position[1] - 10, 10])
 
 a1 = Fence([-740, -590, 10], [740, -590, 10])
 a2 = Fence([-740, 740, 10], [740, 740, 10])
@@ -1071,12 +1141,21 @@ b4 = BorderLine([740, -590, 10], [740, 740, 10])
 
 BOUND_BOXES = [b1, b2, b3, b4]
 
-p1 = Plot([570, -20, 1])
-p2 = Plot([570, -350, 1])
-# p3 = Plot([-200, 200, 1])
-# p4 = Plot([200, -200, 1])
+PLOT1 = Plot([570, -20, 1])
+PLOT2 = Plot([570, -350, 1])
 
-PLOTS = [p1, p2]
+PLOT1.slots[0][0] = 1  # wheat
+PLOT1.slots[1][1] = 2  # carrot
+PLOT2.slots[2][2] = 1  # wheat
+
+
+PLOT1.set_slot_color(0,0,[1,1,0])   # yellow wheat
+PLOT1.set_slot_color(1,1,[1,0.5,0]) # orange carrot
+
+
+PLOT2.water_slot(2,2)
+
+PLOTS = [PLOT1, PLOT2]
 
 t1 = Tree(203.79333586600404, 58.59383956134186, 0)
 t2 = Tree(396.9853972831635, 343.36338720735466, 0)
@@ -1519,7 +1598,8 @@ def showScreen():
     for i in range(INVENTORY["cows"]):
         COWS[i].draw()
 
-    bucket.draw_bucket()
+    BUCKET.position = [MAOMAO.position[0] + 10, MAOMAO.position[1] - 10, 10]
+    BUCKET.draw_bucket()
     
     
     COOP.draw()
