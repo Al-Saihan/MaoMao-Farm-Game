@@ -72,6 +72,7 @@ TIME = {"hour": 6, "minute": 0}
 WEATHER = "clear"  # ? Clear, Rainy
 NIGHT = False
 BUCKET_FLAG = False
+POND_FLAG = False
 WATER = 10
 MAX_WATER = 10
 WATER_MODE = False
@@ -1597,9 +1598,10 @@ def specialKeyUpListener(key, x, y):
 
 
 plot_coordinates = [(570, -20), (570, -350)]  # Add more plot coordinates as needed
+pond_coordinates = [(0, 0)]  # Placeholder for pond coordinates
 
 def mouseListener(button, state, x, y):
-    global FOV, CAMERA_Z_REWORK, TOPVIEW, BUCKET_FLAG
+    global FOV, CAMERA_Z_REWORK, TOPVIEW, BUCKET_FLAG, POND_FLAG
 
     zoomUpStep = 4
     zoomDownStep = 6
@@ -1631,7 +1633,7 @@ def mouseListener(button, state, x, y):
         CAMERA_Z_REWORK = min(CAMERA_Z_REWORK + zoomDownStep, (2 * zoomDownStep))
     
     if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
-        if x, y in plot_coordinates:
+        if (x, y) in plot_coordinates:
             if BUCKET_FLAG == True:
                 print("Bucket Clicked")
                 if INVENTORY["water_buckets"] > 0:
@@ -1653,6 +1655,14 @@ def mouseListener(button, state, x, y):
                             print(f"Planted at plot ({plot.x}, {plot.y})")
                 else:
                     print("No seeds available to plant.")
+        
+        if (x, y) in pond_coordinates:
+            print("Pond Clicked")
+            if INVENTORY["water_buckets"] < 5:
+                INVENTORY["water_buckets"] += 1
+                print(f"Collected water. Total water buckets: {INVENTORY['water_buckets']}")
+            else:
+                print("Water buckets full.")            
 
     glutPostRedisplay()
 
