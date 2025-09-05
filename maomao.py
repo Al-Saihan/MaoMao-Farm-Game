@@ -64,6 +64,7 @@ P_ROTATE_ANGLE = 0.4
 
 
 # ! GAME LOGIC VARIABLES
+LAST_TIME_UPDATE = time.time()
 BALANCE = 0.0
 TIME = {"hour": 6, "minute": 0}
 WEATHER = "clear"  # ? Clear, Rainy
@@ -1411,6 +1412,22 @@ def mouseListener(button, state, x, y):
 
     glutPostRedisplay()
 
+def updateTime():
+    global TIME, LAST_TIME_UPDATE, NIGHT
+
+    if time.time() - LAST_TIME_UPDATE >= 0.5:  # Update every 1 second
+        LAST_TIME_UPDATE = time.time()
+        TIME["minute"] += 30
+        if TIME["minute"] >= 60:
+            TIME["minute"] = 0
+            TIME["hour"] += 1
+            if TIME["hour"] >= 24:
+                TIME["hour"] = 0
+            
+            if 18 > TIME["hour"] > 6:
+                NIGHT = False
+            else:
+                NIGHT = True
 
 # ! --------------------------------------- Camera Function ---------------------------------------
 # ! ------------------------------------- ShowScreen Function -------------------------------------
@@ -1577,6 +1594,8 @@ def idle():
         # ? If No Collision - Move
         if move:
             MAOMAO.move(dx, dy)
+
+    updateTime()
 
     # # ! Camera Movement With Limit
     # if BUTTONS["la"]:
