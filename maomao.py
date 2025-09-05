@@ -821,6 +821,172 @@ class Pillar:
         glPopMatrix()
 
 
+class Barn:
+    def __init__(self, position):
+        self.position = position
+
+    def draw_barn(self):
+
+        glPushMatrix()
+        glTranslatef(self.position[0], self.position[1], self.position[2] + 25)
+        glScalef(180, 120, 50)
+        glColor3f(0.8, 0.1, 0.1)
+        glutSolidCube(1)
+        glPopMatrix()
+
+        # roof
+        glColor3f(0.5, 0.25, 0.1)  # brown
+        glBegin(GL_TRIANGLES)
+        # front
+        glVertex3f(self.position[0] - 90, self.position[1] - 60, self.position[2] + 50)
+        glVertex3f(self.position[0] + 90, self.position[1] - 60, self.position[2] + 50)
+        glVertex3f(self.position[0], self.position[1], self.position[2] + 100)
+
+        # Back
+        glVertex3f(self.position[0] - 90, self.position[1] + 60, self.position[2] + 50)
+        glVertex3f(self.position[0] + 90, self.position[1] + 60, self.position[2] + 50)
+        glVertex3f(self.position[0], self.position[1], self.position[2] + 100)
+
+        # Left
+        glVertex3f(self.position[0] - 90, self.position[1] - 60, self.position[2] + 50)
+        glVertex3f(self.position[0] - 90, self.position[1] + 60, self.position[2] + 50)
+        glVertex3f(self.position[0], self.position[1], self.position[2] + 100)
+
+        # Right
+        glVertex3f(self.position[0] + 90, self.position[1] - 60, self.position[2] + 50)
+        glVertex3f(self.position[0] + 90, self.position[1] + 60, self.position[2] + 50)
+        glVertex3f(self.position[0], self.position[1], self.position[2] + 100)
+        glEnd()
+
+        # door
+        glPushMatrix()
+        glTranslatef(
+            self.position[0] - 40, self.position[1] - 60.1, self.position[2] + 15
+        )
+        glScalef(20, 1, 30)
+        glColor3f(0.3, 0.15, 0.05)  # dark brown
+        glutSolidCube(1)
+        glPopMatrix()
+
+        # big foor
+        glPushMatrix()
+        glTranslatef(
+            self.position[0] + 30, self.position[1] - 60.2, self.position[2] + 20
+        )
+        glScalef(60, 1, 40)
+        glColor3f(0.35, 0.2, 0.1)
+        glutSolidCube(1)
+        glPopMatrix()
+
+        # handle??
+        glPushMatrix()
+        glTranslatef(self.position[0] + 30, self.position[1] - 61, self.position[2] + 5)
+        glScalef(5, 1, 5)
+        glColor3f(0.9, 0.9, 0.9)
+        glPopMatrix()
+
+
+class Cow:
+    def __init__(
+        self,
+        position,
+        scale=6.0,
+        body_color=(0.85, 0.85, 0.85),
+        nose_color=(0.7, 0.7, 0.7),
+        ear_color=(0.7, 0.5, 0.4),
+    ):
+        self.position = [position[0], position[1], position[2]]
+        self.rotation = 0
+        self.scale = scale
+        self.body_color = body_color
+        self.nose_color = nose_color
+        self.ear_color = ear_color
+
+    def draw(self):
+        s = self.scale
+        glPushMatrix()
+        glTranslatef(*self.position)
+        glRotatef(self.rotation, 0, 0, 1)
+
+        # body
+        glPushMatrix()
+        glTranslatef(0, 0, 1.5 * s)
+        glScalef(4 * s, 2 * s, 2 * s)
+        glColor3f(*self.body_color)
+        glutSolidCube(1)
+        glPopMatrix()
+
+        # head
+        glPushMatrix()
+        glTranslatef(2.5 * s, 0, 2.5 * s)
+        glScalef(1.5 * s, 1.5 * s, 1.5 * s)
+        glColor3f(*self.body_color)
+        glutSolidCube(1)
+        glPopMatrix()
+
+        # nose
+        glPushMatrix()
+        glTranslatef(3.25 * s, 0, 2.0 * s)
+        glScalef(0.25 * s, 1.2 * s, 0.4 * s)
+        glColor3f(*self.nose_color)
+        glutSolidCube(1)
+        glPopMatrix()
+
+        # eyes
+        eye_positions = [
+            (3.2 * s, 0.35 * s, 2.5 * s, 0.15 * s),
+            (3.2 * s, -0.35 * s, 2.5 * s, 0.15 * s),
+        ]
+        glColor3f(0, 0, 0)
+        for x, y, z, size in eye_positions:
+            glPushMatrix()
+            glTranslatef(x, y, z)
+            glScalef(size, size, size)
+            glutSolidCube(1)
+            glPopMatrix()
+
+        # ears/horns? idk
+        ear_positions = [
+            (2.8 * s, 0.75 * s, 3.0 * s, 0.4 * s, 45),
+            (2.8 * s, -0.75 * s, 3.0 * s, 0.4 * s, -45),
+        ]
+        glColor3f(*self.ear_color)
+        for x, y, z, size, rot in ear_positions:
+            glPushMatrix()
+            glTranslatef(x, y, z)
+            glRotatef(rot, 0, 0, 1)
+            glScalef(size, size, size)
+            glutSolidCube(1)
+            glPopMatrix()
+
+        # tail
+        glPushMatrix()
+        glTranslatef(-2 * s, 0, 1.5 * s)
+        glRotatef(45, 0, 1, 0)
+        glScalef(0.3 * s, 0.3 * s, 1.2 * s)
+        glColor3f(*self.ear_color)
+        glutSolidCube(1)
+        glPopMatrix()
+
+        # leg
+        leg_z = 0.75 * s
+        leg_positions = [
+            (1.5 * s, -0.8 * s, leg_z),
+            (1.5 * s, 0.8 * s, leg_z),
+            (-1.5 * s, -0.8 * s, leg_z),
+            (-1.5 * s, 0.8 * s, leg_z),
+        ]
+        for pos in leg_positions:
+            glPushMatrix()
+            glTranslatef(*pos)
+            glScalef(0.8 * s, 0.8 * s, 1.5 * s)
+            glColor3f(*self.body_color)
+            glutSolidCube(1)
+            glPopMatrix()
+
+        glPopMatrix()
+
+
 coop = Coop(-200, -200, 0)
 
 print(BorderLine([0, 0, 0], [1, 0, 0]))
