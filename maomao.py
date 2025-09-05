@@ -40,7 +40,7 @@ else:
 # TODO: Buy/ Sell Logics -------------------------------------- Saihan [WIP]
 # TODO: Cheat Modes -------------------------------------------
 # TODO: Rain Logic --------------------------------------------
-# TODO: Day-Night Cycle --------------------------------------- 
+# TODO: Day-Night Cycle ---------------------------------------
 # TODO: Design User Interface --------------------------------- Sauihan [Finished]
 
 
@@ -64,9 +64,12 @@ P_ROTATE_ANGLE = 0.4
 
 
 # ! GAME LOGIC VARIABLES
+LAST_TIME_UPDATE = time.time()
+DAY = 0
 BALANCE = 0.0
 TIME = {"hour": 6, "minute": 0}
 WEATHER = "clear"  # ? Clear, Rainy
+NIGHT = False
 WATER = 10
 MAX_WATER = 10
 INVENTORY = {
@@ -328,7 +331,11 @@ class Tree:
         glPushMatrix()
         glTranslatef(self.x, self.y, self.z)
         glScalef(10, 10, 80)
-        glColor3f(0.8, 0.5, 0.6)  # Brownish pink
+        if NIGHT:
+            glColor3f(0.7, 0.4, 0.5)  # NIGHT Brownish pink
+        else:
+            glColor3f(0.8, 0.5, 0.6)  # Brownish pink
+
         glutSolidCylinder(1, 1, 10, 10)
         glPopMatrix()
 
@@ -336,7 +343,10 @@ class Tree:
         glPushMatrix()
         glTranslatef(self.x, self.y, self.z + 80)
         glScalef(30, 30, 30)
-        glColor3f(1.0, 0.7, 0.8)  # Sakura pink
+        if NIGHT:
+            glColor3f(0.9, 0.6, 0.7)  # NIGHT Sakura pink
+        else:
+            glColor3f(1.0, 0.7, 0.8)  # Sakura pink
         glutSolidSphere(1, 30, 30)
         glPopMatrix()
 
@@ -451,7 +461,12 @@ class House:
     def draw_housearea(self):
         glBegin(GL_QUADS)
         # ! House Area
-        glColor3f(0.95, 0.85, 0.4)  # ? Yellowish field color
+        if NIGHT:
+            glColor3f(
+                0.95 - 0.1, 0.85 - 0.1, 0.4 - 0.1
+            )  # Yellowish field color (darker at night)
+        else:
+            glColor3f(0.95, 0.85, 0.4)  # Yellowish field color
         glVertex3f(-100, 380, 1)  # ? house area left bottom point
         glVertex3f(425, 380, 1)  # ? house area right bottom point
         glVertex3f(425, 725, 1)  # ? house area right top point
@@ -459,7 +474,12 @@ class House:
         glEnd()
         # ! Garage
         glBegin(GL_QUADS)
-        glColor3f(0.7, 0.7, 0.7)  # Light gray for the quad
+        if NIGHT:
+            glColor3f(
+                0.7 - 0.1, 0.7 - 0.1, 0.7 - 0.1
+            )  # Light gray for the quad (darker at night)
+        else:
+            glColor3f(0.7, 0.7, 0.7)  # Light gray for the quad
         glVertex3f(425, 420, 1)
         glVertex3f(700, 420, 1)
         glVertex3f(700, 680, 1)
@@ -1115,19 +1135,33 @@ COWS = [cow1, cow2, cow3]
 def farmLand():
     glBegin(GL_QUADS)
     # ! Grass Land
-    glColor3f(0.05, 0.35, 0.05)
-    glVertex3f(-750, -600, 0)
-    glColor3f(0.10, 0.55, 0.10)
-    glVertex3f(750, -600, 0)
-    glColor3f(0.30, 0.70, 0.20)
-    glVertex3f(750, 750, 0)
-    glColor3f(0.55, 0.85, 0.40)
-    glVertex3f(-750, 750, 0)
+    # Grass Land (darker at night)
+    if NIGHT:
+        glColor3f(0.05 - 0.1, 0.35 - 0.1, 0.05 - 0.1)
+        glVertex3f(-750, -600, 0)
+        glColor3f(0.10 - 0.1, 0.55 - 0.1, 0.10 - 0.1)
+        glVertex3f(750, -600, 0)
+        glColor3f(0.30 - 0.1, 0.70 - 0.1, 0.20 - 0.1)
+        glVertex3f(750, 750, 0)
+        glColor3f(0.55 - 0.1, 0.85 - 0.1, 0.40 - 0.1)
+        glVertex3f(-750, 750, 0)
+    else:
+        glColor3f(0.05, 0.35, 0.05)
+        glVertex3f(-750, -600, 0)
+        glColor3f(0.10, 0.55, 0.10)
+        glVertex3f(750, -600, 0)
+        glColor3f(0.30, 0.70, 0.20)
+        glVertex3f(750, 750, 0)
+        glColor3f(0.55, 0.85, 0.40)
+        glVertex3f(-750, 750, 0)
     glEnd()
 
     # ! Road
     glBegin(GL_QUADS)
-    glColor3f(0.95, 0.95, 0.5)  # ? Road brown color
+    if NIGHT:
+        glColor3f(0.95 - 0.1, 0.95 - 0.1, 0.5 - 0.1)  # Road brown color
+    else:
+        glColor3f(0.95, 0.95, 0.5)  # Road brown color
     # ! 1
     glVertex3f(150, 250, 1)
     glVertex3f(750, 250, 1)
@@ -1252,10 +1286,16 @@ def user_interface():
     glEnd()
 
     # ? TEXTS - (Top Right)
-    draw_text(105, H - 30, "MaoMao Farming Simulator", (0, 0, 0))
-    draw_text(105, H - 60, f"Balance: {BALANCE:.2f}$", (0, 0, 0))
-    draw_text(105, H - 90, f"Time: {TIME['hour']:02}:{TIME['minute']:02}", (0, 0, 0))
-    draw_text(W - 200, H - 30, f"Weather: {WEATHER}", (0, 0, 0))
+    if NIGHT:
+        textColor = (1, 1, 1)
+    else:
+        textColor = (0, 0, 0)
+
+    draw_text(105, H - 30, "MaoMao Farming Simulator", textColor)
+    draw_text(105, H - 60, f"Balance: {BALANCE:.2f}$", textColor)
+    draw_text(105, H - 90, f"Time: {TIME['hour']:02}:{TIME['minute']:02}", textColor)
+    draw_text(W - 200, H - 30, f"Weather: {WEATHER}", textColor)
+    draw_text(W - 165, H - 60, f"Day: {DAY}", textColor)
 
     draw_text(13, H - 473, "Inventory:", (0, 0, 0))
     # ? TEXTS Background - (Bottom Left)
@@ -1319,6 +1359,11 @@ def keyboardListener(key, x, y):
     # ! Move right (D key)
     if key.lower() == b"d":
         BUTTONS["d"] = True
+
+    # ! CHEAT: Night On/Off (R key)
+    if key.lower() == b"r":
+        global NIGHT
+        NIGHT = not NIGHT
 
     # ! Escape key to exit game
     if key == b"\x1b":
@@ -1390,6 +1435,24 @@ def mouseListener(button, state, x, y):
 
     glutPostRedisplay()
 
+def updateTime():
+    global TIME, LAST_TIME_UPDATE, NIGHT
+
+    if time.time() - LAST_TIME_UPDATE >= 0.5:  # Update every 1 second
+        LAST_TIME_UPDATE = time.time()
+        TIME["minute"] += 30
+        if TIME["minute"] >= 60:
+            TIME["minute"] = 0
+            TIME["hour"] += 1
+            if TIME["hour"] >= 24:
+                TIME["hour"] = 0
+                global DAY
+                DAY += 1
+            
+            if 18 > TIME["hour"] > 6:
+                NIGHT = False
+            else:
+                NIGHT = True
 
 # ! --------------------------------------- Camera Function ---------------------------------------
 # ! ------------------------------------- ShowScreen Function -------------------------------------
@@ -1432,9 +1495,13 @@ def showScreen():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     glViewport(0, 0, W, H)
-    glClearColor(0.53, 0.81, 0.92, 1)  # Sky blue color
-    setupCamera()
 
+    if NIGHT:
+        glClearColor(0.1, 0.1, 0.2, 1)  # Dark night color
+    else:
+        glClearColor(0.53, 0.81, 0.92, 1)  # Sky blue color
+
+    setupCamera()
     MAOMAO.draw()
     House1.draw_housearea()
     House1.draw_house()
@@ -1449,7 +1516,7 @@ def showScreen():
     for chimken in CHICKENS:
         chimken.draw_chicken()
 
-    for i in range(INVENTORY['cows']):
+    for i in range(INVENTORY["cows"]):
         COWS[i].draw()
 
     bucket.draw_bucket()
@@ -1555,6 +1622,8 @@ def idle():
         # ? If No Collision - Move
         if move:
             MAOMAO.move(dx, dy)
+
+    updateTime()
 
     # # ! Camera Movement With Limit
     # if BUTTONS["la"]:
