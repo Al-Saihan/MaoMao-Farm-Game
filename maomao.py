@@ -76,9 +76,9 @@ INVENTORY = {
     "potato": 0,
     "carrot": 0,
     "sunflower": 0,
-    "chicken": 0,
+    "chickens": 0,
     "egg": 0,
-    "cow": 0,
+    "cows": 3,
     "milk": 0,
 }
 
@@ -341,8 +341,6 @@ class Tree:
         glColor3f(1.0, 0.7, 0.8)  # Sakura pink
         glutSolidSphere(1, 30, 30)
         glPopMatrix()
-
-
 
 
 class Shop:
@@ -893,6 +891,7 @@ class Barn:
         glTranslatef(self.position[0] + 30, self.position[1] - 61, self.position[2] + 5)
         glScalef(5, 1, 5)
         glColor3f(0.9, 0.9, 0.9)
+        glutSolidCube(1)
         glPopMatrix()
 
 
@@ -904,9 +903,10 @@ class Cow:
         body_color=(0.85, 0.85, 0.85),
         nose_color=(0.7, 0.7, 0.7),
         ear_color=(0.7, 0.5, 0.4),
+        rotation=0,
     ):
         self.position = [position[0], position[1], position[2]]
-        self.rotation = 0
+        self.rotation = rotation
         self.scale = scale
         self.body_color = body_color
         self.nose_color = nose_color
@@ -1002,7 +1002,7 @@ BARN = Barn([-400, 400, 0])
 
 print(BorderLine([0, 0, 0], [1, 0, 0]))
 
-MAOMAO = Player([-70, -100, 0], -150)
+MAOMAO = Player([-161, 299, 0], 110)
 
 a1 = Fence([-740, -590, 10], [740, -590, 10])
 a2 = Fence([-740, 740, 10], [740, 740, 10])
@@ -1013,8 +1013,17 @@ a5 = Fence([-130, -290, 10], [-130, -110, 10])
 a6 = Fence([-265, -290, 10], [-130, -290, 10])
 a7 = Fence([-265, -110, 10], [-130, -110, 10])
 a8 = Fence([-265, -290, 10], [-265, -110, 10])
+# cow fences
+a9 = Fence([-310, 350, 10], [-126, 350, 10])
+a10 = Fence([-310, 455, 10], [-126, 455, 10])
+a11 = Fence([-126, 350, 10], [-126, 455, 10])
+# Garage Fence
+a12 = Fence([693, 433, 0], [692, 667, 10])
+a13 = Fence([439, 667, 0], [692, 667, 10])
+a14 = Fence([439, 433, 0], [439, 667, 10])
 
-FENCES = [a1, a2, a3, a4, a5, a6, a7, a8]
+
+FENCES = [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14]
 
 b1 = BorderLine([-740, -590, 10], [740, -590, 10])
 b2 = BorderLine([-740, 740, 10], [740, 740, 10])
@@ -1059,6 +1068,24 @@ chicken1 = Chicken(-150, -150, 0)
 chicken2 = Chicken(-200, -130, 0)
 chicken3 = Chicken(-170, -180, 0)
 CHICKENS = [chicken1, chicken2, chicken3]
+
+cow1 = Cow([-276, 418, 0], scale=6, rotation=-30, body_color=(0.85, 0.85, 0.85))
+cow2 = Cow(
+    [-170, 408, 0],
+    scale=6,
+    rotation=-90,
+    body_color=(1.0, 0.6, 0.6),
+    nose_color=(0.8, 0.5, 0.5),
+    ear_color=(0.6, 0.3, 0.2),
+)
+cow3 = Cow(
+    [-200, 390, 0],
+    scale=6,
+    rotation=-110,
+    body_color=(0.6, 0.9, 0.6),
+    nose_color=(0.5, 0.7, 0.5),
+)
+COWS = [cow1, cow2, cow3]
 
 
 # ! --------------------------------------- Draw Functions ---------------------------------------
@@ -1323,7 +1350,9 @@ def mouseListener(button, state, x, y):
     if button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
         with open(config_path, "a") as f:
             print("Writing to config.txt")
-            f.write(f"t = Tree({MAOMAO.position[0]}, {MAOMAO.position[1]}, {MAOMAO.position[2]})\n")
+            f.write(
+                f"a = Fence({MAOMAO.position[0]}, {MAOMAO.position[1]}, {MAOMAO.position[2]})\n"
+            )
 
     # ? Scroll Up:
     if button == 3 and state == GLUT_DOWN:
@@ -1398,13 +1427,15 @@ def showScreen():
     for chimken in CHICKENS:
         chimken.draw_chicken()
 
+    for i in range(INVENTORY['cows']):
+        COWS[i].draw()
+
     COOP.draw()
     COOP.draw_coop()
     farmLand()
     drawFences()
     drawPlots()
     BARN.draw_barn()
-
 
     # ! User Interface
     user_interface()
@@ -1523,7 +1554,7 @@ def idle():
 
 def main():
     glutInit()
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE)
     glutInitWindowSize(W, H)
     glutInitWindowPosition(200, 100)
     glutCreateWindow(b"MaoMao's Farm - The Game")
