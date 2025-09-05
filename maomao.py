@@ -1497,9 +1497,9 @@ def showScreen():
     glViewport(0, 0, W, H)
 
     if NIGHT:
-        glClearColor(0.1, 0.1, 0.2, 1)  # Dark night color
+        glClearColor(0.25, 0.15, 0.25, 1)  # Dark mauve color for night
     else:
-        glClearColor(0.53, 0.81, 0.92, 1)  # Sky blue color
+        glClearColor(0.95, 0.6, 0.8, 1)  # Pookie pink color
 
     setupCamera()
     MAOMAO.draw()
