@@ -79,17 +79,10 @@ WATER = 10
 MAX_WATER = 10
 INVENTORY = {
     "wheat": 0,
-<<<<<<< HEAD
-    "wheat seeds": 5,
-    "carrot": 0,
-    "carrot seeds": 5,
-    "chickens": 0,
-=======
     "wheat seed": 0,
     "carrot": 0,
     "carrot seed": 0,
     "chickens": 5,
->>>>>>> shop
     "egg": 0,
     "cows": 0,
     "milk": 0,
@@ -1718,24 +1711,12 @@ def mouseListener(button, state, x, y):
     zoomUpStep = 4
     zoomDownStep = 6
 
-<<<<<<< HEAD
-    # if button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
-    #     # with open(config_path, "a") as f:
-    #     #     print("Writing to config.txt")
-    #     #     f.write(
-    #     #         f"a = Fence({MAOMAO.position[0]}, {MAOMAO.position[1]}, {MAOMAO.position[2]})\n"
-    #     #     )
-    #     global WATER
-
-    if button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN and BUCKET_FLAG:
-=======
     if button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
         with open(config_path, "a") as f:
             print("Writing to config.txt")
             f.write(
                 f"a = Fence({MAOMAO.position[0]}, {MAOMAO.position[1]}, {MAOMAO.position[2]})\n"
             )
->>>>>>> shop
         global WATER
 
         px,py,pz = MAOMAO.position
