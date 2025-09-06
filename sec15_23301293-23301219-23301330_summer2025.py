@@ -696,9 +696,6 @@ class Plot:
     def __init__(self, position):
         self.position = position
         self.slots = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-        self.watered = [
-            [0 for _ in range(3)] for _ in range(3)
-        ]  # 0=empty,1=wheat,2=carrot
         self.slot_colors = []
         self.watered = []
         for i in range(3):
