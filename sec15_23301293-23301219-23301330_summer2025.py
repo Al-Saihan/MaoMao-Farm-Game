@@ -1859,7 +1859,7 @@ def mouseListener(button, state, x, y):
         for plot in PLOTS:
             slot = plot.get_slot_at(px, py)
             if slot:
-                if WATER > 0:
+                if WATER > 0 and BUCKET_FLAG:
                     i, j = slot
                     plot.water_slot(i, j)
                     WATER -= 1
