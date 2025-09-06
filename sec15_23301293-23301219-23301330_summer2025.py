@@ -681,7 +681,7 @@ class BorderLine:
 
         distance = cross_mag / AB_mag if AB_mag != 0 else 0
 
-        # ? Limit check: projection must be between A and B
+        # ? Limit check: projection of C must be between A and B
         BC = [C[i] - self.B[i] for i in range(3)]
         dot1 = sum([AB[i] * AC[i] for i in range(3)])
         dot2 = sum([(-AB[i]) * BC[i] for i in range(3)])
