@@ -31,7 +31,7 @@ from random import randint
 # TODO: Harvest Logic ----------------------------------------- Nusayba [Finished]
 # TODO: Inventory System -------------------------------------- Saihan [Finished]
 # TODO: Buy/ Sell Logics -------------------------------------- Saihan [Finished]
-# TODO: Cheat Modes ------------------------------------------- WIP ------------------------------------
+# TODO: Cheat Modes ------------------------------------------- Mao [Finished]
 # TODO: Day-Night Cycle --------------------------------------- Amra Shobai Raja [Finished]
 # TODO: Design User Interface --------------------------------- Saihan [Finished]
 
