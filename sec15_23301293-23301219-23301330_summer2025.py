@@ -23,7 +23,7 @@ from random import randint
 # TODO: Make Cows Class --------------------------------------- Nusayba [Finished]
 # TODO: Make Hens Barn Class ---------------------------------- Mao [Finished]
 # TODO: Make Hens Class --------------------------------------- Mao [Finished]
-# TODO: Make Crops Class [Wheat, Potato, Carrot, Sunflower] --- Nusayba [Finished]
+# TODO: Make Crops Class [Wheat,  Carrot] --------------------- Nusayba [Finished]
 # TODO: Make Player Class [A Cat Humanoid] -------------------- Saihan [Finished]
 # TODO: Crop Planting Logic ----------------------------------- Nusayba [Finished]
 # TODO: Water Mechanism --------------------------------------- Mao [Finished]
@@ -31,7 +31,7 @@ from random import randint
 # TODO: Harvest Logic ----------------------------------------- Nusayba [Finished]
 # TODO: Inventory System -------------------------------------- Saihan [Finished]
 # TODO: Buy/ Sell Logics -------------------------------------- Saihan [Finished]
-# TODO: Cheat Modes ------------------------------------------- WIP ------------------------------------
+# TODO: Cheat Modes ------------------------------------------- Mao [Finished]
 # TODO: Day-Night Cycle --------------------------------------- Amra Shobai Raja [Finished]
 # TODO: Design User Interface --------------------------------- Saihan [Finished]
 
@@ -51,8 +51,8 @@ TOPVIEW = False
 BUTTONS = {"w": False, "s": False, "a": False, "d": False, "la": False, "ra": False}
 
 # ! Player Control
-P_SPEED = 1
-P_ROTATE_ANGLE = 1
+P_SPEED = 0.5
+P_ROTATE_ANGLE = 0.5
 
 
 # ! GAME LOGIC VARIABLES
@@ -1863,11 +1863,9 @@ def mouseListener(button, state, x, y):
                     i, j = slot
                     plot.water_slot(i, j)
                     WATER -= 1
+                    print("Watering! Remaining:", WATER)
                     break
 
-        if BUCKET_FLAG and WATER > 0:
-            WATER -= 1
-            print("Watering! Remaining:", WATER)
 
     if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
 
